@@ -141,13 +141,13 @@ function halfArc(lat, decl, h0) {
 
 // ---- Proposed Z rule (SPEC.md, Under discussion; NOT agreed)
 // asleep S = 6.4 h + 0.56 × (night − 11.9 h), floor 6 h, ceiling 9.9 h (the longest sleep measured under natural light, Colorado winter);
-// Z (time in bed) = 15 min + S ÷ 0.83; centred 1.1 h after lowest sun (Hadza).
-const RULE = { base: 6.4, slope: 0.56, nightA: 11.9, floor: 6, latency: 0.25, eff: 0.83, centre: 1.1 };
+// Z (time in bed) = 15 min + S ÷ 0.83. Wake at sunrise (agreed): bed = sunrise − Z.
+const RULE = { base: 6.4, slope: 0.56, nightA: 11.9, floor: 6, latency: 0.25, eff: 0.83 };
 const state = { city: 'lis', day: Math.floor((Date.UTC(2026, 10, 16) - YEAR0) / DAY), ceil: 9.9 };   // 8 h ceiling rejected: deep-winter sleep runs longer than 8 h under natural light
-function rule(night) {
+function rule(night, sunrise) {
   const S = Math.max(RULE.floor, Math.min(state.ceil, RULE.base + RULE.slope * (night - RULE.nightA)));
   const Z = RULE.latency + S / RULE.eff;
-  return { S, Z, bed: RULE.centre - Z / 2, wake: RULE.centre + Z / 2 };   // sun time, hours (bed may be negative = before midnight)
+  return { S, Z, bed: sunrise - Z, wake: sunrise };   // sun time, hours (bed may be negative = before midnight)
 }
 
 // Local clock offset from UTC (hours) on a given instant, from the browser's time-zone database
@@ -172,7 +172,7 @@ function dayInfo(c, d) {
   const off = tzOffset(c.tz, noonUTC);
   const toClock = h => h - c.lon / 15 - eot / 60 + off;
   const fromClock = h => h + c.lon / 15 + eot / 60 - off;
-  return { decl, eot, day, light, night, off, toClock, fromClock, r: rule(night) };
+  return { decl, eot, day, light, night, off, toClock, fromClock, r: rule(night, 12 - day / 2) };
 }
 
 // ---- Formatting
@@ -281,7 +281,7 @@ function table() {
 function notes() {
   const src = CITIES.filter(c => OBSERVED[c.id]).map(c => `<p><b>${c.name}:</b> ${OBSERVED[c.id].what}. ${OBSERVED[c.id].src}</p>`).join('');
   $('notes').innerHTML = `
-    <p><b>Should (proposed rule, not agreed):</b> asleep = 6.4 h + 0.56 × (night − 11.9 h), never under 6 h, never over 9.9 h (the longest sleep measured under natural light: Colorado camping in winter); in bed = 15 min to fall asleep + asleep ÷ 0.83; the window is centred 1.1 h after lowest sun (NT 01:06), as the Hadza sleep.</p>
+    <p><b>Should (proposed rule, not agreed):</b> asleep = 6.4 h + 0.56 × (night − 11.9 h), never under 6 h, never over 9.9 h (the longest sleep measured under natural light: Colorado camping in winter); in bed = 15 min to fall asleep + asleep ÷ 0.83; wake is at sunrise and bed is that much earlier, so longer nights bring bedtime forward, never the wake.</p>
     <p><b>NT</b> here is sun time: 00:00 at lowest sun, 12:00 at peak sun, minutes 60 s long. With the seasonal stretch, NT readings between those anchors would shift; the stretch isn't agreed yet.</p>
     <p><b>Clock</b> times use each city's own time zone, daylight saving included (the browser's time-zone database). Night is sunset to sunrise (sun's centre 0.833° below the horizon); twilight runs to −12°.</p>
     <p><b>Observed data:</b> Sleep Cycle app (941,329 smartphone users aged 18–55, June 2014 to March 2015), time in bed, one national average per country for the whole year, so city and season differences don't show. Nairobi: no sourced figure for Kenya. Reported in the Daily Mail, 2015; table read from a reprint because the original couldn't be fetched. App users skew young, urban and well off.</p>`;

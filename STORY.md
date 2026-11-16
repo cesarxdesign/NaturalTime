@@ -26,6 +26,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 19. **One rule, both hemispheres; 5 planes of cities he knows.** The rule is mirrored, so only the northern half of the globe is needed and southern cities count at their mirrored latitude. First picks bunched up (Austin and Lisbon 8° apart, nothing in 0–30°, where most people live); exact-latitude picks (Quito, Manila, St Petersburg) were evenly spaced but unfamiliar. Settled on groups of big cities he knows, a few degrees off allowed: Singapore · (Nairobi) · (Jakarta), Bangkok · Hong Kong · (Rio), Austin, Milan, Copenhagen · Stockholm · Oslo. Lisbon and London stay as reference lines. Familiar beats exact: a known place makes the data easier to judge, and big metropolises are where data lives.
 
+20. **Wake when the light comes.** Centring sleep on the night, as the Hadza do, had Lisbon up 1h12 before a November sunrise. Rule set instead: wake at sunrise, and longer nights only move bedtime earlier.
+
 ## Rejected or replaced
 
 - Sunrise as the anchor: doesn't exist every day far north.
@@ -34,6 +36,7 @@ Raw material for a future folio page: turning points, decisions, what was reject
 - Deepest sleep as the anchor: follows bedtime, not the clock.
 - 30% stretch, 22:00–06:00 sleep arc: picked without evidence; placeholders until agreed.
 - An 8 h sleep ceiling (Huberman's winter top): not natural; deep-winter sleep under natural light runs longer. The one place the user overruled Huberman.
+- Sleep centred on the night (1.1 h after lowest sun): woke people in the dark in winter. Replaced by wake at sunrise.
 - On/off light on the globe: replaced by measured lux on an eye scale.
 - Reference planes Equator, Austin, Lisbon, Stockholm, Tromsø: bunched in pairs, a 30° hole where most people live; Tromsø too small.
 - Planes Quito, Manila, Austin, Milan, St Petersburg: exact 15° spacing, but cities he doesn't know.

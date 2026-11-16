@@ -241,7 +241,7 @@ Z (bed) = 15 min + S ÷ 0.83
 - **Floor: 6 h asleep (7.5 h in bed).** Huberman's summer figure. Shortest-night measurements: Tsimané 5.7, San 6.2, Colorado 6.8. Reached at nights under 11.2 h.
 - **Ceiling:** 8 h asleep **rejected** (2026-11-16): not natural; in deep winter, people living by the sun sleep longer than 8 h, not just lie in bed. Huberman's 7–8 h winter figure overruled here (flagged). Proposed instead: 9.9 h asleep (12.2 h in bed), the longest sleep measured under natural light (Colorado camping, winter). Not agreed.
 - **Temperature:** no separate length term, to avoid double-counting the season. Heat only as a later adjustment: nights above 30 °C cut sleep by just over 14 min (Minor et al. 2022, 47,000 people, 68 countries).
-- **Where Z sits:** centred about 1.1 h after lowest sun (NT about 01:05). Hadza: in bed 21:06 solar, awake 05:03, centre 01:05; melatonin midpoint at lowest sun, sleep centre about 1 h after it. Wake comes before sunrise when nights are long, which covers the far north.
+- **Where Z sits: agreed, wake at sunrise** (2026-11-16): humans wake when the light comes. Ze = sunrise; Zs = sunrise − Z, so longer nights bring bedtime forward, never the wake. Replaces my own pick of centring sleep 1.1 h after lowest sun (from the Hadza), which put Lisbon's November wake 1h12 before sunrise. Open: places where sunrise comes very late or not at all (wake has to come before it there); and the far north in summer, where wake at sunrise plus the 6 h floor puts bedtime before sunset (Oslo 22 Jun: bed 20:25, sunset 22:44, wake 03:54).
 
 | Place | Summer: asleep / in bed | Winter: asleep / in bed (ceiling 8 / 9.9) |
 |---|---|---|
@@ -254,6 +254,8 @@ Z (bed) = 15 min + S ÷ 0.83
 Lisbon check with the first user (2026-11-16), equator baseline, AT:
 - 16 Nov: sunrise 07:20, peak sun 12:21, sunset 17:23; bed 20:47 ("almost 21 seems ok as guidance"), wake 06:08, 1h12 before sunrise.
 - 22 Jun: sunrise 06:12, peak sun 13:38, sunset 21:05; bed 23:00 ("a wee bit late", but 21:22 NT reads right), wake 06:29 ("in line with regular standards"), 17 min after sunrise.
+
+With wake at sunrise (AT): 16 Nov bed 21:59, wake 07:20; 22 Jun bed 22:44, wake 06:12; 21 Dec bed 22:06, wake 07:51.
 
 Conflict: Colorado measured 9.9 h asleep in winter at 40° N; this rule gives about 8 h there. Huberman favored; Colorado's week-long campers may have been catching up on sleep.
 
