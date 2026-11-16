@@ -84,6 +84,7 @@
     <div><i class="key fig"></i><span id="figLabel">Overhead sun at 12:00 UTC, every day of the year</span></div>
     <div><i class="key dot"></i>Lisbon</div>
     <div id="planeKey" hidden><i class="key plane"></i>Sleep planes: Quito, Manila, Austin, Milan, St Petersburg (dimmer: same rule in the other hemisphere)</div>
+    <div id="refKey" hidden><i class="key eq" style="border-top-color:var(--blue)"></i>Reference: Lisbon, London</div>
     <div id="trailKey" hidden><i class="key fig"></i><span id="trailLabel"></span></div>
   </div>
   <div class="hint">Drag to turn · double-click to reset</div>
@@ -286,6 +287,17 @@ const planeGroup = new THREE.Group(); tiltGroup.add(planeGroup);
     planeGroup.add(lb);
   }
 }
+// Reference lines (not planes): places the user knows, so the planes can be read against them
+const REFS = [['Lisbon', 38.72], ['London', 51.51]];
+{
+  const refMat = new THREE.LineDashedMaterial({ color: 0x8fb3d9, dashSize: 0.03, gapSize: 0.025 });
+  for (const [name, lat] of REFS) {
+    planeGroup.add(line(parallel(lat, 1.006), refMat, true));
+    const lb = label(`${name} ${lat.toFixed(1)}° N`, '#8fb3d9', 0.07);
+    lb.position.set(Math.cos(lat * RAD) + 0.06 + lb.scale.x / 2, Math.sin(lat * RAD), 0);   // just outside the right edge
+    planeGroup.add(lb);
+  }
+}
 // Each plane stands for the people between it and the midpoints to its neighbours
 const PLANE_EDGES = [0, ...PLANES.slice(1).map(([, b], i) => (PLANES[i][1] + b) / 2), 90];
 const POP_TOTAL = POP.reduce((a, b) => a + b, 0);
@@ -310,6 +322,14 @@ function drawPop() {
     x.fillStyle = '#9fd0c4'; x.textAlign = 'right';
     x.fillText(`${name} ${(PLANE_SHARE[i] * 100).toFixed(PLANE_SHARE[i] < 0.01 ? 1 : 0)}%`, W - R, y - (lat > 1 ? 15 : -16));
   });
+  x.setLineDash([8, 6]); x.strokeStyle = '#8fb3d9'; x.lineWidth = 1.5; x.fillStyle = '#8fb3d9'; x.textAlign = 'left'; x.font = '400 20px Inter, system-ui, sans-serif';
+  REFS.forEach(([name, lat]) => {
+    const y = ty(lat), tx0 = L + pw * 0.64, tw = x.measureText(name).width;
+    x.beginPath(); x.moveTo(L, y); x.lineTo(W - R, y); x.stroke();
+    x.fillStyle = '#0b0f15'; x.fillRect(tx0 - 6, y - 12, tw + 12, 24);
+    x.fillStyle = '#8fb3d9'; x.textBaseline = 'middle'; x.fillText(name, tx0, y);
+  });
+  x.setLineDash([]);
   x.font = '400 20px Inter, system-ui, sans-serif'; x.fillStyle = 'rgba(232,236,241,.6)'; x.textAlign = 'left'; x.textBaseline = 'top';
   x.fillText('% = share of people nearest each plane', L, H - B + 18);
 }
@@ -589,8 +609,8 @@ function refresh() {   // anything that changes the geometry of the year
 toggle('bTilt', 'tilt', () => { bandDecl = null; yearImg = null; refresh(); });
 toggle('bPath', 'path');
 function showPlanes() {
-  planeGroup.visible = state.planes; $('bPlanes').setAttribute('aria-pressed', state.planes);
-  $('popPanel').hidden = !state.planes || atLisbon(); $('planeKey').hidden = !state.planes;
+  planeGroup.visible = state.planes; lisLabel.visible = !state.planes; $('bPlanes').setAttribute('aria-pressed', state.planes);
+  $('popPanel').hidden = !state.planes || atLisbon(); $('planeKey').hidden = $('refKey').hidden = !state.planes;
   if (state.planes) drawPop();
 }
 toggle('bPlanes', 'planes', showPlanes);

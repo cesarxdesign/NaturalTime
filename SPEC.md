@@ -191,6 +191,8 @@ Z has to be a calculation based on something real. Plan: find the planet's basel
 
 **Agreed (2026-11-16): one rule for both hemispheres.** Whatever is set north of the equator holds south of it too, mirrored: same latitude, same rule, seasons flipped. So southern data (Hadza, Tsimané, San) counts for the matching northern latitude.
 
+**Agreed (2026-11-16):** Austin and Milan are planes. Lisbon (where the user lives) and London (where he lived) are reference lines, not planes: they're there so the planes can be read against known places. The other 3 planes (about 0°, 15°, 60°) are still to be picked. Rule for picking: a city the user knows beats an exact latitude match. A few degrees off is fine, because a familiar place makes the data easier to judge.
+
 **5 reference planes, proposed (not agreed):** about 15° apart, from the equator to St Petersburg (59.9° N, the northernmost city of over a million). Shown on the globe ("Sleep planes", [Visualizations](Visualizations/README.md)).
 
 | Plane | Latitude | Gap to the next | Natural-light sleep data near it |
