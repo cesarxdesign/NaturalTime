@@ -85,7 +85,7 @@
     <div><i class="key fig"></i><span id="figLabel">Overhead sun at 12:00 UTC, every day of the year</span></div>
     <div><i class="key dot"></i>Lisbon, London</div>
     <div id="planeKey" hidden><i class="key plane"></i>Cities (sleep planes), northern half only: a line for one city, a band for a group; dots are the cities, southern ones mirrored north and named in brackets</div>
-    <div id="bandKey" hidden><i class="key" style="border-top-color:#e8ecf1;opacity:.7"></i>Light bands, northern half: each adds the same to the longest day as the tropics band (about 1h28); 7 and 8 are thin slivers under the Arctic Circle; above 65.7° the longest day is 24 h</div>
+    <div id="bandKey" hidden><i class="key" style="border-top-color:#e8ecf1;opacity:.7"></i>Reference bands the model is built on: E0 (23.4° S – 23.4° N), N2 (23.4–40.2°), N3 (40.2–50.7°); everything else is derived</div>
     <div id="popKey" hidden><i class="key" style="border-top-color:#cfd6e0"></i>Population by light band, north and south: share of the world's people and density (× world average, also the shade) (rough: each country's total spread by where its cities are; Natural Earth, about 2019)</div>
     <div id="refKey" hidden><i class="key eq" style="border-top-color:var(--blue)"></i>Reference: Lisbon, London</div>
     <div id="trailKey" hidden><i class="key fig"></i><span id="trailLabel"></span></div>
@@ -356,22 +356,18 @@ const BAND_EDGES = (() => {
   return e;
 })();
 const bandGroup = new THREE.Group(); tiltGroup.add(bandGroup);
+// The 3 reference bands the model is built on (SPEC: Reference bands): E0 = N1 + S1 (same light, mirrored), N2, N3.
+// Only these 3 are drawn; the rest of the globe is derived from them.
 {
-  const fills = [new THREE.MeshBasicMaterial({ color: 0xe8ecf1, transparent: true, opacity: 0.16, depthWrite: false }),
-                 new THREE.MeshBasicMaterial({ color: 0xe8ecf1, transparent: true, opacity: 0.05, depthWrite: false })];
-  const edgeMat = new THREE.LineBasicMaterial({ color: 0xe8ecf1, transparent: true, opacity: 0.6 });
-  const seg = (lo, hi, mat) => bandGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0105, 160, 16, 0, 2 * Math.PI, (90 - hi) * RAD, (hi - lo) * RAD), mat));
-  for (let i = 0; i < BAND_EDGES.length - 1; i++) {
-    const lo = BAND_EDGES[i], hi = BAND_EDGES[i + 1];
-    seg(lo, hi, fills[i % 2]);
-    bandGroup.add(line(parallel(hi, 1.011), edgeMat));
-    if (hi - lo >= 2) {   // too thin to label: bands 7 and 8
-      const lb = label(String(i + 1), '#e8ecf1', 0.08); lb.position.copy(ll((lo + hi) / 2, -112, 1.05)); bandGroup.add(lb);
-    }
-  }
-  const cap = BAND_EDGES[BAND_EDGES.length - 1];
-  seg(cap, 90, new THREE.MeshBasicMaterial({ color: 0x8fb3d9, transparent: true, opacity: 0.18, depthWrite: false }));
-  const lb = label("24 h", "#8fb3d9", 0.07); lb.position.copy(ll(78, -112, 1.05)); bandGroup.add(lb);
+  const e = BAND_EDGES;   // 0, 23.4, 40.2, 50.7, …
+  const mat = o => new THREE.MeshBasicMaterial({ color: 0xe8ecf1, transparent: true, opacity: o, depthWrite: false });
+  const seg = (lo, hi, o) => bandGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0105, 160, 16, 0, 2 * Math.PI, (90 - hi) * RAD, (hi - lo) * RAD), mat(o)));
+  const edgeMat = new THREE.LineBasicMaterial({ color: 0xe8ecf1, transparent: true, opacity: 0.7 });
+  const tag = (text, lat, col = '#e8ecf1') => { const lb = label(text, col, 0.08); lb.position.set(-Math.cos(lat * RAD) - 0.08 - lb.scale.x / 2, Math.sin(lat * RAD), 0); bandGroup.add(lb); };
+  seg(-e[1], e[1], 0.18); tag('E0', 0);                                   // equatorial band, both sides
+  seg(e[1], e[2], 0.08); tag('N2', (e[1] + e[2]) / 2);
+  seg(e[2], e[3], 0.18); tag('N3', (e[2] + e[3]) / 2);
+  for (const lat of [-e[1], e[1], e[2], e[3]]) bandGroup.add(line(parallel(lat, 1.011), edgeMat));
 }
 // ---- Population by light band, both halves. Millions per band (band 1 at the equator … the 24 h cap last).
 // Rough: Natural Earth country populations (about 2019, 7.68 billion) spread across bands by where each country's cities are.
