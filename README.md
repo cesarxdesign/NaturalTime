@@ -15,4 +15,6 @@ Live: https://cesarxdesign.github.io/NaturalTime/
 
 Full spec (what it takes into account, how and why, and what's still under discussion): [SPEC.md](SPEC.md)
 
+Story tally for a future folio page: [STORY.md](STORY.md)
+
 Models used to work the ideas out: [Visualizations](Visualizations/README.md), live at https://cesarxdesign.github.io/NaturalTime/Visualizations/globe.html
