@@ -28,9 +28,21 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 20. **Wake when the light comes.** Centring sleep on the night, as the Hadza do, had Lisbon up 1h12 before a November sunrise. Rule set instead: wake at sunrise, and longer nights only move bedtime earlier.
 
-21. **Two equal halves.** The Earth turns at a steady rate, so the morning is exactly as long as the afternoon. Keep both halves equal and pin the ends, and there's only one answer: sunrise 06:00, peak 12:00, sunset 18:00, every day, everywhere. Wake at sunrise becomes wake at 06:00 NT. Minutes stretch with the season instead (Lisbon: 47–74 s by day).
+21. **Two equal halves, and a wrong turn.** The Earth turns at a steady rate, so the morning is exactly as long as the afternoon. That looked like it forced sunrise 06:00, peak 12:00, sunset 18:00 (100% stretch), and it went live. Then the question that undid it: is the day 12 + 12 everywhere? Only at the equator. Equal halves only need sunrise and sunset the same distance from 12:00; pinning them to 06:00 and 18:00 is a separate choice.
 
 22. **The light ramp.** Waking at sunrise is fine where the light comes on fast. Where it creeps in (winter, the north), sleeping a little past sunrise beats sitting in dim light, and it lets winter's extra sleep come partly from the morning, not all from the evening.
+
+23. **Testing the stretch on real places.** Longest and shortest day, sun time and clock, in Singapore, Nairobi, Lisbon and Oslo:
+   - Singapore and Nairobi: 12h03–12h12 of day all year, so 06:00–18:00 is almost true. Put Singapore's clock on its natural zone and sunrise is 06:01, peak 12:03–12:07, sunset 18:04–18:12.
+   - Lisbon: 14h53 in June (sun time 04:34 → 19:26), 9h27 in December (07:16 → 16:44).
+   - Oslo: 18h50 in June (02:35 → 21:25, twilight all night), 5h54 in December (09:03 → 14:57).
+   - The deciding image: at 100%, Oslo's June sunset reads 18:00 when it's really 21:25. "We can't call 22h 18h... but they WILL have light." 100% reopened.
+   - Nobody gets 06:00 / 12:00 / 18:00 on the clock all year; even the equator has 12h07 of day (refraction), and the clock drifts ±16 min from the sun. Closest: Quito (14 Oct) and Mbandaka (25 Feb), each for about a day.
+24. **Bands of equal light.** One band = equator to the Tropic of Cancer (23.44°, the tilt); the polar cap is exactly one more. Equal-width bands: 3.84 to the pole. But light changes faster further north, so bands of equal light change (each adds the tropics' 1h28 to the longest day) shrink: 23.4°, 16.8°, 10.5°, 6.5°, 4.1°, 2.5°, 1.4°, 0.5°: 8 bands before the Arctic Circle. Total yearly daylight is about the same everywhere; what latitude changes is how it's spread across the seasons.
+25. **Reading the figure-8.** Its height is the tilt (seasons, ±23.44°, symmetric); its width is the clock drifting from the sun. The bottom loop is fat because Earth is closest and fastest in January; the crossing sits at 8.9° N, not on the equator, as a fingerprint of the oval orbit. NT erases the width: 12:00 is always peak sun, so the 8 collapses to a straight line on your own meridian.
+26. **Strength, not just length.** Distance gives January about 7% stronger sun; sun height matters far more (Lisbon noon light about twice as strong in June). At sunrise itself the light is about the same every day; 20 minutes later the season barely matters, but latitude does (the sun creeps sideways in Oslo). The real seasonal difference is later in the morning.
+27. **Ease in, ease out.** No animal runs at full speed at sunrise; the productive day trails the light (7–19 or 8–20 instead of 6–18). Nature has the same shift: peak heat trails peak sun by about 2–3 h, and the body's temperature peaks in the late afternoon. Not a fixed 2 h: it moves with season, latitude and coast.
+28. **Looking for the heat formula.** The best published rule found: Cesaraccio et al. 2001 (yes, nearly his name), peak heat 4 h before sunset, coldest at sunrise, built on 5 Californian weather stations. It moves with day length (equator 2h03 after peak sun; Lisbon 3h26 in June, 0h44 in December) but breaks on short days (Oslo in December would peak before noon). Other models (Parton & Logan) use a fixed lag tuned site by site. Nobody found adjusts the timing for latitude: a gap the project may have to fill with its own fit to measured data.
 
 ## Rejected or replaced
 
@@ -38,7 +50,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 - Day and night as two fixed halves: ignores the season.
 - Split (two-phase) sleep: left out.
 - Deepest sleep as the anchor: follows bedtime, not the clock.
-- 30% stretch, 22:00–06:00 sleep arc: picked without evidence. Stretch now settled at 100%; the arc is still a placeholder.
+- 30% stretch, 22:00–06:00 sleep arc: picked without evidence.
+- 100% stretch (sunrise always 06:00, sunset 18:00): agreed in a hurry, then reopened. It forces a 12 + 12 split that only the equator has; Oslo's 21:25 June sunset would read 18:00.
 - An 8 h sleep ceiling (Huberman's winter top): not natural; deep-winter sleep under natural light runs longer. The one place the user overruled Huberman.
 - Sleep centred on the night (1.1 h after lowest sun): woke people in the dark in winter. Replaced by wake at sunrise.
 - Stretch 30%: a placeholder with no reason. Stretch 0% (pure sun time): honest minutes, but sunrise wanders 04:34–07:16 NT in Lisbon.

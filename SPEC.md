@@ -61,7 +61,7 @@ Peak sun and lowest sun are the only markers that exist every day everywhere. Su
 Inside the day, NT stretches or shrinks its minutes with the season, while keeping 00:00 at lowest sun and 12:00 at peak sun.
 
 1. Work out today's daylight `D` in hours: sunrise to sunset, with the sun's centre 0.833° below the horizon (standard refraction).
-2. Blend it toward 12 hours by the stretch `k`: `D' = 12 + k × (D − 12)`, kept between 0.5 h and 23.5 h. **Agreed (2026-11-16): k = 100%**, so `D' = D`: sunrise is always 06:00 NT, peak sun 12:00, sunset 18:00. Reason: nature gives 2 equal halves either side of peak sun (the Earth turns at a steady rate, so the morning is exactly as long as the afternoon); the only way to keep both halves equal and pin sunrise and sunset is 06:00–12:00–18:00. It also puts the agreed wake (usually at sunrise) at 06:00 NT every day. The 0.5–23.5 h clamp is the existing fallback where the sun doesn't set or rise; the far-north rule is still open.
+2. Blend it toward 12 hours by the stretch `k`: `D' = 12 + k × (D − 12)`, kept between 0.5 h and 23.5 h. **Not agreed (reopened 2026-11-16).** Live code currently runs k = 100% (sunrise always 06:00 NT, sunset 18:00), set briefly as agreed and then reopened: equal halves only require sunrise and sunset the same distance from 12:00 (plain sun time does that too); pinning them to 06:00 and 18:00 forces a 12 + 12 split that only the equator has, and would show Oslo's 21:25 June sunset as 18:00. **Agreed:** peak sun is 12:00 with equal halves either side. The 0.5–23.5 h clamp is the existing fallback where the sun doesn't set or rise.
 3. Map the blended day onto NT 06:00–18:00 and the rest onto the night, in 4 straight pieces:
 
 | Sun time | NT |
@@ -269,7 +269,7 @@ Lisbon in NT: Portugal's 00:41 → 08:22 is 23:03 → 06:44 NT on 22 June and 00
 
 ### The seasonal stretch
 
-Settled 2026-11-16: 100% (see How NT is worked out). Options weighed: 0% (pure sun time: honest 60-second minutes, but sunrise wanders from 04:34 to 07:16 NT in Lisbon), 30% (placeholder with no reason, dropped), 100% (chosen). Still open: the rule where the sun doesn't set or rise.
+Reopened 2026-11-16 (live code still at 100% until decided). Options weighed: 0% (pure sun time: honest 60-second minutes, but sunrise wanders from 04:34 to 07:16 NT in Lisbon), 30% (placeholder with no reason, dropped), 100% (sunrise always 06:00; forces 12 + 12, hides real daylight far north). Inputs gathered since: the solstice table for Singapore, Nairobi, Lisbon and Oslo; equal-light latitude bands; the productive day trailing the light (7–19 or 8–20); peak heat trailing peak sun by a lag that moves with day length (Cesaraccio et al. 2001: peak heat 4 h before sunset, built on Californian data, breaks on short days; no published latitude formula found). See STORY.md 21–28.
 
 ## Open items
 
