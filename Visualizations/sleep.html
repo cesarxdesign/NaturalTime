@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sleep by City</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --space: #06080c; --panel: #0d1117; --ink: #e8ecf1; --dim: #8b95a4; --line: #243041;
+    --sun: #f2b33d; --blue: #8fb3d9; --twi: #3c5a80; --night: #0b0f15; --rule: #9fd0c4;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; --sans: Inter, -apple-system, system-ui, sans-serif;
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--space); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.45; }
+  main { max-width: 1180px; margin: 0 auto; padding: 20px max(16px, env(safe-area-inset-left, 0px)) 40px; display: grid; gap: 18px; }
+  main > * { min-width: 0; }
+  h1 { font-size: 20px; font-weight: 600; margin: 0; }
+  .sub { color: var(--dim); margin: 2px 0 0; max-width: 820px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .bar .lbl { color: var(--dim); font-size: 12px; margin-right: 4px; }
+  button { font: inherit; font-size: 13px; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+  button[aria-pressed="true"] { border-color: var(--rule); color: var(--rule); }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .grp { color: var(--dim); font-size: 11px; letter-spacing: .04em; margin: 0 2px 0 8px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  canvas { display: block; width: 100%; height: auto; touch-action: none; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; color: var(--dim); margin-top: 10px; }
+  .legend i { display: inline-block; width: 14px; height: 10px; border-radius: 2px; vertical-align: -1px; margin-right: 6px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 18px; margin-top: 12px; }
+  .stat span { display: block; font-size: 11px; color: var(--dim); letter-spacing: .04em; }
+  .stat b { font-family: var(--mono); font-weight: 400; font-size: 15px; font-variant-numeric: tabular-nums; }
+  .stat small { color: var(--dim); font-family: var(--mono); font-size: 12px; }
+  .tablewrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 6px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); }
+  th { color: var(--dim); font-weight: 500; font-size: 11px; letter-spacing: .03em; }
+  th:first-child, td:first-child { text-align: left; }
+  td { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  td:first-child { font-family: var(--sans); }
+  tr.sel td { color: var(--rule); }
+  tr { cursor: pointer; }
+  .na { color: var(--dim); }
+  .note { color: var(--dim); font-size: 12px; max-width: 900px; }
+  .note p { margin: 4px 0; }
+  input[type=range] { width: 100%; accent-color: var(--rule); }
+</style>
+
+<main>
+  <header>
+    <h1>Sleep by city</h1>
+    <p class="sub">Light, night length and sleep for the reference cities, every night of 2026. Times are local clock time and NT. NT here is pure sun time (lowest sun 00:00, peak sun 12:00), because the seasonal stretch isn't agreed yet. The "should" window is the proposed Z rule, not agreed.</p>
+  </header>
+
+  <div class="bar" id="cities"></div>
+
+  <section class="card">
+    <canvas id="year" width="1120" height="560" aria-label="The year for the selected city: day, twilight, night, the proposed sleep window and the observed one"></canvas>
+    <input type="range" id="day" min="0" max="364" value="0" aria-label="Day of the year">
+    <div class="legend">
+      <span><i style="background:var(--sun)"></i>Sun up</span>
+      <span><i style="background:var(--twi)"></i>Twilight (sun down to −12°)</span>
+      <span><i style="background:var(--night);border:1px solid var(--line)"></i>Dark</span>
+      <span><i style="background:rgba(159,208,196,.55)"></i>Should be in bed (proposed rule)</span>
+      <span><i style="border:2px dashed var(--blue);height:10px"></i>Observed bed to wake (data)</span>
+    </div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="card">
+    <div class="bar" style="margin-bottom:10px"><span class="lbl" id="tableTitle"></span></div>
+    <div class="tablewrap"><table id="table"></table></div>
+  </section>
+
+  <section class="note" id="notes"></section>
+</main>
+
+<script>
+const RAD = Math.PI / 180, DEG = 180 / Math.PI, DAY = 86400e3, YEAR0 = Date.UTC(2026, 0, 1);
+
+// ---- Cities: 5 agreed planes (groups) plus 2 reference lines
+const CITIES = [
+  { id: 'sin', name: 'Singapore', lat: 1.35, lon: 103.82, tz: 'Asia/Singapore', plane: '1' },
+  { id: 'nbo', name: 'Nairobi', lat: -1.29, lon: 36.82, tz: 'Africa/Nairobi', plane: '1' },
+  { id: 'jkt', name: 'Jakarta', lat: -6.21, lon: 106.85, tz: 'Asia/Jakarta', plane: '1' },
+  { id: 'bkk', name: 'Bangkok', lat: 13.76, lon: 100.50, tz: 'Asia/Bangkok', plane: '2' },
+  { id: 'hkg', name: 'Hong Kong', lat: 22.32, lon: 114.17, tz: 'Asia/Hong_Kong', plane: '2' },
+  { id: 'rio', name: 'Rio de Janeiro', lat: -22.91, lon: -43.17, tz: 'America/Sao_Paulo', plane: '2' },
+  { id: 'aus', name: 'Austin', lat: 30.27, lon: -97.74, tz: 'America/Chicago', plane: '3' },
+  { id: 'lis', name: 'Lisbon', lat: 38.72, lon: -9.14, tz: 'Europe/Lisbon', plane: 'ref' },
+  { id: 'mil', name: 'Milan', lat: 45.46, lon: 9.19, tz: 'Europe/Rome', plane: '4' },
+  { id: 'lon', name: 'London', lat: 51.51, lon: -0.13, tz: 'Europe/London', plane: 'ref' },
+  { id: 'cph', name: 'Copenhagen', lat: 55.68, lon: 12.57, tz: 'Europe/Copenhagen', plane: '5' },
+  { id: 'sto', name: 'Stockholm', lat: 59.33, lon: 18.07, tz: 'Europe/Stockholm', plane: '5' },
+  { id: 'osl', name: 'Oslo', lat: 59.91, lon: 10.75, tz: 'Europe/Oslo', plane: '5' },
+];
+
+// ---- Observed bed and wake times (local clock), filled from sourced data only. null = not found.
+// { bed: 'HH:MM', wake: 'HH:MM', what: 'which figure', src: 'short source' }
+const OBSERVED = {};
+
+// ---- Sun (NOAA solar calculator formulas)
+function sunAt(ms) {
+  const T = (ms / DAY + 2440587.5 - 2451545) / 36525;
+  const L0 = ((280.46646 + T * (36000.76983 + 0.0003032 * T)) % 360 + 360) % 360;
+  const M = (357.52911 + T * (35999.05029 - 0.0001537 * T)) * RAD;
+  const e = 0.016708634 - T * (0.000042037 + 0.0000001267 * T);
+  const C = Math.sin(M) * (1.914602 - T * (0.004817 + 0.000014 * T)) + Math.sin(2 * M) * (0.019993 - 0.000101 * T) + Math.sin(3 * M) * 0.000289;
+  const om = (125.04 - 1934.136 * T) * RAD;
+  const lambda = (L0 + C - 0.00569 - 0.00478 * Math.sin(om)) * RAD;
+  const eps0 = 23 + (26 + (21.448 - T * (46.815 + T * (0.00059 - T * 0.001813))) / 60) / 60;
+  const eps = (eps0 + 0.00256 * Math.cos(om)) * RAD;
+  const decl = Math.asin(Math.sin(eps) * Math.sin(lambda));
+  const y = Math.tan(eps / 2) ** 2, L = L0 * RAD;
+  const eot = 4 * DEG * (y * Math.sin(2 * L) - 2 * e * Math.sin(M) + 4 * e * y * Math.sin(M) * Math.cos(2 * L) - 0.5 * y * y * Math.sin(4 * L) - 1.25 * e * e * Math.sin(2 * M));
+  return { decl, eot };   // eot in minutes
+}
+// Half the time the sun spends above altitude h0, in hours (0 = never above, 12 = always above)
+function halfArc(lat, decl, h0) {
+  const p = lat * RAD, c = (Math.sin(h0 * RAD) - Math.sin(p) * Math.sin(decl)) / (Math.cos(p) * Math.cos(decl));
+  return c >= 1 ? 0 : c <= -1 ? 12 : Math.acos(c) * DEG / 15;
+}
+
+// ---- Proposed Z rule (SPEC.md, Under discussion; NOT agreed)
+// asleep S = 6.4 h + 0.56 × (night − 11.9 h), floor 6 h, ceiling 8 h (Huberman) or 9.9 h (Colorado);
+// Z (time in bed) = 15 min + S ÷ 0.83; centred 1.1 h after lowest sun (Hadza).
+const RULE = { base: 6.4, slope: 0.56, nightA: 11.9, floor: 6, latency: 0.25, eff: 0.83, centre: 1.1 };
+const state = { city: 'lis', day: Math.floor((Date.UTC(2026, 10, 16) - YEAR0) / DAY), ceil: 8 };
+function rule(night) {
+  const S = Math.max(RULE.floor, Math.min(state.ceil, RULE.base + RULE.slope * (night - RULE.nightA)));
+  const Z = RULE.latency + S / RULE.eff;
+  return { S, Z, bed: RULE.centre - Z / 2, wake: RULE.centre + Z / 2 };   // sun time, hours (bed may be negative = before midnight)
+}
+
+// Local clock offset from UTC (hours) on a given instant, from the browser's time-zone database
+const offCache = new Map();
+function tzOffset(tz, ms) {
+  const k = tz + Math.floor(ms / 3600e3);
+  if (offCache.has(k)) return offCache.get(k);
+  const parts = new Intl.DateTimeFormat('en-GB', { timeZone: tz, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).formatToParts(new Date(ms));
+  const g = t => +parts.find(p => p.type === t).value;
+  const asUTC = Date.UTC(g('year'), g('month') - 1, g('day'), g('hour'), g('minute'));
+  const off = Math.round((asUTC - Math.floor(ms / 60e3) * 60e3) / 60e3) / 60;
+  offCache.set(k, off); return off;
+}
+
+// One city, one day: everything in sun time (hours) plus the conversion to local clock
+function dayInfo(c, d) {
+  const noonUTC = YEAR0 + d * DAY + (12 - c.lon / 15) * 3600e3;
+  const { decl, eot } = sunAt(noonUTC);
+  const day = 2 * halfArc(c.lat, decl, -0.833), light = 2 * halfArc(c.lat, decl, -12);
+  const night = 24 - day;
+  // sun time → local clock: clock = sun − lon/15 − eot/60 + offset
+  const off = tzOffset(c.tz, noonUTC);
+  const toClock = h => h - c.lon / 15 - eot / 60 + off;
+  const fromClock = h => h + c.lon / 15 + eot / 60 - off;
+  return { decl, eot, day, light, night, off, toClock, fromClock, r: rule(night) };
+}
+
+// ---- Formatting
+const wrap = h => ((h % 24) + 24) % 24;
+const hm = h => { const m = Math.round(wrap(h) * 60) % 1440; return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; };
+const dur = h => `${Math.floor(h)}h${String(Math.round((h % 1) * 60) % 60).padStart(2, '0')}`;
+const parseHM = s => { const [a, b] = s.split(':').map(Number); return a + b / 60; };
+const dateOf = d => new Date(YEAR0 + d * DAY).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+const $ = id => document.getElementById(id);
+const city = () => CITIES.find(c => c.id === state.city);
+
+// ---- City buttons
+{
+  const bar = $('cities'); let lastPlane = null;
+  for (const c of CITIES) {
+    if (c.plane !== lastPlane) { const s = document.createElement('span'); s.className = 'grp'; s.textContent = c.plane === 'ref' ? 'REF' : 'PLANE ' + c.plane; bar.append(s); lastPlane = c.plane; }
+    const b = document.createElement('button'); b.textContent = c.name; b.dataset.id = c.id;
+    b.onclick = () => { state.city = c.id; draw(); }; bar.append(b);
+  }
+  const s = document.createElement('span'); s.className = 'grp'; s.textContent = 'CEILING'; bar.append(s);
+  for (const v of [8, 9.9]) {
+    const b = document.createElement('button'); b.textContent = `${v} h asleep`; b.dataset.ceil = v;
+    b.onclick = () => { state.ceil = v; draw(); }; bar.append(b);
+  }
+}
+
+// ---- Year chart: days across, sun time down from 12:00 through midnight to 12:00
+const cv = $('year'), X = cv.getContext('2d');
+const G = { L: 64, R: 16, T: 40, B: 34 };
+function draw() {
+  document.querySelectorAll('[data-id]').forEach(b => b.setAttribute('aria-pressed', b.dataset.id === state.city));
+  document.querySelectorAll('[data-ceil]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.ceil === state.ceil));
+  const c = city(), W = cv.width, H = cv.height, pw = W - G.L - G.R, ph = H - G.T - G.B;
+  const tx = d => G.L + d / 365 * pw;
+  const ty = h => G.T + wrap(h - 12) / 24 * ph;            // 12:00 at top, 00:00 in the middle
+  X.fillStyle = '#0b0f15'; X.fillRect(0, 0, W, H);
+  const days = [];
+  for (let d = 0; d < 365; d++) days.push(dayInfo(c, d));
+  // light: per day, per 10-minute row
+  const rows = 144;
+  days.forEach((D, d) => {
+    for (let r = 0; r < rows; r++) {
+      const h = 12 + (r + 0.5) * 24 / rows, dist = Math.abs(wrap(h) - 12);   // hours from peak sun
+      X.fillStyle = dist <= D.day / 2 ? '#f2b33d' : dist <= D.light / 2 ? '#3c5a80' : '#0b0f15';
+      X.fillRect(tx(d), G.T + r * ph / rows, pw / 365 + 0.6, ph / rows + 0.6);
+    }
+  });
+  // proposed sleep window
+  X.fillStyle = 'rgba(159,208,196,.55)';
+  days.forEach((D, d) => { const y0 = ty(D.r.bed), y1 = ty(D.r.wake); X.fillRect(tx(d), y0, pw / 365 + 0.6, y1 - y0); });
+  // observed bed → wake, converted from local clock to sun time each day (moves with DST and the equation of time)
+  const ob = OBSERVED[c.id];
+  if (ob) {
+    X.strokeStyle = '#8fb3d9'; X.lineWidth = 2; X.setLineDash([6, 5]);
+    for (const k of ['bed', 'wake']) {
+      X.beginPath();
+      days.forEach((D, d) => { const y = ty(D.fromClock(parseHM(ob[k]))), x0 = tx(d + 0.5); d ? X.lineTo(x0, y) : X.moveTo(x0, y); });
+      X.stroke();
+    }
+    X.setLineDash([]);
+  }
+  // axes
+  X.font = '400 15px "IBM Plex Mono", ui-monospace, monospace'; X.fillStyle = 'rgba(232,236,241,.65)'; X.textAlign = 'right'; X.textBaseline = 'middle';
+  for (const h of [12, 15, 18, 21, 0, 3, 6, 9]) {
+    const y = ty(h); X.fillText(hm(h), G.L - 8, y);
+    X.strokeStyle = 'rgba(232,236,241,.08)'; X.lineWidth = 1; X.beginPath(); X.moveTo(G.L, y); X.lineTo(W - G.R, y); X.stroke();
+  }
+  X.fillText('12:00', G.L - 8, G.T + ph);
+  X.textAlign = 'center'; X.textBaseline = 'top';
+  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].forEach((m, i) => X.fillText(m, tx((Date.UTC(2026, i, 15) - YEAR0) / DAY), H - G.B + 10));
+  X.font = '500 18px Inter, system-ui, sans-serif'; X.fillStyle = '#e8ecf1'; X.textAlign = 'left'; X.textBaseline = 'top';
+  X.fillText(`${c.name} · ${Math.abs(c.lat).toFixed(1)}° ${c.lat >= 0 ? 'N' : 'S'}`, G.L, 10);
+  X.font = '400 14px Inter, system-ui, sans-serif'; X.fillStyle = '#8b95a4'; X.textAlign = 'right';
+  X.fillText('NT (sun time) down the side', W - G.R, 13);
+  // selected day
+  const x = tx(state.day + 0.5);
+  X.strokeStyle = 'rgba(232,236,241,.9)'; X.lineWidth = 1.5; X.beginPath(); X.moveTo(x, G.T); X.lineTo(x, G.T + ph); X.stroke();
+  $('day').value = state.day;
+  stats(c, days[state.day]);
+  table();
+}
+
+function stats(c, D) {
+  const ob = OBSERVED[c.id];
+  const items = [
+    ['DATE', dateOf(state.day), ''],
+    ['SUNRISE · SUNSET (CLOCK)', `${hm(D.toClock(12 - D.day / 2))} · ${hm(D.toClock(12 + D.day / 2))}`, `NT ${hm(12 - D.day / 2)} · ${hm(12 + D.day / 2)}`],
+    ['DAY · NIGHT', `${dur(D.day)} · ${dur(D.night)}`, `clock is UTC${D.off >= 0 ? '+' : ''}${D.off}`],
+    ['SHOULD: BED → WAKE (CLOCK)', `${hm(D.toClock(D.r.bed))} → ${hm(D.toClock(D.r.wake))}`, `NT ${hm(D.r.bed)} → ${hm(D.r.wake)}`],
+    ['SHOULD: IN BED · ASLEEP', `${dur(D.r.Z)} · ${dur(D.r.S)}`, D.r.S <= RULE.floor ? 'on the 6 h floor' : D.r.S >= state.ceil ? 'on the ceiling' : ''],
+    ['OBSERVED: BED → WAKE (CLOCK)', ob ? `${ob.bed} → ${ob.wake}` : 'not found', ob ? `NT ${hm(D.fromClock(parseHM(ob.bed)))} → ${hm(D.fromClock(parseHM(ob.wake)))}` : ''],
+  ];
+  $('stats').innerHTML = items.map(([a, b, s]) => `<div class="stat"><span>${a}</span><b>${b}</b><br><small>${s}</small></div>`).join('');
+}
+
+function table() {
+  $('tableTitle').textContent = `All cities on ${dateOf(state.day)} · click a row to open its year`;
+  const head = '<tr><th>City</th><th>Day</th><th>Night</th><th>Sunrise clock</th><th>Sunset clock</th><th>Should bed clock</th><th>Should wake clock</th><th>Should bed NT</th><th>Should wake NT</th><th>In bed</th><th>Asleep</th><th>Observed bed → wake</th><th>Observed in NT</th></tr>';
+  const body = CITIES.map(c => {
+    const D = dayInfo(c, state.day), ob = OBSERVED[c.id];
+    return `<tr data-row="${c.id}" class="${c.id === state.city ? 'sel' : ''}"><td>${c.name}</td><td>${dur(D.day)}</td><td>${dur(D.night)}</td>
+      <td>${hm(D.toClock(12 - D.day / 2))}</td><td>${hm(D.toClock(12 + D.day / 2))}</td>
+      <td>${hm(D.toClock(D.r.bed))}</td><td>${hm(D.toClock(D.r.wake))}</td><td>${hm(D.r.bed)}</td><td>${hm(D.r.wake)}</td>
+      <td>${dur(D.r.Z)}</td><td>${dur(D.r.S)}</td>
+      <td class="${ob ? '' : 'na'}">${ob ? `${ob.bed} → ${ob.wake}` : 'not found'}</td>
+      <td class="${ob ? '' : 'na'}">${ob ? `${hm(D.fromClock(parseHM(ob.bed)))} → ${hm(D.fromClock(parseHM(ob.wake)))}` : ''}</td></tr>`;
+  }).join('');
+  $('table').innerHTML = head + body;
+  document.querySelectorAll('[data-row]').forEach(r => r.onclick = () => { state.city = r.dataset.row; draw(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+}
+
+function notes() {
+  const src = CITIES.filter(c => OBSERVED[c.id]).map(c => `<p><b>${c.name}:</b> ${OBSERVED[c.id].what}. ${OBSERVED[c.id].src}</p>`).join('');
+  $('notes').innerHTML = `
+    <p><b>Should (proposed rule, not agreed):</b> asleep = 6.4 h + 0.56 × (night − 11.9 h), never under 6 h, capped at the chosen ceiling; in bed = 15 min to fall asleep + asleep ÷ 0.83; the window is centred 1.1 h after lowest sun (NT 01:06), as the Hadza sleep.</p>
+    <p><b>NT</b> here is sun time: 00:00 at lowest sun, 12:00 at peak sun, minutes 60 s long. With the seasonal stretch, NT readings between those anchors would shift; the stretch isn't agreed yet.</p>
+    <p><b>Clock</b> times use each city's own time zone, daylight saving included (the browser's time-zone database). Night is sunset to sunrise (sun's centre 0.833° below the horizon); twilight runs to −12°.</p>
+    ${src ? '<p><b>Observed data</b> (one figure for the whole year unless stated):</p>' + src : '<p><b>Observed data:</b> being sourced.</p>'}`;
+}
+
+// ---- Interaction: drag on the chart or the slider to pick a day
+$('day').addEventListener('input', e => { state.day = +e.target.value; draw(); });
+function pick(e) {
+  const r = cv.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * cv.width;
+  state.day = Math.max(0, Math.min(364, Math.floor((x - G.L) / (cv.width - G.L - G.R) * 365))); draw();
+}
+let down = false;
+cv.addEventListener('pointerdown', e => { down = true; cv.setPointerCapture(e.pointerId); pick(e); });
+cv.addEventListener('pointermove', e => down && pick(e));
+cv.addEventListener('pointerup', () => down = false);
+{ const q = new URLSearchParams(location.search); if (CITIES.some(c => c.id === q.get('city'))) state.city = q.get('city'); if (q.get('day')) state.day = Math.max(0, Math.min(364, +q.get('day'))); }
+draw(); notes();
+</script>

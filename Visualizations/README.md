@@ -71,3 +71,13 @@ The date, the latitude where the sun is overhead (declination), Earth–sun dist
 - No place on Earth keeps the same day length, sun height or temperature all year. The equator comes closest: about 12h07 of daylight every day. Geometry fixes it near 12h; the extra minutes come from refraction, which adds about 7 minutes everywhere.
 - Peak sun and lowest sun (the sun crossing your meridian) are the only markers that happen every day everywhere. That's why NT anchors 12:00 and 00:00 on them.
 - The hottest belt (the thermal equator) is not the overhead band: it bends with land and sea. Not drawn.
+
+## sleep.html: sleep by city
+
+Every night of 2026 for the 13 reference cities (the 5 planes' cities plus Lisbon and London). Pick a city; drag across the chart or the slider to pick a day. `?city=lis&day=319` opens a city and day (city ids: sin, nbo, jkt, bkk, hkg, rio, aus, lis, mil, lon, cph, sto, osl; day 0 = 1 Jan).
+
+- **Year chart:** days across; NT down the side from 12:00 through 00:00 to 12:00, so the night sits in the middle. Painted sun up (amber), twilight to −12° (blue) and dark.
+- **Should (green):** the proposed Z rule (SPEC.md, not agreed): asleep = 6.4 h + 0.56 × (night − 11.9 h), floor 6 h, ceiling 8 h or 9.9 h (buttons); in bed = 15 min + asleep ÷ 0.83; centred 1.1 h after lowest sun.
+- **Observed (dashed blue):** typical bed and wake times from published data, converted from the local clock to NT for every day, so they wander with daylight saving and the equation of time. "Not found" where no sourced figure exists.
+- **Readouts and table:** sunrise and sunset on the local clock and in NT, day and night length, should bed and wake (clock and NT), time in bed and asleep, observed times, for the chosen city and for all 13 on the chosen day.
+- **NT** on this page is pure sun time (lowest sun 00:00, peak sun 12:00, 60-second minutes): the seasonal stretch isn't agreed. Clock times use each city's time zone with daylight saving.

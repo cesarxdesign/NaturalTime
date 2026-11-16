@@ -51,6 +51,7 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 - The watch face (index.html): NT/AT, day bars, seconds dots, icons.
 - Globe (Visualizations/globe.html): the 4 views, the year-in-2-s trail, the imprint figure-8 over Lisbon, the "Lisbon, the year" chart of sun, twilight and dark; the 5 sleep planes with the people-by-latitude chart.
+- Sleep by city (Visualizations/sleep.html): every night of the year for 13 cities, light, the proposed sleep window and observed bed and wake times, on the clock and in NT.
 
 ## Open
 
