@@ -22,6 +22,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 16. **The baseline has data.** The Hadza, 3.7° S, under natural light: 12.1 h nights, 6.3 h of sleep, asleep 3.4 h after sunset, awake 1 h before sunrise, no seasons. Further from the equator sleep grows in winter (Tsimané +56 min, San +53 min), always ending near the day's coldest point.
 17. **Sleep counted as time in bed.** Studies report time asleep; the watch needs time in bed. Z = time to fall asleep (about 15 min, 169 lab studies) + sleep period (time asleep ÷ efficiency, 83% in the traditional groups and 86% in the labs). Huberman sets no target, only a limit: up after 20–25 min awake. Agreed: 15 min to fall asleep.
 
+18. **The data and Huberman meet.** Natural-light groups gain about 0.56 h of sleep per extra hour of night. Huberman's 6 h summer, 8 h winter, at Austin's latitude, works out at 0.51. One rule proposed for the planet: 6.4 h at the equator, plus 0.56 × the extra night, never under 6 h.
+
 ## Rejected or replaced
 
 - Sunrise as the anchor: doesn't exist every day far north.
