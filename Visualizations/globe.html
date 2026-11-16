@@ -494,7 +494,7 @@ function buildSwing(step) {
       if (!hollow) g.add(new THREE.Mesh(new THREE.SphereGeometry(1.0105, 160, 8, 0, 2 * Math.PI, a * RAD, (hi - lo) * RAD),
         new THREE.MeshBasicMaterial({ color: cap ? 0x8fb3d9 : 0xe8ecf1, transparent: true, opacity: cap ? 0.18 : i % 2 ? 0.05 : 0.16, depthWrite: false })));
       if (!cap) g.add(line(parallel(sgn * hi, 1.011), edgeMat));
-      if (hi - lo >= 2.5) {
+      if (hi - lo >= 2.5 && !hollow) {   // hollow bands carry no label
         const mid = cap ? lo + 8 : (lo + hi) / 2, lb = label(`${name} ${pc}`, cap ? '#8fb3d9' : '#e8ecf1', 0.07);
         lb.position.set(-Math.cos(mid * RAD) - 0.08 - lb.scale.x / 2, sgn * Math.sin(mid * RAD), 0); g.add(lb);
       }
