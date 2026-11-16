@@ -171,6 +171,24 @@ Open questions:
 3. **Temperature:** heat shortens sleep and cold lengthens it; the size of the effect needs data.
 4. **Where Z sits:** the evidence puts the body's night (melatonin midpoint) at the middle of the solar night, i.e. lowest sun, NT 00:00. Options: around a "peak sleep" point, stretched both ways like NT stretches from peak sun, or ending at the coldest point of the night with Z counted backwards. This also settles the 2-hour offset between lowest sun and the middle of sleep that the placeholder uses.
 
+### Latitude model: a baseline, then the change with latitude
+
+Z has to be a calculation based on something real. Plan: find the planet's baseline (A), then how sleep changes moving away from it, fitted through real reference places: Lisbon (B, the first user), Austin (Huberman's reference), then Sweden (C) and a place with almost no winter sun (D). Where the sun barely rises, people will have to wake before sunrise; the model must allow for that.
+
+**Baseline: the equator.** Day length is 12h07 every day of the year (refraction included), so neither the light nor Z needs to flex. Nearest population with natural-light sleep data: the Hadza, Tanzania, 3.5° S.
+
+| Place | Latitude | Shortest day | Longest day | Day-length flex | Full dark (sun below −12°) at midsummer |
+|---|---|---|---|---|---|
+| Equator (A) | 0° | 12h07 | 12h07 | 0 | 10h15 |
+| Hadza, Tanzania | 3.5° S | 11h55 | 12h19 | 0h24 | 10h02 |
+| Austin (Huberman) | 30.3° N | 10h11 | 14h06 | 3h55 | 7h52 |
+| Lisbon (B) | 38.7° N | 9h27 | 14h53 | 5h26 | 6h43 |
+| Boulder, Colorado (studies) | 40.0° N | 9h19 | 15h01 | 5h41 | 6h30 |
+| Stockholm (C) | 59.3° N | 6h05 | 18h37 | 12h32 | none |
+| Tromsø (D) | 69.7° N | none (polar night) | 24 h (midnight sun) | 24 h | none |
+
+Real natural-light sleep data exists near A (Hadza, San, Tsimané) and at B's latitude (Colorado). Not yet for Austin, C or D under natural light; Tromsø data is under electric light.
+
 ### The seasonal stretch
 
 How far NT pulls sunrise and sunset toward 06:00 and 18:00. Live code runs 30%, a placeholder chosen without agreement. Options on the table: 0% (pure sun time), 100% (sunrise always 06:00, sunset always 18:00, with a fallback where the sun doesn't set or rise), or a value with a reason behind it.
