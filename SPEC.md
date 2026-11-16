@@ -189,6 +189,20 @@ Z has to be a calculation based on something real. Plan: find the planet's basel
 | Stockholm (C) | 59.3° N | 6h05 | 18h37 | 12h32 | none |
 | Tromsø (D) | 69.7° N | none (polar night) | 24 h (midnight sun) | 24 h | none |
 
+Natural-light sleep by latitude (Yetish et al. 2015, Table S2; Wright et al. 2013; Stothard et al. 2017). "Night" is sunset to sunrise. "Sleep" is time actually asleep (actigraphy), not time in bed: the 3 traditional groups were asleep about 83% of the time between falling asleep and waking.
+
+| Group | Latitude | Season | Night | Sleep |
+|---|---|---|---|---|
+| Hadza | 3.7° S | one week, May (no seasons at the equator) | 12.1 h | 6.3 h; fell asleep 3.4 h after sunset, woke 1 h before sunrise |
+| Tsimané | 14.9° S | winter / summer | 12.4 h / 11.1 h | 6.6 h / 5.7 h (56 min more in winter) |
+| San | 19.8° S | winter / summer | 12.9 h / 11.0 h | 7.1 h / 6.2 h (53 min more in winter); in summer woke 1 h after sunrise, with the day's coldest point |
+| Colorado campers | 40° N | summer / winter | about 9.3 h / about 14.7 h | 6.8 h / 9.9 h |
+
+- In all 3 traditional groups sleep began while the air was cooling and ended near the day's coldest point.
+- Ratio of sleep change to night change: Tsimané about 0.7, San about 0.45, Colorado about 0.56.
+- Doesn't line up on one straight line from the equator: Colorado's summer sleep (6.8 h, 9.3 h night) is about the Hadza's (6.3 h, 12.1 h night), and Colorado's winter sleep is far longer. Possible reasons: modern sleepers catching up, different sleep scoring, or sleep shrinking less in short nights than it grows in long ones. Not settled.
+- To decide: Z on the watch should be time in bed (Zs to Ze), which is longer than time asleep.
+
 Real natural-light sleep data exists near A (Hadza, San, Tsimané) and at B's latitude (Colorado). Not yet for Austin, C or D under natural light; Tromsø data is under electric light.
 
 ### The seasonal stretch
