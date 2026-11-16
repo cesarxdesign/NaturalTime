@@ -43,7 +43,7 @@
   .clock.small .t { font-size: 11cqi; color: var(--dim); }
   .clock.small .dots { display: none; }
 
-  .clock.big { order: 1; flex: 1; flex-direction: column; justify-content: center; gap: 5cqi; }
+  .clock.big { order: 1; flex: 1; flex-direction: column; justify-content: center; gap: 5cqi; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; }
   .clock.big .icon { width: 20cqi; height: 20cqi; }
   .clock.big .t { font-size: 27cqi; }
   .clock.big .dots { width: 80cqi; margin-top: -1cqi; }
@@ -261,6 +261,11 @@ const $ = id => document.getElementById(id);
 for (const id of ['ntD', 'atD'])
   $(id).innerHTML = Array.from({ length: 60 }, (_, i) => `<circle cx="${1 + i * 2}" cy="1" r=".7"/>`).join('');
 const lastSec = {};
+let flipped = false, lastAuto = null;
+for (const id of ['nt', 'at']) $(id).addEventListener('click', () => {
+  if (!$(id).classList.contains('big')) return;
+  flipped = !flipped; render();
+});
 function setDots(id, sec) {
   if (lastSec[id] === sec) return;
   lastSec[id] = sec;
@@ -278,8 +283,12 @@ function render() {
   const weekday = at.getDay() >= 1 && at.getDay() <= 5;
   const inWork = weekday && atMin >= 480 && atMin < 1080;
   const swap = weekday && ((atMin >= 475 && atMin < 480) || (atMin >= 1075 && atMin < 1080));
-  $('nt').className = 'clock ' + (swap ? 'equal' : inWork ? 'small' : 'big');
-  $('at').className = 'clock ' + (swap ? 'equal' : inWork ? 'big' : 'small');
+  // A tap on the big clock flips them until the next scheduled switch
+  const auto = swap ? 'equal' : inWork ? 'at' : 'nt';
+  if (auto !== lastAuto) { flipped = false; lastAuto = auto; }
+  const bigOne = auto === 'equal' ? 'equal' : flipped ? (auto === 'at' ? 'nt' : 'at') : auto;
+  $('nt').className = 'clock ' + (bigOne === 'equal' ? 'equal' : bigOne === 'nt' ? 'big' : 'small');
+  $('at').className = 'clock ' + (bigOne === 'equal' ? 'equal' : bigOne === 'at' ? 'big' : 'small');
 
   const [nh, nm, ns] = hms(nt);
   $('ntT').textContent = `${pad(nh)}:${pad(nm)}`; setDots('ntD', ns);
