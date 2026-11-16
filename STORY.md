@@ -50,6 +50,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 30. **Not fixing Oslo.** "We're NOT going to fix Oslo, ever." People there still sleep about 8 h; they live with the extremes (sunlit 3 am summers, 6-hour winter days). So the flex keeps growing with the light but flattens, log-like: full near the equator, pronounced by Oslo, like the bands going from fat to a line. Designed for livable latitudes (about London, maybe Copenhagen); the curve carries on beyond them, gently.
 
+31. **Geometry is the only clean signal.** Temperature and rain follow the sun only roughly, and people have bent them too: fewer trees mean less rain and longer dry seasons, cities hold heat, and electric light and clocks shift sleep. The sun's position is the one input nobody has moved, which is why NT anchors on it and treats climate as a correction.
+
 ## Rejected or replaced
 
 - Sunrise as the anchor: doesn't exist every day far north.
