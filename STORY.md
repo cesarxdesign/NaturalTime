@@ -59,6 +59,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 34. **The tropics in three.** E0 (N1 + S1 merged) turned out not to be one thing: no seasons at the equator, but about an hour of winter sleep at its edges (Tsimané, San). Split by equal light change: E0 (±8.3°, the Hadza, no flex), N1 and S1 (8.3–23.4°, mirrors, about 1 h of flex). The middle comes out slightly wider, as the equal-light rule predicts.
 35. **One hour at a time.** Bands where each step adds an hour to the seasonal swing. The first step, equator to 8.6°, lands next to the figure-8's crossing (8.9°): two different causes, nearly the same line.
 
+36. **W, S, R.** Work is 8 h, fixed. Sleep flexes with the season around 8 h. Rest is the remainder: 24 − W − S. The season lands on rest and sleep, never on work: summer gives longer evenings, winter longer nights.
+
 ## Rejected or replaced
 
 - Sunrise as the anchor: doesn't exist every day far north.

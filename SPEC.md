@@ -261,6 +261,14 @@ With wake at sunrise (AT): 16 Nov bed 21:59, wake 07:20; 22 Jun bed 22:44, wake 
 
 Conflict: Colorado measured 9.9 h asleep in winter at 40° N; this rule gives about 8 h there. Huberman favored; Colorado's week-long campers may have been catching up on sleep.
 
+### The day in 3 parts: W, S, R (agreed 2026-11-16)
+
+- **W, work:** 8 h, the same every day of the year, everywhere.
+- **S, sleep:** about 8 h on average across the year and the globe, a bit more in winter and less in summer (the Z rule: time in bed).
+- **R, rest:** recreation, relaxing, recovering, eating, training, people: whatever is left, R = 24 − W − S.
+
+So R absorbs the season: long summer days give more R, long winter nights give more S and less R. With the proposed Z figures (equator-group baseline): equator S 7.9 h, R 8.1 h all year; Lisbon S 7.5 h / R 8.5 h in June, S 9.75 h / R 6.25 h in December.
+
 ### Working bands: 1 h swing steps (agreed 2026-11-16, for now)
 
 Work continues on bands where each step adds 1 h to the gap between the longest and shortest day, N1, N2… and S1, S2… outward from the equator, up to the 24 h cap at 65.7°. Edges (north, mirrored south): 8.6°, 16.8°, 24.2°, 30.8°, 36.5°, 41.4°, 45.6°, 49.1°, 52.0°, 54.5°, 56.7°, 58.5°, 60.0°… Reason: the first step (equator to 8.6°) lands close to where the figure-8 crosses itself (8.9° N). The two come from different causes (day-length swing vs the oval orbit), so the match is close, not exact. These replace the earlier reference bands below while this work runs; on the globe: "1 h bands".
