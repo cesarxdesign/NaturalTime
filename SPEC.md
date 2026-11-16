@@ -201,7 +201,7 @@ Natural-light sleep by latitude (Yetish et al. 2015, Table S2; Wright et al. 201
 - In all 3 traditional groups sleep began while the air was cooling and ended near the day's coldest point.
 - Ratio of sleep change to night change: Tsimané about 0.7, San about 0.45, Colorado about 0.56.
 - Doesn't line up on one straight line from the equator: Colorado's summer sleep (6.8 h, 9.3 h night) is about the Hadza's (6.3 h, 12.1 h night), and Colorado's winter sleep is far longer. Possible reasons: modern sleepers catching up, different sleep scoring, or sleep shrinking less in short nights than it grows in long ones. Not settled.
-- To decide: Z on the watch should be time in bed (Zs to Ze), which is longer than time asleep.
+- **Agreed: Z is time in bed.** Zs is going to bed. Then a short delay before falling asleep (sleep latency). Then the sleep period: falling asleep to final waking, including brief wakings during the night. Ze is waking, and getting up follows almost at once. So **Z = latency + sleep period**, and the studies' "sleep" figures have to be converted up: sleep period = time asleep ÷ sleep efficiency (about 83% in the traditional groups, so Hadza 6.3 h asleep ≈ 7.6 h sleep period). Latency still needs a sourced figure (normal adult values: Boulos et al. 2019 meta-analysis of 169 studies; Huberman's take not found yet).
 
 Real natural-light sleep data exists near A (Hadza, San, Tsimané) and at B's latitude (Colorado). Not yet for Austin, C or D under natural light; Tromsø data is under electric light.
 
