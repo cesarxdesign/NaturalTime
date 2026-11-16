@@ -85,6 +85,7 @@
     <div><i class="key dot"></i>Lisbon, London</div>
     <div id="planeKey" hidden><i class="key plane"></i>Cities (sleep planes), northern half only: a line for one city, a band for a group; dots are the cities, southern ones mirrored north and named in brackets</div>
     <div id="bandKey" hidden><i class="key" style="border-top-color:#e8ecf1;opacity:.7"></i>Light bands, northern half: each adds the same to the longest day as the tropics band (about 1h28); 7 and 8 are thin slivers under the Arctic Circle; above 65.7° the longest day is 24 h</div>
+    <div id="popKey" hidden><i class="key" style="border-top-color:#cfd6e0"></i>Population by light band, north and south: share of the world's people (rough: each country's total spread by where its cities are; Natural Earth, about 2019)</div>
     <div id="refKey" hidden><i class="key eq" style="border-top-color:var(--blue)"></i>Reference: Lisbon, London</div>
     <div id="trailKey" hidden><i class="key fig"></i><span id="trailLabel"></span></div>
   </div>
@@ -114,6 +115,7 @@
       <button id="bPath" aria-pressed="true">Year path</button>
       <button id="bPlanes" aria-pressed="false">Cities</button>
       <button id="bBands" aria-pressed="false">Bands</button>
+      <button id="bPop" aria-pressed="false">Population</button>
       <span class="sep"></span>
       <button data-time="pause" aria-pressed="false">Pause</button>
       <button data-time="day" aria-pressed="true">Day</button>
@@ -160,7 +162,7 @@ function sunAt(ms) {
 
 // ---- State
 const VIEWS = ['axis', 'spin', 'around', 'lisbon', 'orbit'];
-const state = { planes: new URLSearchParams(location.search).get('planes') === '1', bands: new URLSearchParams(location.search).get('bands') === '1', ms: Math.min(Math.max(Date.now(), YEAR0), YEAR1 - 1), tilt: true, path: true, time: 'day', yearPos: 0,
+const state = { planes: new URLSearchParams(location.search).get('planes') === '1', bands: new URLSearchParams(location.search).get('bands') === '1', pop: new URLSearchParams(location.search).get('pop') === '1', ms: Math.min(Math.max(Date.now(), YEAR0), YEAR1 - 1), tilt: true, path: true, time: 'day', yearPos: 0,
   view: VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'spin' };
 { const t = Date.parse(new URLSearchParams(location.search).get('t') || ''); if (t >= YEAR0 && t < YEAR1) state.ms = t; }   // ?t=2026-06-21T12:36Z
 const atLisbon = () => state.view === 'around' || state.view === 'lisbon';   // Earth held still, Lisbon facing you
@@ -368,6 +370,30 @@ const bandGroup = new THREE.Group(); tiltGroup.add(bandGroup);
   const cap = BAND_EDGES[BAND_EDGES.length - 1];
   seg(cap, 90, new THREE.MeshBasicMaterial({ color: 0x8fb3d9, transparent: true, opacity: 0.18, depthWrite: false }));
   const lb = label("24 h", "#8fb3d9", 0.07); lb.position.copy(ll(78, -112, 1.05)); bandGroup.add(lb);
+}
+// ---- Population by light band, both halves. Millions per band (band 1 at the equator … the 24 h cap last).
+// Rough: Natural Earth country populations (about 2019, 7.68 billion) spread across bands by where each country's cities are.
+const BAND_POP = { N: [2580.8, 2846.7, 868.6, 291.3, 40.1, 4.9, 2.8, 0.3, 3.3], S: [792.8, 241.2, 3.6, 0.5, 0, 0, 0, 0, 0] };
+const popGroup = new THREE.Group(); tiltGroup.add(popGroup);
+{
+  const total = [...BAND_POP.N, ...BAND_POP.S].reduce((a, b) => a + b, 0), max = Math.max(...BAND_POP.N, ...BAND_POP.S);
+  const pct = v => { const p = 100 * v / total; return p >= 1 ? p.toFixed(1) + '%' : p >= 0.01 ? p.toPrecision(1) + '%' : v > 0 ? '<0.01%' : '0%'; };
+  const edgeMat = new THREE.LineBasicMaterial({ color: 0xcfd6e0, transparent: true, opacity: 0.5 });
+  const edges = [...BAND_EDGES, 90];   // 8 bands + the 24 h cap
+  for (const [h, sgn] of [['N', 1], ['S', -1]]) {
+    for (let i = 0; i < edges.length - 1; i++) {
+      const lo = edges[i], hi = edges[i + 1], v = BAND_POP[h][i];
+      const a = sgn > 0 ? 90 - hi : 90 + lo;   // polar angle from the north pole
+      popGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0115, 160, 16, 0, 2 * Math.PI, a * RAD, (hi - lo) * RAD),
+        new THREE.MeshBasicMaterial({ color: 0xcfd6e0, transparent: true, opacity: 0.03 + 0.45 * Math.sqrt(v / max), depthWrite: false })));
+      if (hi < 90) popGroup.add(line(parallel(sgn * hi, 1.012), edgeMat));
+      if (hi - lo >= 2) {   // bands 7 and 8 are too thin to label
+        const mid = (lo + hi) / 2, lb = label(`${h}${i + 1 === edges.length - 1 ? ' cap' : i + 1} ${pct(v)}`, '#e8ecf1', 0.08);
+        const stagger = mid > 50 && i % 2 ? 0.4 : 0;   // crowded near the poles: push every other label out
+        lb.position.set(-Math.cos(mid * RAD) - 0.08 - stagger - lb.scale.x / 2, sgn * Math.sin(mid * RAD), 0); popGroup.add(lb);   // outside the left edge
+      }
+    }
+  }
 }
 // Reference lines (not planes): places the user knows, so the planes can be read against them
 const REFS = [['Lisbon', 38.72], ['London', 51.51]];
@@ -735,6 +761,8 @@ function showPlanes() {
 toggle('bPlanes', 'planes', showPlanes);
 function showBands() { bandGroup.visible = state.bands; $('bBands').setAttribute('aria-pressed', state.bands); $('bandKey').hidden = !state.bands; }
 toggle('bBands', 'bands', showBands); showBands();
+function showPop() { popGroup.visible = state.pop; $('bPop').setAttribute('aria-pressed', state.pop); $('popKey').hidden = !state.pop; }
+toggle('bPop', 'pop', showPop); showPop();
 function setTime(m) {
   state.time = m;
   document.querySelectorAll('[data-time]').forEach(b => b.setAttribute('aria-pressed', b.dataset.time === m));
