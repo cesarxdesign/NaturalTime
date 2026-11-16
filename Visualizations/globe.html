@@ -494,7 +494,15 @@ function buildSwing(step) {
       if (!hollow) g.add(new THREE.Mesh(new THREE.SphereGeometry(1.0105, 160, 8, 0, 2 * Math.PI, a * RAD, (hi - lo) * RAD),
         new THREE.MeshBasicMaterial({ color: cap ? 0x8fb3d9 : 0xe8ecf1, transparent: true, opacity: cap ? 0.18 : i % 2 ? 0.05 : 0.16, depthWrite: false })));
       if (!cap) g.add(line(parallel(sgn * hi, 1.011), edgeMat));
-      if (hi - lo >= 2.5 && !hollow) {   // hollow bands carry no label
+      if (step === 1 && h === 'N' && i <= 8) {
+        // 1 h set, north: N9 sits level with N9's top edge, N8…N1 evenly spaced below it down to N1's middle;
+        // a thin leader runs from each label to its band at the globe's edge
+        const yTop = Math.sin(e[9] * RAD), yBot = Math.sin((e[0] + e[1]) / 2 * RAD), y = yBot + (yTop - yBot) * i / 8;
+        const mid = (lo + hi) / 2, lb = label(`${name} ${pc}`, '#e8ecf1', 0.062), edgeX = -Math.cos(mid * RAD) * 1.012;
+        const x = Math.min(-Math.sqrt(Math.max(0, 1 - y * y)), edgeX) - 0.12;
+        lb.position.set(x - lb.scale.x / 2, y, 0); g.add(lb);
+        g.add(line([new THREE.Vector3(x + 0.02, y, 0), new THREE.Vector3(edgeX, Math.sin(mid * RAD), 0)], new THREE.LineBasicMaterial({ color: 0xe8ecf1, transparent: true, opacity: 0.45 })));
+      } else if (hi - lo >= 2.5 && !hollow) {   // hollow bands carry no label
         const mid = cap ? lo + 8 : (lo + hi) / 2, lb = label(`${name} ${pc}`, cap ? '#8fb3d9' : '#e8ecf1', 0.07);
         lb.position.set(-Math.cos(mid * RAD) - 0.08 - lb.scale.x / 2, sgn * Math.sin(mid * RAD), 0); g.add(lb);
       }
