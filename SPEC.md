@@ -267,7 +267,7 @@ The model is built on these bands and derives everything else. The tropics are s
 
 | Band | Latitude | Share of people | Biggest cities | Natural-light sleep data |
 |---|---|---|---|---|
-| E0 | 8.3° S – 8.3° N | 12.8% | Lagos, Jakarta, Kinshasa, Bogotá (also Singapore, Nairobi) | Hadza 3.7° S: no seasonal flex |
+| E0 (day within ±30 min of 12 h, all year) | 8.3° S – 8.3° N | 12.8% | Lagos, Jakarta, Kinshasa, Bogotá (also Singapore, Nairobi) | Hadza 3.7° S: no seasonal flex |
 | N1 / S1 (mirrors) | 8.3–23.4° | 27.1% / 4.0% | Mexico City, Mumbai, Kolkata, Manila / Rio, Lima, Belo Horizonte | Tsimané 14.9° S, San 19.8° S: about 1 h more in winter |
 | N2 | 23.4–40.2° | 37.1% | Tokyo, Delhi, Shanghai, Dhaka (and Austin, Lisbon) | Colorado 40.0° N (top edge) |
 | N3 | 40.2–50.7° | 11.3% | New York, Istanbul, Paris (and Milan) | none yet |
