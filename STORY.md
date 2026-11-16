@@ -52,7 +52,7 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 31. **Geometry is the only clean signal.** Temperature and rain follow the sun only roughly, and people have bent them too: fewer trees mean less rain and longer dry seasons, cities hold heat, and electric light and clocks shift sleep. The sun's position is the one input nobody has moved, which is why NT anchors on it and treats climate as a correction.
 
-32. **Who lives where the light swings.** Rough count by light band (country populations spread by where their cities are): 87% of people live north of the equator; bands 1–2 (0–40°, weak seasons) hold 84%: East and South Asia, the Middle East, Africa, Latin America. Only Europe and Russia live mostly in bands 3–4, with real seasons. Yet the working day and the clock (9-to-5, time zones, Greenwich) were shaped in band 3–4 Britain, Europe and the US, and exported to the majority, who live by heat more than by day length.
+32. **Who lives where the light swings.** Rough count by light band (country populations spread by where their cities are): 87% of people live north of the equator; bands 1–2 (0–40°, weak seasons) hold 84%: East and South Asia, the Middle East, Africa, Latin America. Only Europe and Russia live mostly in bands 3–4, with real seasons. Yet the working day and the clock (9-to-5, time zones, Greenwich) were shaped in band 3–4 Britain, Europe and the US, and exported to the majority, who live by heat more than by day length. The bands and head-counts are guidance on ways of living, not a definition of who the user is: NT works for anyone, anywhere.
 
 ## Rejected or replaced
 
