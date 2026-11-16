@@ -20,7 +20,7 @@ Raw material for a future folio page: turning points, decisions, what was reject
 14. **Evidence over intuition.** Colorado camping (40° N, close to Lisbon): 6.8 h of sleep in summer, 9.9 h in winter under natural light only. Huberman's example: 6 h summer, 7–8 h winter. Conflict recorded; Huberman favored.
 15. **One model for the whole planet.** Baseline at the equator (12h07 of day all year, nothing to flex), then a relation fitted through real places: Lisbon (first user), Austin (Huberman), Stockholm, Tromsø.
 16. **The baseline has data.** The Hadza, 3.7° S, under natural light: 12.1 h nights, 6.3 h of sleep, asleep 3.4 h after sunset, awake 1 h before sunrise, no seasons. Further from the equator sleep grows in winter (Tsimané +56 min, San +53 min), always ending near the day's coldest point.
-17. **Sleep counted as time in bed.** Studies report time asleep; the watch needs time in bed. Z = time to fall asleep (about 15 min, 169 lab studies) + sleep period (time asleep ÷ about 85% efficiency). Huberman sets no target, only a limit: up after 20–25 min awake.
+17. **Sleep counted as time in bed.** Studies report time asleep; the watch needs time in bed. Z = time to fall asleep (about 15 min, 169 lab studies) + sleep period (time asleep ÷ efficiency, 83% in the traditional groups and 86% in the labs). Huberman sets no target, only a limit: up after 20–25 min awake.
 
 ## Rejected or replaced
 
