@@ -110,12 +110,12 @@
   <div class="rightPanels">
   <div class="bandPanel" id="bandPanel" hidden>
     <h3>Bands · biggest cities</h3>
-    <div class="b derived"><b>N4+</b><span>Moscow, London</span><small>50.7° N and up · derived</small></div>
-    <div class="b"><b>N3</b><span>New York, Istanbul, Paris</span><small>40.2–50.7° N</small></div>
-    <div class="b"><b>N2</b><span>Tokyo, Delhi, Shanghai, Dhaka</span><small>23.4–40.2° N</small></div>
-    <div class="b"><b>E0</b><span>Mexico City, Mumbai, Kolkata, Rio de Janeiro, Manila, Lagos</span><small>23.4° S – 23.4° N</small></div>
-    <div class="b derived"><b>S2+</b><span>São Paulo, Buenos Aires, Santiago</span><small>23.4° S and down · derived</small></div>
-    <div class="src">Ranked by metro population (Natural Earth populated places)</div>
+    <div class="b derived"><b>N4+</b><span>Moscow, London · 4.5%</span><small>50.7° N and up · derived</small></div>
+    <div class="b"><b>N3</b><span>New York, Istanbul, Paris · 11.3%</span><small>40.2–50.7° N</small></div>
+    <div class="b"><b>N2</b><span>Tokyo, Delhi, Shanghai, Dhaka · 37.1%</span><small>23.4–40.2° N</small></div>
+    <div class="b"><b>E0</b><span>Mexico City, Mumbai, Kolkata, Rio de Janeiro, Manila, Lagos · 43.9%</span><small>23.4° S – 23.4° N</small></div>
+    <div class="b derived"><b>S2+</b><span>São Paulo, Buenos Aires, Santiago · 3.2%</span><small>23.4° S and down · derived</small></div>
+    <div class="src">Cities ranked by metro population; % = share of the world's people (rough, Natural Earth)</div>
   </div>
   <div class="popPanel" id="popPanel" hidden><canvas class="sky" id="popChart" width="600" height="560" aria-label="City population by latitude, north and south folded, with the 5 sleep planes"></canvas></div>
   </div>
@@ -386,6 +386,9 @@ const BAND_EDGES = (() => {
   if (cap - e[e.length - 1] > 0.05) e.push(cap); else e[e.length - 1] = cap;
   return e;
 })();
+// People per light band, millions (band 1 at the equator … the 24 h cap last). Rough: Natural Earth country populations
+// (about 2019, 7.68 billion) spread across bands by where each country's cities are.
+const BAND_POP = { N: [2580.8, 2846.7, 868.6, 291.3, 40.1, 4.9, 2.8, 0.3, 3.3], S: [792.8, 241.2, 3.6, 0.5, 0, 0, 0, 0, 0] };
 const bandGroup = new THREE.Group(); tiltGroup.add(bandGroup);
 // The 3 reference bands the model is built on (SPEC: Reference bands): E0 = N1 + S1 (same light, mirrored), N2, N3.
 // Only these 3 are drawn; the rest of the globe is derived from them.
@@ -395,14 +398,14 @@ const bandGroup = new THREE.Group(); tiltGroup.add(bandGroup);
   const seg = (lo, hi, o) => bandGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0105, 160, 16, 0, 2 * Math.PI, (90 - hi) * RAD, (hi - lo) * RAD), mat(o)));
   const edgeMat = new THREE.LineBasicMaterial({ color: 0xe8ecf1, transparent: true, opacity: 0.7 });
   const tag = (text, lat, col = '#e8ecf1') => { const lb = label(text, col, 0.08); lb.position.set(-Math.cos(lat * RAD) - 0.08 - lb.scale.x / 2, Math.sin(lat * RAD), 0); bandGroup.add(lb); };
-  seg(-e[1], e[1], 0.18); tag('E0', 0);                                   // equatorial band, both sides
-  seg(e[1], e[2], 0.08); tag('N2', (e[1] + e[2]) / 2);
-  seg(e[2], e[3], 0.18); tag('N3', (e[2] + e[3]) / 2);
+  const all = [...BAND_POP.N, ...BAND_POP.S].reduce((a, b) => a + b, 0), share = v => (100 * v / all).toFixed(1) + '%';
+  seg(-e[1], e[1], 0.18); tag(`E0 ${share(BAND_POP.N[0] + BAND_POP.S[0])}`, 0);   // equatorial band, both sides
+  seg(e[1], e[2], 0.08); tag(`N2 ${share(BAND_POP.N[1])}`, (e[1] + e[2]) / 2);
+  seg(e[2], e[3], 0.18); tag(`N3 ${share(BAND_POP.N[2])}`, (e[2] + e[3]) / 2);
   for (const lat of [-e[1], e[1], e[2], e[3]]) bandGroup.add(line(parallel(lat, 1.011), edgeMat));
 }
 // ---- Population by light band, both halves. Millions per band (band 1 at the equator … the 24 h cap last).
 // Rough: Natural Earth country populations (about 2019, 7.68 billion) spread across bands by where each country's cities are.
-const BAND_POP = { N: [2580.8, 2846.7, 868.6, 291.3, 40.1, 4.9, 2.8, 0.3, 3.3], S: [792.8, 241.2, 3.6, 0.5, 0, 0, 0, 0, 0] };
 const popGroup = new THREE.Group(); tiltGroup.add(popGroup);
 {
   const total = [...BAND_POP.N, ...BAND_POP.S].reduce((a, b) => a + b, 0), max = Math.max(...BAND_POP.N, ...BAND_POP.S);
