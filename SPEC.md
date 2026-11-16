@@ -1,6 +1,8 @@
 # Natural Time — spec
 
-What the watch takes into account, how it works it out, and why. Started 2026-11-16. Every rule here matches the live code in `index.html`.
+What the watch takes into account, how it works it out, and why. Started 2026-11-16. Every rule here matches the live code in `index.html`, except the section **Under discussion**, which records ideas and evidence that aren't agreed or built yet.
+
+Models used to work the ideas out: [Visualizations](Visualizations/README.md).
 
 ---
 
@@ -57,7 +59,7 @@ Peak sun and lowest sun are the only markers that exist every day everywhere. Su
 Inside the day, NT stretches or shrinks its minutes with the season, while keeping 00:00 at lowest sun and 12:00 at peak sun.
 
 1. Work out today's daylight `D` in hours: sunrise to sunset, with the sun's centre 0.833° below the horizon (standard refraction).
-2. Blend it toward 12 hours by the stretch `k` (default 30%): `D' = 12 + k × (D − 12)`, kept between 0.5 h and 23.5 h.
+2. Blend it toward 12 hours by the stretch `k` (live code: 30%, a placeholder not yet agreed, see Under discussion): `D' = 12 + k × (D − 12)`, kept between 0.5 h and 23.5 h.
 3. Map the blended day onto NT 06:00–18:00 and the rest onto the night, in 4 straight pieces:
 
 | Sun time | NT |
@@ -75,9 +77,9 @@ Length of 1 NT minute = `5 × D'` seconds by day and `5 × (24 − D')` seconds 
 
 NT seconds stretch with the minutes. In Lisbon right now an NT second is 0.95 real seconds by day and 1.05 at night.
 
-### 3. Sleep: 22:00–06:00 NT
+### 3. Sleep: 22:00–06:00 NT (placeholder, not agreed)
 
-Sleep is a fixed arc on the NT dial, 22:00 to 06:00, centred on 02:00 NT.
+Live code draws sleep as a fixed arc on the NT dial, 22:00 to 06:00, centred on 02:00 NT. It's a placeholder chosen without agreement; the sleep rule is being worked out under **Under discussion**. The reasoning behind the placeholder:
 
 - Centred about 2 hours after the sun's lowest point because that's where people living without electricity centre their sleep: they fall asleep about 3 hours after sunset and wake near the coldest point of the night, just before dawn. Air temperature trails the sun by about 2 hours.
 - With the 30% stretch, the arc gives Lisbon about **8h30 of real sleep in December and 7h30 in June**. That's close to the roughly 1 extra hour in winter seen in those groups.
@@ -133,10 +135,45 @@ The moon phase is the mean phase, accurate to within about a day. It's mirrored 
 - Position, place name and stretch are remembered in the browser.
 - Without GPS permission, the place is Lisbon.
 
+## Under discussion (not agreed, not built)
+
+### Sleep: Z, Zs and Ze
+
+Agreed so far:
+
+- **Time follows the planet; sleep follows the body.** NT minutes flex only to fit the hours to the sun. They never flex to fit sleep. Sleep is markers placed on the NT dial.
+- **Z** is how long to sleep, always stated in real hours (AT hours), so the number is never odd-looking. **Zs** (go to sleep) and **Ze** (wake up) are where it sits on the NT dial.
+- **Natural conditions:** the rule assumes no artificial light at night. The watch gives the natural guidance; blackout is up to the user.
+- **One block of sleep.** No split sleep.
+- **Z changes with the season:** longer in winter and when cold, shorter in summer and when hot. It changes a little every day, never in jumps. How much it swings must come from evidence, not a picked number.
+
+Evidence gathered so far:
+
+| Conditions | Winter vs summer sleep |
+|---|---|
+| Without electric light (Tsimané, Bolivia; San, Namibia) | about 1 hour more in winter |
+| Camping without electric light, Colorado | winter 9.9 h vs 7.6 h at home; summer camping no different from home |
+| With electric light (Germany; 73 million nights of wearable data; Tromsø) | 0–25 minutes more in winter |
+
+- Read as a ratio: under natural light, sleep changes by about 40–60% of the change in night length.
+- People living by the sun wake near the coldest point of the night, about 1 hour before sunrise.
+
+Open questions:
+
+1. **Z's swing:** which ratio to the night length (40–60% from the evidence), and whether a floor (about 6 h) and a ceiling (about 10 h) apply.
+2. **Z's baseline:** the length at the equinox, set per user (8 h for the first user).
+3. **Temperature:** heat shortens sleep and cold lengthens it; the size of the effect needs data.
+4. **Where Z sits:** around a "peak sleep" point, stretched both ways like NT stretches from peak sun, or ending at the coldest point of the night with Z counted backwards. This also settles the 2-hour offset between lowest sun and the middle of sleep that the placeholder uses.
+
+### The seasonal stretch
+
+How far NT pulls sunrise and sunset toward 06:00 and 18:00. Live code runs 30%, a placeholder chosen without agreement. Options on the table: 0% (pure sun time), 100% (sunrise always 06:00, sunset always 18:00, with a fallback where the sun doesn't set or rise), or a value with a reason behind it.
+
 ## Open items
 
 - **Temperature offset:** agreed that the 2-hour gap between the sun and the body should follow the place's measured temperature cycle (from forecasts, averaged over 1–2 weeks so weather doesn't jerk it). Not built: sleep is fixed at 22:00–06:00 NT.
-- **Stretch default 30%:** chosen to give Lisbon 8h30 / 7h30 of winter / summer sleep. Far north it's extreme: Kiruna at midsummer gets about 5h36.
+- **Stretch 30%:** a placeholder chosen without agreement (see Under discussion). Far north it's extreme: Kiruna at midsummer gets about 5h36.
+- **Sleep arc 22:00–06:00 NT:** a placeholder, to be replaced by the Z rule.
 - **Work block weekdays only:** an assumption. Weekends are NT all day. The block itself (08:00–18:00) will be set per user.
 - **Handover and hollow-sun craft:** to be designed.
 - **Apple Watch:** Apple doesn't allow third-party watch faces, so the big clock has to be a large complication (X-Large or Modular Ultra face) with the small one as a second complication. AT can use the system clock. NT's stretched minutes have to be worked out ahead of time and handed to the complication as a timeline.

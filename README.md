@@ -13,4 +13,6 @@ Testing: `?t=2026-07-25T15:20:00Z&lat=53.48&lon=-2.24&tz=Europe/London&speed=60`
 
 Live: https://cesarxdesign.github.io/NaturalTime/
 
-Full spec (what it takes into account, how and why): [SPEC.md](SPEC.md)
+Full spec (what it takes into account, how and why, and what's still under discussion): [SPEC.md](SPEC.md)
+
+Models used to work the ideas out: [Visualizations](Visualizations/README.md), live at https://cesarxdesign.github.io/NaturalTime/Visualizations/globe.html
