@@ -263,15 +263,16 @@ Conflict: Colorado measured 9.9 h asleep in winter at 40° N; this rule gives ab
 
 ### Reference bands (agreed 2026-11-16)
 
-The model is built on 3 light bands and derives everything else:
+The model is built on these bands and derives everything else. The tropics are split in 3, each covering the same change in day length (about 58 min on the June solstice), so the middle comes out slightly wider:
 
-| Band | Latitude | Reference cities | Natural-light sleep data |
-|---|---|---|---|
-| E0 (N1 + S1 merged: same light, mirrored) | 23.4° S – 23.4° N | Singapore, Nairobi, Jakarta, Bangkok, Hong Kong, Rio | Hadza 3.7° S, Tsimané 14.9° S, San 19.8° S |
-| N2 | 23.4–40.2° | Austin, Lisbon | Colorado 40.0° N (top edge) |
-| N3 | 40.2–50.7° | Milan | none yet |
+| Band | Latitude | Share of people | Biggest cities | Natural-light sleep data |
+|---|---|---|---|---|
+| E0 | 8.3° S – 8.3° N | 12.8% | Lagos, Jakarta, Kinshasa, Bogotá (also Singapore, Nairobi) | Hadza 3.7° S: no seasonal flex |
+| N1 / S1 (mirrors) | 8.3–23.4° | 27.1% / 4.0% | Mexico City, Mumbai, Kolkata, Manila / Rio, Lima, Belo Horizonte | Tsimané 14.9° S, San 19.8° S: about 1 h more in winter |
+| N2 | 23.4–40.2° | 37.1% | Tokyo, Delhi, Shanghai, Dhaka (and Austin, Lisbon) | Colorado 40.0° N (top edge) |
+| N3 | 40.2–50.7° | 11.3% | New York, Istanbul, Paris (and Milan) | none yet |
 
-S2 mirrors N2. N4 and beyond (London, Copenhagen, Stockholm, Oslo) are derived from the curve fitted on these 3, flattening toward the pole. Every place still gets its own exact day from the sun at its GPS position; the bands only organise the evidence and the fitting.
+S2 mirrors N2. N4 and beyond (London, Copenhagen, Stockholm, Oslo; 4.5%) are derived from the curve fitted on these, flattening toward the pole. Shares are rough (Natural Earth country populations spread by where each country's cities are). Every place still gets its own exact day from the sun at its GPS position; the bands only organise the evidence and the fitting.
 
 ### Hypothesis: anchor the day on the body, not the light (2026-11-16, not agreed)
 

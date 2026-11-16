@@ -56,6 +56,7 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 33. **Three bands to build on.** N1 and S1 get the same light, mirrored, so they merge into E0, the equatorial band. With N2 and N3, that's 3 reference bands holding about 95% of people and all the natural-light sleep data; everything further out is derived. The 5 city planes fold into them: plane 1 and 2 cities in E0, Austin and Lisbon in N2, Milan in N3.
 
+34. **The tropics in three.** E0 (N1 + S1 merged) turned out not to be one thing: no seasons at the equator, but about an hour of winter sleep at its edges (Tsimané, San). Split by equal light change: E0 (±8.3°, the Hadza, no flex), N1 and S1 (8.3–23.4°, mirrors, about 1 h of flex). The middle comes out slightly wider, as the equal-light rule predicts.
 ## Rejected or replaced
 
 - Sunrise as the anchor: doesn't exist every day far north.
