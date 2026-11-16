@@ -17,7 +17,14 @@ Live: https://cesarxdesign.github.io/NaturalTime/Visualizations/globe.html
 | **Spin · axis still** | turns once a day, axis upright on screen | moves up and down with the season | always on: half the globe is lit |
 | **Spin · axis moves** | turns once a day under a still sun | fixed on the right; the axis leans toward it in June, away in December, sideways at the equinoxes | always on |
 | **Lisbon · sun around** | held still, Lisbon's meridian (blue line) facing you | goes round Earth once a day, at that day's height | real: Lisbon goes dark when the sun goes behind |
-| **Lisbon · sun up/down** | held still, Lisbon's meridian facing you | sits on Lisbon's meridian at that day's point of the figure-8: high in June, low in December, nudged sideways by the equation of time | follows Lisbon's sun height: brightness grows with sin(sun height), as sunlight on flat ground does, so it peaks at peak sun and is weaker on winter noons. It also falls with the square of the Earth–sun distance: about 7% more light at the closest point (3 Jan) than at the farthest (6 Jul). Scaled to Lisbon's brightest noon of the year (21 June). Below the horizon a dim glow (12%, a display choice) fades out by −12° |
+| **Lisbon · sun up/down** | held still, Lisbon's meridian facing you | sits on Lisbon's meridian at that day's point of the figure-8: high in June, low in December, nudged sideways by the equation of time | follows Lisbon's light as the eye sees it (below) |
+
+**Light in "sun up/down", as the eye sees it.**
+
+1. Light on flat ground under a clear sky, in lux. Sun up: 100,000 × sin(sun height) × (1 AU ÷ distance)² for the direct sun, plus 400 for the sky at the horizon. So it peaks at peak sun, is weaker on winter noons, and is about 7% stronger at the closest point (3 Jan) than the farthest (6 Jul). Twilight: published clear-sky values, joined smoothly: 0° about 400 lux, −6° about 3, −12° about 0.03, −18° and below 0.002 (moonless night). Sources: [AMS glossary, civil twilight](https://glossarystaging.ametsoc.net/wiki/Civil_twilight), [NRC, NAP chapter](https://www.nap.edu/read/1037/chapter/3).
+2. Shown on a log scale, the way eyes and cameras respond, from moonless night to Lisbon's brightest noon (21 June). Brightness: June noon 100%, December noon 96%, sun 10° up 91%, sunrise 69%, end of civil twilight 41%, end of nautical twilight 15%, −18° 0%. The Lisbon sky panel uses the same scale for its colour.
+
+Simplifications: clear sky, no moon, no clouds, and the atmosphere's dimming of a low sun isn't modelled.
 
 The 2 Lisbon views also show 2 panels (bottom left):
 

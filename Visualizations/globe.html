@@ -299,22 +299,29 @@ function pose(ms, out = {}) {
   return out;
 }
 const P = {};
-// Light in the "sun up/down" view: sunlight on flat ground grows with sin(sun height), so it peaks at peak sun,
-// and falls with the square of the Earth–sun distance (about 7% more in early January than early July).
-// Scaled to Lisbon's brightest noon of the year. Below the horizon a dim glow fades out by −12°.
-const GLOW = 0.12;
-const LIGHT_MAX = (() => {
+// Light in the "sun up/down" view, as the eye sees it.
+// 1. Light on flat ground under a clear sky, in lux:
+//    sun up:   100,000 × sin(sun height) × (1 AU / distance)² for the direct sun, plus 400 for the sky at the horizon
+//    twilight: published clear-sky values, joined smoothly in log: 0° 400 · −6° 3 · −12° 0.03 · −18° 0.002 (moonless night)
+// 2. Shown on a log scale, the way eyes and cameras respond, from moonless night (0.002 lux) to Lisbon's brightest noon.
+const TWI = [[0, 400], [-6, 3], [-12, 0.03], [-18, 0.002]], NIGHT = 0.002;
+function lux(alt, dist) {
+  if (alt >= 0) return 400 + 100000 * Math.sin(alt * RAD) / (dist * dist);
+  if (alt <= -18) return NIGHT;
+  for (let i = 0; i < 3; i++) {
+    const [a0, l0] = TWI[i], [a1, l1] = TWI[i + 1];
+    if (alt >= a1) return Math.pow(10, Math.log10(l0) + (Math.log10(l1) - Math.log10(l0)) * (alt - a0) / (a1 - a0));
+  }
+}
+const LUX_MAX = (() => {
   let m = 0;
   for (let d = 0; d < 365; d++) {
     const s = sunAt(YEAR0 + d * DAY + 12 * 3600e3);
-    m = Math.max(m, Math.sin((90 - Math.abs(LISBON.lat - s.decl * DEG)) * RAD) / (s.dist * s.dist));
+    m = Math.max(m, lux(90 - Math.abs(LISBON.lat - s.decl * DEG), s.dist));
   }
   return m;
 })();
-function lisbonLight(alt, dist) {
-  if (alt >= 0) return GLOW + (1 - GLOW) * Math.min(1, Math.sin(alt * RAD) / (dist * dist) / LIGHT_MAX);
-  return GLOW * Math.max(0, (alt + 12) / 12);
-}
+const lisbonLight = (alt, dist) => Math.max(0, Math.min(1, Math.log10(lux(alt, dist) / NIGHT) / Math.log10(LUX_MAX / NIGHT)));
 function orient(ms) {
   pose(ms, P);
   tiltGroup.quaternion.copy(P.tiltQ); spinGroup.rotation.y = P.spinY; sunDir.copy(P.sun);
@@ -391,7 +398,7 @@ function drawSky(ms, decl, eot) {
   const now = alt(st);
   const tx = h => pad + h / 24 * (W - 2 * pad), ty = a => H / 2 + 14 - a / 80 * (H / 2 - 22);
   // Sky colour follows the sun: dark below nautical twilight, brightening to day
-  const t = Math.max(0, Math.min(1, (now + 12) / 24));
+  const t = lisbonLight(now, sunAt(ms).dist);   // same eye-scale light as the globe
   const mix = (a, b) => Math.round(a + (b - a) * t);
   x.fillStyle = `rgb(${mix(5, 58)},${mix(7, 99)},${mix(11, 144)})`; x.fillRect(0, 0, W, H);
   x.fillStyle = 'rgba(6,8,12,.55)'; x.fillRect(0, ty(0), W, H - ty(0));                      // ground
