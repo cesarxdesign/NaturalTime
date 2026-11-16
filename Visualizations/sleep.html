@@ -52,7 +52,7 @@
 <main>
   <header>
     <h1>Sleep by city</h1>
-    <p class="sub">Light, night length and sleep for the reference cities, every night of 2026. Times are local clock time and NT. NT here is pure sun time (lowest sun 00:00, peak sun 12:00), because the seasonal stretch isn't agreed yet. The "should" window is the proposed Z rule, not agreed.</p>
+    <p class="sub">Light, night length and sleep for the reference cities, every night of 2026. Times are local clock time (AT) and NT: sunrise always 06:00, peak sun 12:00, sunset 18:00 (the agreed 100% stretch). Wake at sunrise is agreed; how long Z runs is the proposed rule, not agreed.</p>
   </header>
 
   <div class="bar" id="cities"></div>
@@ -175,6 +175,11 @@ function dayInfo(c, d) {
   return { decl, eot, day, light, night, off, toClock, fromClock, r: rule(night, 12 - day / 2) };
 }
 
+// NT with the agreed 100% stretch: lowest sun 00:00, sunrise 06:00, peak 12:00, sunset 18:00, straight in between
+function ntOf(h, D) {
+  const day = Math.max(0.5, Math.min(23.5, D.day)), a = 12 - day / 2, b = 12 + day / 2, x = wrap(h);
+  return x < a ? x * 6 / a : x <= b ? 6 + (x - a) * 12 / day : 18 + (x - b) * 6 / (24 - b);
+}
 // ---- Formatting
 const wrap = h => ((h % 24) + 24) % 24;
 const hm = h => { const m = Math.round(wrap(h) * 60) % 1440; return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; };
@@ -240,7 +245,7 @@ function draw() {
   X.font = '500 18px Inter, system-ui, sans-serif'; X.fillStyle = '#e8ecf1'; X.textAlign = 'left'; X.textBaseline = 'top';
   X.fillText(`${c.name} · ${Math.abs(c.lat).toFixed(1)}° ${c.lat >= 0 ? 'N' : 'S'}`, G.L, 10);
   X.font = '400 14px Inter, system-ui, sans-serif'; X.fillStyle = '#8b95a4'; X.textAlign = 'right';
-  X.fillText('NT (sun time) down the side', W - G.R, 13);
+  X.fillText('sun time down the side (00:00 lowest sun, 12:00 peak)', W - G.R, 13);
   // selected day
   const x = tx(state.day + 0.5);
   X.strokeStyle = 'rgba(232,236,241,.9)'; X.lineWidth = 1.5; X.beginPath(); X.moveTo(x, G.T); X.lineTo(x, G.T + ph); X.stroke();
@@ -253,11 +258,11 @@ function stats(c, D) {
   const ob = OBSERVED[c.id];
   const items = [
     ['DATE', dateOf(state.day), ''],
-    ['SUNRISE · SUNSET (CLOCK)', `${hm(D.toClock(12 - D.day / 2))} · ${hm(D.toClock(12 + D.day / 2))}`, `NT ${hm(12 - D.day / 2)} · ${hm(12 + D.day / 2)}`],
+    ['SUNRISE · SUNSET (CLOCK)', `${hm(D.toClock(12 - D.day / 2))} · ${hm(D.toClock(12 + D.day / 2))}`, `NT ${hm(ntOf(12 - D.day / 2, D))} · ${hm(ntOf(12 + D.day / 2, D))}`],
     ['DAY · NIGHT', `${dur(D.day)} · ${dur(D.night)}`, `clock is UTC${D.off >= 0 ? '+' : ''}${D.off}`],
-    ['SHOULD: BED → WAKE (CLOCK)', `${hm(D.toClock(D.r.bed))} → ${hm(D.toClock(D.r.wake))}`, `NT ${hm(D.r.bed)} → ${hm(D.r.wake)}`],
+    ['SHOULD: BED → WAKE (CLOCK)', `${hm(D.toClock(D.r.bed))} → ${hm(D.toClock(D.r.wake))}`, `NT ${hm(ntOf(D.r.bed, D))} → ${hm(ntOf(D.r.wake, D))}`],
     ['SHOULD: IN BED · ASLEEP', `${dur(D.r.Z)} · ${dur(D.r.S)}`, D.r.S <= RULE.floor ? 'on the 6 h floor' : D.r.S >= state.ceil ? 'on the ceiling' : ''],
-    ['OBSERVED: BED → WAKE (CLOCK)', ob ? `${ob.bed} → ${ob.wake}` : 'not found', ob ? `NT ${hm(D.fromClock(parseHM(ob.bed)))} → ${hm(D.fromClock(parseHM(ob.wake)))}` : ''],
+    ['OBSERVED: BED → WAKE (CLOCK)', ob ? `${ob.bed} → ${ob.wake}` : 'not found', ob ? `NT ${hm(ntOf(D.fromClock(parseHM(ob.bed)), D))} → ${hm(ntOf(D.fromClock(parseHM(ob.wake)), D))}` : ''],
   ];
   $('stats').innerHTML = items.map(([a, b, s]) => `<div class="stat"><span>${a}</span><b>${b}</b><br><small>${s}</small></div>`).join('');
 }
@@ -269,10 +274,10 @@ function table() {
     const D = dayInfo(c, state.day), ob = OBSERVED[c.id];
     return `<tr data-row="${c.id}" class="${c.id === state.city ? 'sel' : ''}"><td>${c.name}</td><td>${dur(D.day)}</td><td>${dur(D.night)}</td>
       <td>${hm(D.toClock(12 - D.day / 2))}</td><td>${hm(D.toClock(12 + D.day / 2))}</td>
-      <td>${hm(D.toClock(D.r.bed))}</td><td>${hm(D.toClock(D.r.wake))}</td><td>${hm(D.r.bed)}</td><td>${hm(D.r.wake)}</td>
+      <td>${hm(D.toClock(D.r.bed))}</td><td>${hm(D.toClock(D.r.wake))}</td><td>${hm(ntOf(D.r.bed, D))}</td><td>${hm(ntOf(D.r.wake, D))}</td>
       <td>${dur(D.r.Z)}</td><td>${dur(D.r.S)}</td>
       <td class="${ob ? '' : 'na'}">${ob ? `${ob.bed} → ${ob.wake}` : 'not found'}</td>
-      <td class="${ob ? '' : 'na'}">${ob ? `${hm(D.fromClock(parseHM(ob.bed)))} → ${hm(D.fromClock(parseHM(ob.wake)))}` : ''}</td></tr>`;
+      <td class="${ob ? '' : 'na'}">${ob ? `${hm(ntOf(D.fromClock(parseHM(ob.bed)), D))} → ${hm(ntOf(D.fromClock(parseHM(ob.wake)), D))}` : ''}</td></tr>`;
   }).join('');
   $('table').innerHTML = head + body;
   document.querySelectorAll('[data-row]').forEach(r => r.onclick = () => { state.city = r.dataset.row; draw(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
@@ -282,7 +287,7 @@ function notes() {
   const src = CITIES.filter(c => OBSERVED[c.id]).map(c => `<p><b>${c.name}:</b> ${OBSERVED[c.id].what}. ${OBSERVED[c.id].src}</p>`).join('');
   $('notes').innerHTML = `
     <p><b>Should (proposed rule, not agreed):</b> asleep = 6.4 h + 0.56 × (night − 11.9 h), never under 6 h, never over 9.9 h (the longest sleep measured under natural light: Colorado camping in winter); in bed = 15 min to fall asleep + asleep ÷ 0.83; wake is at sunrise and bed is that much earlier, so longer nights bring bedtime forward, never the wake.</p>
-    <p><b>NT</b> here is sun time: 00:00 at lowest sun, 12:00 at peak sun, minutes 60 s long. With the seasonal stretch, NT readings between those anchors would shift; the stretch isn't agreed yet.</p>
+    <p><b>NT</b> uses the agreed 100% stretch: lowest sun 00:00, sunrise 06:00, peak sun 12:00, sunset 18:00, every day; minutes stretch with the season. The chart's side scale is plain sun time, so the seasons show.</p>
     <p><b>Clock</b> times use each city's own time zone, daylight saving included (the browser's time-zone database). Night is sunset to sunrise (sun's centre 0.833° below the horizon); twilight runs to −12°.</p>
     <p><b>Observed data:</b> Sleep Cycle app (941,329 smartphone users aged 18–55, June 2014 to March 2015), time in bed, one national average per country for the whole year, so city and season differences don't show. Nairobi: no sourced figure for Kenya. Reported in the Daily Mail, 2015; table read from a reprint because the original couldn't be fetched. App users skew young, urban and well off.</p>`;
 }
