@@ -10,29 +10,41 @@ A 3D Earth (three.js r128) lit by a sun on the right. Sun maths: the same NOAA f
 
 Live: https://cesarxdesign.github.io/NaturalTime/Visualizations/globe.html
 
-### 2 views (top right, or `#spin` / `#lisbon` in the URL)
+### 4 views (top right, or `#axis` / `#spin` / `#around` / `#lisbon` in the URL)
 
 | View | Earth | Sun | Light |
 |---|---|---|---|
-| **Spinning Earth** | turns once a day under a still sun | fixed on the right | always on: half the globe is lit |
-| **Lisbon, still** | held still, Lisbon's meridian (blue line) facing you | sits on Lisbon's meridian at that day's point of the figure-8: high in June, low in December, nudged sideways by the equation of time | follows Lisbon's sun height: dark below −12° (nautical night), full by +6° |
+| **Spin · axis still** | turns once a day, axis upright on screen | moves up and down with the season | always on: half the globe is lit |
+| **Spin · axis moves** | turns once a day under a still sun | fixed on the right; the axis leans toward it in June, away in December, sideways at the equinoxes | always on |
+| **Lisbon · sun around** | held still, Lisbon's meridian (blue line) facing you | goes round Earth once a day, at that day's height | real: Lisbon goes dark when the sun goes behind |
+| **Lisbon · sun up/down** | held still, Lisbon's meridian facing you | sits on Lisbon's meridian at that day's point of the figure-8: high in June, low in December, nudged sideways by the equation of time | follows Lisbon's sun height: dark below −12° (nautical night), full by +6° |
 
-The Lisbon view also shows a **sky panel** (bottom left): the sun's height over Lisbon from 00:00 to 24:00 sun time, the horizon, the −12° line, and where the sun is now (filled by day, hollow otherwise). The sky colour follows the sun's height.
+The 2 Lisbon views also show a **sky panel** (bottom left): the sun's height over Lisbon from 00:00 to 24:00 sun time, the horizon, the −12° line, and where the sun is now (filled by day, hollow otherwise). The sky colour follows the sun's height.
+
+### 5 time modes (panel, or `?time=` in the URL)
+
+| Mode | Speed | What it shows |
+|---|---|---|
+| **Pause** | stopped | the chosen moment; drag the timeline |
+| **Day** | 1 day every 8 s | day and night |
+| **Year** | 30 days a second, about 12 s a year | the season |
+| **Year in 2 s** | 182.5 days a second | the season, with a fading light trail behind the sun, the ground point under it and the axis tip |
+| **Imprint** | still | a timelapse photo: 1 dot a day for the whole year, for the sun, the ground point and the axis tip |
+
+Year, Year in 2 s and Imprint step a day at a time at the same clock time as the year path (12:00 UTC in the spin views, Lisbon mean noon in the Lisbon views), so Earth doesn't blur through day and night. That's what draws the figure-8: in the Lisbon views the sun's imprint is the 8 in Lisbon's sky; in "axis moves" the axis tip draws a ring, because seen from the sun the axis turns once a year.
 
 ### What's drawn
 
 - **Overhead band (amber):** where the sun is straight overhead today. On any one day it's a straight parallel at the sun's declination.
 - **Equator** (dashed) and **tropics** at 23.4° N and S: the band never leaves the tropics.
-- **Year path (thin amber, toggle "Year path"):** where the sun is overhead at the same clock time every day of the year. It's a figure-8 (the analemma): up and down from the tilt, sideways from the equation of time. Drawn at 12:00 UTC on the spinning globe and at Lisbon mean noon on the still view, so there it sits on Lisbon's meridian.
+- **Year path (thin amber, toggle "Year path"):** where the sun is overhead at the same clock time every day of the year. It's a figure-8 (the analemma): up and down from the tilt, sideways from the equation of time. Drawn at 12:00 UTC in the spin views and at Lisbon mean noon in the Lisbon views, so there it sits on Lisbon's meridian.
 - **Lisbon** (blue dot).
 
 ### Controls
 
 - **Tilt 23.4°:** off puts the axis upright. The band stays on the equator all year, the 8 collapses to a short sideways line (only the orbit's eccentricity left), and every place gets about 12 hours of day.
-- **Play day:** 1 day every 8 s.
-- **Play year:** 30 days a second.
 - **Timeline:** drag to any day of 2026. Marks show the equinoxes and solstices, the months, and Earth's closest (3 Jan) and farthest (6 Jul) points from the sun. Click a mark to jump to it.
-- **Drag** the globe to turn the camera; double-click to reset.
+- **Drag** the globe to turn the camera. **Reset view** (or double-click) puts the camera back.
 
 ### Readouts
 

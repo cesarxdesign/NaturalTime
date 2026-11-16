@@ -36,7 +36,9 @@
   .key.dot { width: 8px; height: 8px; border: 0; border-radius: 50%; background: var(--blue); margin-inline: 5px; }
   .key.fig { border-top: 1px solid var(--sun); opacity: .6; }
   .hint { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); bottom: 10px; font-size: 11px; color: var(--dim); pointer-events: none; }
-  .views { position: absolute; top: 12px; right: max(16px, env(safe-area-inset-right, 0px)); display: flex; gap: 6px; }
+  .views { position: absolute; top: 12px; right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: min(52%, 560px); }
+  .views button { background: rgba(6,8,12,.7); }
+  .sep { width: 1px; align-self: stretch; background: var(--line); }
   .sky { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); bottom: 12px; width: min(260px, calc(100% - 32px)); height: auto; aspect-ratio: 13 / 7; border: 1px solid var(--line); border-radius: 10px; }
   @media (max-width: 520px) { .legend { display: none; } }
 
@@ -71,11 +73,14 @@
     <div><i class="key trop"></i>Tropics, 23.4° N and S</div>
     <div><i class="key fig"></i><span id="figLabel">Overhead sun at 12:00 UTC, every day of the year</span></div>
     <div><i class="key dot"></i>Lisbon</div>
+    <div id="trailKey" hidden><i class="key fig"></i><span id="trailLabel"></span></div>
   </div>
   <div class="hint">Drag to turn · double-click to reset</div>
   <div class="views">
-    <button id="vSpin" aria-pressed="true">Spinning Earth</button>
-    <button id="vLis" aria-pressed="false">Lisbon, still</button>
+    <button data-view="axis" aria-pressed="false">Spin · axis still</button>
+    <button data-view="spin" aria-pressed="true">Spin · axis moves</button>
+    <button data-view="around" aria-pressed="false">Lisbon · sun around</button>
+    <button data-view="lisbon" aria-pressed="false">Lisbon · sun up/down</button>
   </div>
   <canvas class="sky" id="sky" width="520" height="280" hidden></canvas>
 </div>
@@ -88,9 +93,15 @@
     <div class="stat"><span>LISBON DAYLIGHT</span><b id="daylen">—</b></div>
     <div class="btns">
       <button id="bTilt" aria-pressed="true">Tilt 23.4°</button>
-      <button id="bSpin" aria-pressed="true">Play day</button>
-      <button id="bYear" aria-pressed="false">Play year</button>
       <button id="bPath" aria-pressed="true">Year path</button>
+      <span class="sep"></span>
+      <button data-time="pause" aria-pressed="false">Pause</button>
+      <button data-time="day" aria-pressed="true">Day</button>
+      <button data-time="year" aria-pressed="false">Year</button>
+      <button data-time="fast" aria-pressed="false">Year in 2 s</button>
+      <button data-time="imprint" aria-pressed="false">Imprint</button>
+      <span class="sep"></span>
+      <button id="bReset">Reset view</button>
     </div>
   </div>
   <div class="timeline">
@@ -127,8 +138,10 @@ function sunAt(ms) {
 }
 
 // ---- State
-const state = { ms: Math.min(Math.max(Date.now(), YEAR0), YEAR1 - 1), tilt: true, spin: true, year: false, path: true,
-  view: location.hash === '#lisbon' ? 'lisbon' : 'spin' };
+const VIEWS = ['axis', 'spin', 'around', 'lisbon'];
+const state = { ms: Math.min(Math.max(Date.now(), YEAR0), YEAR1 - 1), tilt: true, path: true, time: 'day', yearPos: 0,
+  view: VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'spin' };
+const atLisbon = () => state.view === 'around' || state.view === 'lisbon';   // Earth held still, Lisbon facing you
 const view = { az: 0, el: 16 * RAD, dist: 5.6 };
 
 // ---- Scene
@@ -219,7 +232,7 @@ const pathDot = new THREE.Mesh(new THREE.SphereGeometry(0.018, 12, 8), new THREE
 spinGroup.add(pathDot);
 // The year path is drawn at the same clock time every day: 12:00 UTC on the spinning globe,
 // Lisbon's own mean noon (12:37 UTC) in the Lisbon view, so the 8 sits on Lisbon's meridian.
-const pathLon = () => state.view === 'lisbon' ? LISBON.lon : 0;
+const pathLon = () => atLisbon() ? LISBON.lon : 0;
 function noonPoint(dayStartMs, r = 1.007) {
   const s = sunAt(dayStartMs + (12 - pathLon() / 15) * 3600e3);
   const decl = state.tilt ? s.decl * DEG : 0;
@@ -234,43 +247,55 @@ function buildPath() {
 const lisMeridian = line(meridian(LISBON.lon, 1.003), new THREE.LineBasicMaterial({ color: 0x8fb3d9 }));
 spinGroup.add(lisMeridian);
 
-// ---- Orientation
-// Spinning Earth: the sun stays put (+X), the axis leans with the season and Earth turns under the sun.
-// Lisbon, still: Earth holds still with Lisbon facing you, and the sun goes round it once a day.
+// ---- Orientation, 4 views
+// axis:   Earth turns once a day, axis upright on screen; the sun moves up and down with the season.
+// spin:   Earth turns once a day, the sun stays put (+X); the axis leans toward and away from it through the year.
+// around: Earth held still with Lisbon facing you; the sun goes round it once a day.
+// lisbon: Earth held still; the sun stays on Lisbon's meridian at today's point of the 8, and the light goes on and off.
 const X = new THREE.Vector3(), Y = new THREE.Vector3(), Z = new THREE.Vector3(), S = new THREE.Vector3(1, 0, 0), M4 = new THREE.Matrix4();
 const sunDir = new THREE.Vector3(1, 0, 0), rayPos = ray.geometry.attributes.position;
-function orient(ms) {
+const LIS_SPIN = (-90 - LISBON.lon) * RAD;                       // Lisbon's meridian faces the viewer
+const lisQ = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), LIS_SPIN);
+function pose(ms, out = {}) {
   const s = sunAt(ms);
   const utcH = ((ms % DAY) + DAY) % DAY / 3600e3;
   const eot = state.tilt ? s.eotTilt + s.eotOrbit : s.eotOrbit;
-  const subLon = -(utcH - 12) * 15 - eot / 4;               // longitude under the sun right now
+  const subLon = -(utcH - 12) * 15 - eot / 4;                     // longitude under the sun right now
   const decl = state.tilt ? s.decl : 0;
-  if (state.view === 'spin') {
+  out.tiltQ = out.tiltQ || new THREE.Quaternion(); out.sun = out.sun || new THREE.Vector3();
+  const v = state.view;
+  if (v === 'spin') {
     if (state.tilt) Y.set(Math.sin(s.eps) * Math.sin(s.lambda), Math.cos(s.eps), -Math.sin(s.eps) * Math.cos(s.lambda));
     else Y.set(0, 1, 0);
     X.copy(S).addScaledVector(Y, -S.dot(Y)).normalize();
     Z.crossVectors(X, Y);
-    tiltGroup.quaternion.setFromRotationMatrix(M4.makeBasis(X, Y, Z));
-    spinGroup.rotation.y = -subLon * RAD;
-    sunDir.set(1, 0, 0);
+    out.tiltQ.setFromRotationMatrix(M4.makeBasis(X, Y, Z));
+    out.spinY = -subLon * RAD; out.sun.set(1, 0, 0);
+  } else if (v === 'axis') {
+    out.tiltQ.identity(); out.spinY = -subLon * RAD;
+    out.sun.set(Math.cos(decl), Math.sin(decl), 0);
   } else {
-    // Sun stays on Lisbon's meridian at today's point of the 8: up and down with the season,
-    // a little left or right with the equation of time. Day and night show as the light going on and off.
-    tiltGroup.quaternion.identity();
-    spinGroup.rotation.y = (-90 - LISBON.lon) * RAD;          // Lisbon's meridian faces the viewer
-    sunDir.copy(ll(decl * DEG, LISBON.lon - eot / 4, 1)).applyQuaternion(spinGroup.quaternion);
+    out.tiltQ.identity(); out.spinY = LIS_SPIN;
+    out.sun.copy(v === 'around' ? ll(decl * DEG, subLon, 1) : ll(decl * DEG, LISBON.lon - eot / 4, 1)).applyQuaternion(lisQ);
   }
-  // Lisbon's sun height right now drives the light in the Lisbon view
+  // Lisbon's sun height right now
   const utcMin = ((ms / 60e3) % 1440 + 1440) % 1440;
   const st = (((utcMin + 4 * LISBON.lon + eot) % 1440) + 1440) % 1440 / 60;
   const p = LISBON.lat * RAD;
-  const altLis = Math.asin(Math.sin(p) * Math.sin(decl) + Math.cos(p) * Math.cos(decl) * Math.cos((st * 15 - 180) * RAD)) * DEG;
-  const lit = state.view === 'lisbon' ? Math.max(0, Math.min(1, (altLis + 12) / 18)) : 1;
+  out.altLis = Math.asin(Math.sin(p) * Math.sin(decl) + Math.cos(p) * Math.cos(decl) * Math.cos((st * 15 - 180) * RAD)) * DEG;
+  out.s = s; out.decl = decl; out.eot = eot;
+  return out;
+}
+const P = {};
+function orient(ms) {
+  pose(ms, P);
+  tiltGroup.quaternion.copy(P.tiltQ); spinGroup.rotation.y = P.spinY; sunDir.copy(P.sun);
+  const lit = state.view === 'lisbon' ? Math.max(0, Math.min(1, (P.altLis + 12) / 18)) : 1;
   light.intensity = 1.25 * lit;
   sun.material.transparent = halo.material.transparent = true;
   sun.material.opacity = 0.12 + 0.88 * lit; halo.material.opacity = lit;
-  subsolar.visible = state.view === 'spin' || altLis > -0.833;
-  lisMeridian.visible = state.view === 'lisbon';
+  subsolar.visible = state.view !== 'lisbon' || P.altLis > -0.833;
+  lisMeridian.visible = atLisbon();
   light.position.copy(sunDir).multiplyScalar(5);
   sun.position.copy(sunDir).multiplyScalar(2.35); halo.position.copy(sun.position);
   sunLabel.position.copy(sun.position).add(new THREE.Vector3(0, -0.24, 0));
@@ -278,9 +303,54 @@ function orient(ms) {
   rayPos.setXYZ(0, sun.position.x, sun.position.y, sun.position.z);
   rayPos.setXYZ(1, sunDir.x * 1.01, sunDir.y * 1.01, sunDir.z * 1.01);
   rayPos.needsUpdate = true; ray.computeLineDistances();
-  setBand(decl);
+  setBand(P.decl);
   pathDot.position.copy(noonPoint(Math.floor(ms / DAY) * DAY));
-  return { s, decl, eot };
+  return P;
+}
+
+// ---- Trail (Year in 2 s) and imprint (one dot per day): the sun, the ground point under it, the axis tip
+// All taken at the same clock time every day (the year path's), so they draw the year, not the day.
+const TRAIL = 50, AXIS_TIP = new THREE.Vector3(0, 1.5, 0);
+const tracks = [
+  { name: 'sun', color: new THREE.Color(0xf2b33d), parent: scene, at: q => q.sun.clone().multiplyScalar(2.35), size: 0.05 },
+  { name: 'ground', color: new THREE.Color(0xffe2a0), parent: spinGroup, at: (q, ms) => noonPoint(Math.floor(ms / DAY) * DAY, 1.012), size: 0.028 },
+  { name: 'axis', color: new THREE.Color(0xe8ecf1), parent: scene, at: q => AXIS_TIP.clone().applyQuaternion(q.tiltQ), size: 0.035 },
+];
+for (const t of tracks) {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(TRAIL * 3), 3));
+  g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(TRAIL * 3), 3));
+  t.trail = new THREE.Line(g, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+  t.trail.frustumCulled = false; t.parent.add(t.trail); t.pts = [];
+  t.glow = new THREE.Points(g, new THREE.PointsMaterial({ vertexColors: true, size: t.size, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+  t.glow.frustumCulled = false; t.parent.add(t.glow);
+  t.imprint = null;
+}
+function clearTrails() { for (const t of tracks) { t.pts = []; t.trail.geometry.setDrawRange(0, 0); } }
+function pushTrail(q, ms) {
+  for (const t of tracks) {
+    t.pts.push(t.at(q, ms)); if (t.pts.length > TRAIL) t.pts.shift();
+    const pos = t.trail.geometry.attributes.position, col = t.trail.geometry.attributes.color, n = t.pts.length;
+    t.pts.forEach((v, i) => {
+      const k = Math.pow((i + 1) / n, 1.6);
+      pos.setXYZ(i, v.x, v.y, v.z); col.setXYZ(i, t.color.r * k, t.color.g * k, t.color.b * k);
+    });
+    pos.needsUpdate = col.needsUpdate = true; t.trail.geometry.setDrawRange(0, n);
+  }
+}
+function clearImprint() { for (const t of tracks) if (t.imprint) { t.parent.remove(t.imprint); t.imprint.geometry.dispose(); t.imprint = null; } }
+function buildImprint() {
+  clearImprint();
+  const q = {}, lists = tracks.map(() => []);
+  for (let d = 0; d < 365; d++) {
+    const ms = YEAR0 + d * DAY + clockMs();
+    pose(ms, q); tracks.forEach((t, i) => lists[i].push(t.at(q, ms)));
+  }
+  tracks.forEach((t, i) => {
+    t.imprint = new THREE.Points(new THREE.BufferGeometry().setFromPoints(lists[i]),
+      new THREE.PointsMaterial({ color: t.color, size: t.size, transparent: true, opacity: 0.85, depthWrite: false }));
+    t.parent.add(t.imprint);
+  });
 }
 
 // ---- Lisbon sky: the sun's height over Lisbon through the day, lit when the sun is up
@@ -316,10 +386,11 @@ function drawSky(ms, decl, eot) {
 // ---- Camera: drag to orbit, double-click to reset
 function place() {
   camera.position.set(view.dist * Math.cos(view.el) * Math.sin(view.az), view.dist * Math.sin(view.el), view.dist * Math.cos(view.el) * Math.cos(view.az));
-  camera.lookAt(state.view === 'spin' ? 0.35 : 0, 0, 0);
+  camera.lookAt(atLisbon() ? 0 : 0.35, 0, 0);
 }
-const homeEl = () => (state.view === 'spin' ? 16 : 22) * RAD;
-const homeAz = () => state.view === 'spin' ? 0 : -40 * RAD;   // Lisbon view: from the side, so the sun doesn't block the globe
+const homeEl = () => (atLisbon() ? 14 : 16) * RAD;
+const homeAz = () => atLisbon() ? -55 * RAD : 0;   // Lisbon views: from the side, so the sun doesn't block the globe
+const resetCamera = () => { view.az = homeAz(); view.el = homeEl(); };
 let drag = null;
 stage.addEventListener('pointerdown', e => { if (e.target !== renderer.domElement) return; drag ={ x: e.clientX, y: e.clientY, az: view.az, el: view.el }; stage.setPointerCapture(e.pointerId); });
 stage.addEventListener('pointermove', e => {
@@ -328,12 +399,12 @@ stage.addEventListener('pointermove', e => {
   view.el = Math.max(-1.3, Math.min(1.3, drag.el + (e.clientY - drag.y) * 0.006));
 });
 stage.addEventListener('pointerup', () => drag = null);
-stage.addEventListener('dblclick', () => { view.az = homeAz(); view.el = homeEl(); });
+stage.addEventListener('dblclick', resetCamera);
 
 function resize() {
   const w = stage.clientWidth, h = stage.clientHeight;
   renderer.setSize(w, h, false); camera.aspect = w / h;
-  view.dist = w / h < 1 ? 7.4 : 5.6;
+  view.dist = (w / h < 1 ? 7.4 : 5.6) * (atLisbon() ? 1.15 : 1);
   camera.updateProjectionMatrix();
 }
 new ResizeObserver(resize).observe(stage); resize();
@@ -363,39 +434,69 @@ const jump = ms => () => { state.ms = ms + (((state.ms % DAY) + DAY) % DAY); };
 // Keep the edge labels inside the panel
 for (const sp of [...$('seasons').children, ...$('dists').children]) { if (parseFloat(sp.style.left) < 6) sp.style.transform = 'translateX(0)'; if (parseFloat(sp.style.left) > 94) sp.style.transform = 'translateX(-100%)'; }
 
-$('day').addEventListener('input', e => { state.ms = YEAR0 + e.target.value * DAY + (((state.ms % DAY) + DAY) % DAY); });
+// The year modes and the imprint use one clock time every day: the year path's (12:00 UTC, or Lisbon mean noon)
+const clockMs = () => (12 - pathLon() / 15) * 3600e3;
+const yearMode = () => state.time === 'year' || state.time === 'fast' || state.time === 'imprint';
+const snapToClock = () => { state.ms = YEAR0 + Math.floor((state.ms - YEAR0) / DAY) * DAY + clockMs(); state.yearPos = (state.ms - YEAR0) / DAY; };
+$('day').addEventListener('input', e => {
+  state.ms = YEAR0 + e.target.value * DAY + (((state.ms % DAY) + DAY) % DAY);
+  if (yearMode()) snapToClock();
+  clearTrails();
+});
 function toggle(id, key, after) {
   $(id).addEventListener('click', () => { state[key] = !state[key]; $(id).setAttribute('aria-pressed', state[key]); after && after(); });
 }
-toggle('bTilt', 'tilt', () => { bandDecl = null; buildPath(); });
-toggle('bSpin', 'spin');
-toggle('bYear', 'year');
+function refresh() {   // anything that changes the geometry of the year
+  buildPath(); clearTrails();
+  if (yearMode()) snapToClock();
+  if (state.time === 'imprint') buildImprint(); else clearImprint();
+  $('trailKey').hidden = !(state.time === 'fast' || state.time === 'imprint');
+  $('trailLabel').textContent = (state.time === 'fast' ? 'Trail' : 'Dots, 1 a day') + (atLisbon() ? ' at Lisbon mean noon' : ' at 12:00 UTC') + ': sun, ground point, axis tip';
+}
+toggle('bTilt', 'tilt', () => { bandDecl = null; refresh(); });
 toggle('bPath', 'path');
-if (matchMedia('(prefers-reduced-motion: reduce)').matches) { state.spin = false; $('bSpin').setAttribute('aria-pressed', 'false'); }
+function setTime(m) {
+  state.time = m;
+  document.querySelectorAll('[data-time]').forEach(b => b.setAttribute('aria-pressed', b.dataset.time === m));
+  refresh();
+}
+document.querySelectorAll('[data-time]').forEach(b => b.addEventListener('click', () => setTime(b.dataset.time)));
+$('bReset').addEventListener('click', resetCamera);
 
 function setView(v) {
   state.view = v;
-  $('vSpin').setAttribute('aria-pressed', v === 'spin'); $('vLis').setAttribute('aria-pressed', v === 'lisbon');
-  $('sky').hidden = v !== 'lisbon';
-  view.az = homeAz(); view.el = homeEl();
-  buildPath();
-  $('figLabel').textContent = v === 'lisbon' ? 'Overhead sun at Lisbon mean noon, every day of the year' : 'Overhead sun at 12:00 UTC, every day of the year';
-  try { history.replaceState(null, '', v === 'lisbon' ? '#lisbon' : '#spin'); } catch (e) {}
+  document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === v));
+  $('sky').hidden = !atLisbon();
+  resetCamera(); resize();
+  $('figLabel').textContent = atLisbon() ? 'Overhead sun at Lisbon mean noon, every day of the year' : 'Overhead sun at 12:00 UTC, every day of the year';
+  refresh();
+  try { history.replaceState(null, '', '#' + v); } catch (e) {}
 }
-$('vSpin').addEventListener('click', () => setView('spin'));
-$('vLis').addEventListener('click', () => setView('lisbon'));
+document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
 setView(state.view);
+const askedTime = new URLSearchParams(location.search).get('time');   // ?time=pause|day|year|fast|imprint
+setTime(['pause', 'day', 'year', 'fast', 'imprint'].includes(askedTime) ? askedTime
+  : matchMedia('(prefers-reduced-motion: reduce)').matches ? 'pause' : 'day');
 
-// ---- Loop: 1 day every 8 s while spinning; 30 days a second while the year plays
+// ---- Loop. Day: 1 day every 8 s. Year: 30 days a second (about 12 s a year). Year in 2 s: 182.5 days a second, with a trail.
+// Year modes step a day at a time at the same clock time, so Earth doesn't blur through day and night.
 let last = performance.now(), lastText = '';
 function frame(t) {
   const dt = Math.min(0.1, (t - last) / 1000); last = t;
-  if (state.spin) state.ms += dt * DAY / 8;
-  if (state.year) state.ms += dt * DAY * 30;
-  if (state.ms >= YEAR1) state.ms = YEAR0 + (state.ms - YEAR1);
+  if (state.time === 'day') { state.ms += dt * DAY / 8; if (state.ms >= YEAR1) state.ms = YEAR0 + (state.ms - YEAR1); }
+  if (state.time === 'year' || state.time === 'fast') {
+    const before = Math.floor(state.yearPos);
+    state.yearPos += dt * (state.time === 'fast' ? 365 / 2 : 30);
+    if (state.yearPos >= 365) state.yearPos -= 365;
+    state.ms = YEAR0 + Math.floor(state.yearPos) * DAY + clockMs();
+    if (state.time === 'fast') {   // one trail point for every day passed, however slow the frames
+      const q = {};
+      for (let d = before + 1; d <= Math.floor(state.yearPos); d++) { const ms = YEAR0 + d * DAY + clockMs(); pushTrail(pose(ms, q), ms); }
+    }
+  }
   const { s, decl, eot } = orient(state.ms);
   path.visible = pathDot.visible = state.path;
-  if (state.view === 'lisbon') drawSky(state.ms, decl, eot);
+  if (atLisbon()) drawSky(state.ms, decl, eot);
   place();
   renderer.render(scene, camera);
 
