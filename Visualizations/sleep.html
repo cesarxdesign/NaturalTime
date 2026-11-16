@@ -100,7 +100,22 @@ const CITIES = [
 
 // ---- Observed bed and wake times (local clock), filled from sourced data only. null = not found.
 // { bed: 'HH:MM', wake: 'HH:MM', what: 'which figure', src: 'short source' }
-const OBSERVED = {};
+const SC = 'Sleep Cycle app, 941,329 users aged 18–55, Jun 2014 – Mar 2015, time in bed, national average';
+const OBSERVED = {
+  sin: { bed: '23:52', wake: '07:38', what: 'Singapore, national average, all year', src: SC },
+  jkt: { bed: '00:10', wake: '06:55', what: 'Indonesia, national average, all year', src: SC },
+  bkk: { bed: '00:22', wake: '07:24', what: 'Thailand, national average, all year', src: SC },
+  hkg: { bed: '00:55', wake: '07:57', what: 'Hong Kong, national average, all year', src: SC },
+  rio: { bed: '00:32', wake: '07:31', what: 'Brazil, national average, all year', src: SC },
+  aus: { bed: '23:54', wake: '07:20', what: 'USA, national average, all year', src: SC },
+  lis: { bed: '00:41', wake: '08:22', what: 'Portugal, national average, all year', src: SC },
+  mil: { bed: '00:35', wake: '07:52', what: 'Italy, national average, all year', src: SC },
+  lon: { bed: '00:28', wake: '07:33', what: 'UK, national average, all year', src: SC },
+  cph: { bed: '23:47', wake: '07:19', what: 'Denmark, national average, all year', src: SC },
+  sto: { bed: '23:50', wake: '07:21', what: 'Sweden, national average, all year', src: SC },
+  osl: { bed: '00:16', wake: '07:43', what: 'Norway, national average, all year', src: SC },
+  // nbo: no sourced figure for Kenya or Nairobi
+};
 
 // ---- Sun (NOAA solar calculator formulas)
 function sunAt(ms) {
@@ -269,7 +284,7 @@ function notes() {
     <p><b>Should (proposed rule, not agreed):</b> asleep = 6.4 h + 0.56 × (night − 11.9 h), never under 6 h, never over 9.9 h (the longest sleep measured under natural light: Colorado camping in winter); in bed = 15 min to fall asleep + asleep ÷ 0.83; the window is centred 1.1 h after lowest sun (NT 01:06), as the Hadza sleep.</p>
     <p><b>NT</b> here is sun time: 00:00 at lowest sun, 12:00 at peak sun, minutes 60 s long. With the seasonal stretch, NT readings between those anchors would shift; the stretch isn't agreed yet.</p>
     <p><b>Clock</b> times use each city's own time zone, daylight saving included (the browser's time-zone database). Night is sunset to sunrise (sun's centre 0.833° below the horizon); twilight runs to −12°.</p>
-    ${src ? '<p><b>Observed data</b> (one figure for the whole year unless stated):</p>' + src : '<p><b>Observed data:</b> being sourced.</p>'}`;
+    <p><b>Observed data:</b> Sleep Cycle app (941,329 smartphone users aged 18–55, June 2014 to March 2015), time in bed, one national average per country for the whole year, so city and season differences don't show. Nairobi: no sourced figure for Kenya. Reported in the Daily Mail, 2015; table read from a reprint because the original couldn't be fetched. App users skew young, urban and well off.</p>`;
 }
 
 // ---- Interaction: drag on the chart or the slider to pick a day

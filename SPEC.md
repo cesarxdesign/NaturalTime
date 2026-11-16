@@ -253,6 +253,12 @@ Z (bed) = 15 min + S ÷ 0.83
 
 Conflict: Colorado measured 9.9 h asleep in winter at 40° N; this rule gives about 8 h there. Huberman favored; Colorado's week-long campers may have been catching up on sleep.
 
+### Observed sleep today, with electric light (for comparison, not a target)
+
+Sleep Cycle app, 941,329 users aged 18–55, June 2014 to March 2015, time in bed, national averages (Daily Mail 2015, read from a reprint): Portugal 00:41 → 08:22, UK 00:28 → 07:33, Italy 00:35 → 07:52, USA 23:54 → 07:20, Denmark 23:47 → 07:19, Sweden 23:50 → 07:21, Norway 00:16 → 07:43, Singapore 23:52 → 07:38, Indonesia 00:10 → 06:55, Thailand 00:22 → 07:24, Hong Kong 00:55 → 07:57, Brazil 00:32 → 07:31. Kenya: not found. No city-level or seasonal figures for these places. Huberman: no fixed clock times; wake at the same time daily, sunlight within 30–60 min of waking, sleep when first sleepy, his own bedtime about 22:00–23:00 ([Toolkit for Sleep](https://www.hubermanlab.com/newsletter/toolkit-for-sleep)).
+
+Lisbon in NT: Portugal's 00:41 → 08:22 is 23:03 → 06:44 NT on 22 June and 00:20 → 08:01 NT on 16 November; centred about 3–4 h after lowest sun, against the Hadza's 1.1 h.
+
 ### The seasonal stretch
 
 How far NT pulls sunrise and sunset toward 06:00 and 18:00. Live code runs 30%, a placeholder chosen without agreement. Options on the table: 0% (pure sun time), 100% (sunrise always 06:00, sunset always 18:00, with a fallback where the sun doesn't set or rise), or a value with a reason behind it.
