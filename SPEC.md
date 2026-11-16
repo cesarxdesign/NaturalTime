@@ -191,25 +191,21 @@ Z has to be a calculation based on something real. Plan: find the planet's basel
 
 **Agreed (2026-11-16): one rule for both hemispheres.** Whatever is set north of the equator holds south of it too, mirrored: same latitude, same rule, seasons flipped. So southern data (Hadza, Tsimané, San) counts for the matching northern latitude.
 
-**Agreed (2026-11-16):** Austin and Milan are planes. Lisbon (where the user lives) and London (where he lived) are reference lines, not planes: they're there so the planes can be read against known places. The other 3 planes (about 0°, 15°, 60°) are still to be picked. Rule for picking: a city the user knows beats an exact latitude match. A few degrees off is fine, because a familiar place makes the data easier to judge.
+**Agreed (2026-11-16): the 5 planes are groups of big cities the user knows.** A familiar city beats an exact latitude match; a few degrees off is fine, because a known place makes the data easier to judge. The big metropolises are also where sleep data is most likely to be found. A plane with one city is a line; a plane with several is a band from its nearest to its farthest city (distance from the equator). Southern cities count at their mirrored latitude, written in brackets, so only the northern half of the globe is needed.
 
-**5 reference planes, proposed (not agreed):** about 15° apart, from the equator to St Petersburg (59.9° N, the northernmost city of over a million). Shown on the globe ("Sleep planes", [Visualizations](Visualizations/README.md)).
-
-| Plane | Latitude | Gap to the next | Natural-light sleep data near it |
+| Plane | Cities | Band | Natural-light sleep data near it |
 |---|---|---|---|
-| Quito | 0.2° S | 14.4° | Hadza 3.7° S |
-| Manila | 14.6° N | 15.7° | Tsimané 14.9° S |
-| Austin (Huberman) | 30.3° N | 15.2° | none yet; San 19.8° S between Manila and Austin |
-| Milan | 45.5° N | 14.5° | Colorado 40° N, between Austin and Milan |
-| St Petersburg | 59.9° N | | none yet |
+| 1 | Singapore 1.3° N · (Nairobi 1.3° S) · (Jakarta 6.2° S) | 1–6° | Hadza 3.7° S (Nairobi is the nearest big city) |
+| 2 | Bangkok 13.8° N · Hong Kong 22.3° N · (Rio de Janeiro 22.9° S) | 14–23° | Tsimané 14.9° S, San 19.8° S |
+| 3 | Austin 30.3° N (Huberman) | line | none yet |
+| 4 | Milan 45.5° N | line | Colorado 40° N, between Austin and Milan |
+| 5 | Copenhagen 55.7° N · Stockholm 59.3° N · Oslo 59.9° N | 56–60° | none yet |
 
-**Agreed (2026-11-16): a plane's city can come from either hemisphere.** With the rule mirrored, the globe is 2 halves laid over each other, so a southern city can stand for its latitude in the north. Checked every slot for million-plus cities within 2.5° (Natural Earth): no southern city beats the picks. At 15° the south has Brasília 15.8° S (3.7 M) against Manila 14.6° N (11.1 M); at 30° Porto Alegre 30.0° S (3.9 M); at 45° and 60° the south has none (the southernmost city of a million or more is Melbourne, 37.8° S).
+**Reference lines, not planes:** Lisbon 38.7° N (where the user lives) and London 51.5° N (where he lived), to read the planes against.
 
-Lisbon (38.7° N) is the first user and a test point between Austin and Milan, worked out by the rule rather than a plane.
+Rejected the same day: Equator, Austin, Lisbon, Stockholm, Tromsø (Austin and Lisbon only 8.4° apart, Stockholm and Tromsø 10.3°, nothing in 0–30°, Tromsø too small); then Quito, Manila, Austin, Milan, St Petersburg (exact latitudes, but less familiar cities).
 
-Rejected the same day: Equator, Austin, Lisbon, Stockholm, Tromsø. Austin and Lisbon are only 8.4° apart, Stockholm and Tromsø 10.3°, while 0–30° had no plane. Tromsø also dropped as too small: the top plane is the northernmost city of over a million.
-
-Population check: city population by latitude, north and south folded together (Natural Earth populated places, 7,342 places, 2.37 billion people). Each plane takes the people up to the midpoint with its neighbours (the midpoints are a drawing choice, not agreed): Quito 9%, Manila 21%, Austin 43%, Milan 23%, St Petersburg 4.5%. Cities only: rural people aren't counted, which under-weights the tropics.
+Population check: city population by latitude, north and south folded together (Natural Earth populated places, 7,342 places, 2.37 billion people). Each plane takes the people up to the midpoint with its neighbours, a band counting from its middle (a drawing choice, not agreed): plane 1 13%, plane 2 23%, Austin 36%, Milan 22%, plane 5 6%. Cities only: rural people aren't counted, which under-weights the tropics.
 
 Natural-light sleep by latitude (Yetish et al. 2015, Table S2; Wright et al. 2013; Stothard et al. 2017). "Night" is sunset to sunrise. "Sleep" is time actually asleep (actigraphy), not time in bed: the 3 traditional groups were asleep about 83% of the time between falling asleep and waking.
 

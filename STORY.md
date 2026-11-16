@@ -24,7 +24,7 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 18. **The data and Huberman meet.** Natural-light groups gain about 0.56 h of sleep per extra hour of night. Huberman's 6 h summer, 8 h winter, at Austin's latitude, works out at 0.51. One rule proposed for the planet: 6.4 h at the equator, plus 0.56 × the extra night, never under 6 h.
 
-19. **One rule, both hemispheres; 5 planes, evenly spread.** The rule is mirrored south of the equator, so southern data counts north. First pick of reference cities (Equator, Austin, Lisbon, Stockholm, Tromsø) bunched up: Austin and Lisbon 8° apart, nothing in 0–30°, where most people live. Replaced by planes about 15° apart: Quito, Manila, Austin, Milan, St Petersburg (the northernmost city of over a million). Lisbon becomes a test point the rule has to get right.
+19. **One rule, both hemispheres; 5 planes of cities he knows.** The rule is mirrored, so only the northern half of the globe is needed and southern cities count at their mirrored latitude. First picks bunched up (Austin and Lisbon 8° apart, nothing in 0–30°, where most people live); exact-latitude picks (Quito, Manila, St Petersburg) were evenly spaced but unfamiliar. Settled on groups of big cities he knows, a few degrees off allowed: Singapore · (Nairobi) · (Jakarta), Bangkok · Hong Kong · (Rio), Austin, Milan, Copenhagen · Stockholm · Oslo. Lisbon and London stay as reference lines. Familiar beats exact: a known place makes the data easier to judge, and big metropolises are where data lives.
 
 ## Rejected or replaced
 
@@ -35,6 +35,7 @@ Raw material for a future folio page: turning points, decisions, what was reject
 - 30% stretch, 22:00–06:00 sleep arc: picked without evidence; placeholders until agreed.
 - On/off light on the globe: replaced by measured lux on an eye scale.
 - Reference planes Equator, Austin, Lisbon, Stockholm, Tromsø: bunched in pairs, a 30° hole where most people live; Tromsø too small.
+- Planes Quito, Manila, Austin, Milan, St Petersburg: exact 15° spacing, but cities he doesn't know.
 
 ## Numbers bank
 
@@ -43,7 +44,7 @@ Raw material for a future folio page: turning points, decisions, what was reject
 - Lisbon's year: sun 51%, twilight 9%, dark 40%.
 - Earth–sun distance: 147.1 million km (3 Jan) to 152.1 million km (6 Jul); about 7% more light in January.
 - Sleep without electric light: Hadza, San, Tsimané 5.7–7.1 h (average 6.4 h), start about 3.3 h after sunset, wake before sunrise. Colorado: 6.8 h summer, 9.9 h winter.
-- People by latitude (cities, N and S folded), nearest each plane: Quito 9%, Manila 21%, Austin 43%, Milan 23%, St Petersburg 4.5%. 85% of city dwellers live north of the equator.
+- People by latitude (cities, N and S folded), nearest each plane: Singapore group 13%, Bangkok group 23%, Austin 36%, Milan 22%, Copenhagen group 6%.
 - Time to fall asleep: 15.4 min (adults, 169 lab studies, Boulos 2019); 14.3 min at 18–34, 19.5 min at 65–79. Sleep efficiency 85.7%. Huberman: get up after 20–25 min awake.
 
 ## Visuals available
