@@ -29,7 +29,7 @@ Simplifications: clear sky, no moon, no clouds, and the atmosphere's dimming of 
 The 2 Lisbon views also show 2 panels (bottom left):
 
 - **Lisbon, the year:** every day of the year across, sun time 00–24 down, painted sun (amber), twilight to −12° (blue) and dark. The top line gives the year's shares (sun 51%, twilight 9%, dark 40%). A line and dot mark now.
-- **Lisbon sky:** the sun's height over Lisbon from 00:00 to 24:00 sun time, the horizon, the −12° line, and where the sun is now (filled by day, hollow otherwise). The sky colour follows the sun's height.
+- **Lisbon sky:** the sun's height over Lisbon from 00:00 to 24:00 sun time, the horizon, the −12° line, and where the sun is now (filled by day, hollow otherwise). The sky colour follows the sun's height. Click or drag along it to jump to that time of day; the globe's sun and light follow (year modes switch to Pause).
 
 To watch Lisbon's sun and dark over the year with the globe still: **Lisbon · sun up/down**, **Day**, and push **Speed** up. The sun climbs and drops along the 8 with the season while the light goes on and off each day.
 

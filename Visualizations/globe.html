@@ -44,6 +44,7 @@
   .lisPanels { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); bottom: 12px; width: min(300px, calc(100% - 32px)); display: grid; gap: 8px; }
   .lisPanels[hidden] { display: none; }
   .sky { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; }
+  #sky { cursor: pointer; touch-action: none; }
   .rightPanels { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); bottom: 30px; width: min(300px, calc(100% - 32px)); display: grid; gap: 8px; }
   .popPanel[hidden], .bandPanel[hidden] { display: none; }
   .bandPanel { background: rgba(11,15,21,.88); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 12px; display: grid; gap: 6px; }
@@ -816,6 +817,22 @@ function setTime(m) {
 }
 document.querySelectorAll('[data-time]').forEach(b => b.addEventListener('click', () => setTime(b.dataset.time)));
 $('bReset').addEventListener('click', () => { resetCamera(); saveSetup(); });
+// Lisbon sky: click or drag along the day to jump there; the globe's sun follows
+{
+  const sky = $('sky'); let down = false;
+  const jumpTo = e => {
+    const r = sky.getBoundingClientRect(); if (!r.width) return;
+    const x = (e.clientX - r.left) / r.width * sky.width, pad = 22;
+    const h = Math.max(0, Math.min(24, (x - pad) / (sky.width - 2 * pad) * 24));   // Lisbon sun time picked
+    const s = sunAt(state.ms), eot = state.tilt ? s.eotTilt + s.eotOrbit : s.eotOrbit;
+    const utcMin = (((h * 60 - 4 * LISBON.lon - eot) % 1440) + 1440) % 1440;
+    if (yearMode()) setTime('pause');
+    state.ms = Math.floor(state.ms / DAY) * DAY + utcMin * 60e3; clearTrails();
+  };
+  sky.addEventListener('pointerdown', e => { down = true; sky.setPointerCapture(e.pointerId); jumpTo(e); });
+  sky.addEventListener('pointermove', e => down && jumpTo(e));
+  sky.addEventListener('pointerup', () => down = false);
+}
 // Day speed: from 1 day every 8 s up to 3 days a second (a year in about 2 minutes).
 // Faster than that, each frame skips too much of the day and the light would strobe instead of showing dawn and dusk.
 const daysPerSec = () => (1 / 8) * Math.pow(24, $('speed').value / 100);
