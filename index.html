@@ -363,21 +363,28 @@ kInput.addEventListener('input', () => { try { localStorage.setItem('nt-stretch'
 const zoneName = (TZ || '').split('/').pop().replace(/_/g, ' ');
 
 // NT label: the place you're in. Coordinates go to the geocoder rounded to ~1 km.
-// Town or municipality level: Almada, Manchester, Dover (not the parish, not the district)
+// Locality level: Caparica, Manchester, Dover. Merged Portuguese parishes keep their first name.
 function tidyName(d) {
-  if (d.city) return d.city;
-  return (d.locality || '').replace(/^Uni[aã]o das [Ff]reguesias de /, '').replace(/^Freguesia de /, '').split(/ e /)[0];
+  const n = (d.locality || '').replace(/^Uni[aã]o das [Ff]reguesias d[eo]s? /, '').replace(/^Freguesia d[eo]s? /, '')
+    .replace(/\s*\(.*$/, '').split(/, | e /)[0];
+  return n || d.city || '';
 }
+// Names in the place's own language, so they keep their accents (Santo António, Setúbal)
+const LOCAL_LANG = { PT: 'pt', BR: 'pt', ES: 'es', FR: 'fr', IT: 'it', DE: 'de', AT: 'de', NL: 'nl', BE: 'nl', SE: 'sv', NO: 'nb', DK: 'da', FI: 'fi', PL: 'pl', MX: 'es', AR: 'es', CO: 'es', CL: 'es' };
+const geocode = (lat, lon, lang) =>
+  fetch(`https://api-bdc.io/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=${lang}`).then(r => r.json());
 async function nameFor(p) {
   const lat = p.lat.toFixed(2), lon = p.lon.toFixed(2);
   try {
-    const cached = JSON.parse(localStorage.getItem('nt-name') || 'null');
+    const cached = JSON.parse(localStorage.getItem('nt-name2') || 'null');
     if (cached && cached.lat === lat && cached.lon === lon) return cached.name;
   } catch (e) {}
   try {
-    const r = await fetch(`https://api-bdc.io/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
-    const name = tidyName(await r.json());
-    try { localStorage.setItem('nt-name', JSON.stringify({ lat, lon, name })); } catch (e) {}
+    let d = await geocode(lat, lon, 'en');
+    const lang = LOCAL_LANG[d.countryCode];
+    if (lang) d = await geocode(lat, lon, lang).catch(() => d);
+    const name = tidyName(d);
+    try { localStorage.setItem('nt-name2', JSON.stringify({ lat, lon, name })); } catch (e) {}
     return name;
   } catch (e) { return ''; }
 }
