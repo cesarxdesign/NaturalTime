@@ -33,28 +33,25 @@
           display: flex; flex-direction: column; padding: 12% 10% 14%; container-type: inline-size; }
   .clock { display: flex; align-items: center; font-family: var(--mono); font-variant-numeric: tabular-nums; line-height: 1; }
   .clock svg { flex: none; overflow: visible; }
-  .clock .t { font-weight: 300; letter-spacing: -0.02em; }
-  .clock .s { color: var(--dim); font-weight: 400; }
-  .clock .tag { font-family: var(--sans); font-size: 7cqi; font-weight: 500; letter-spacing: .08em; color: var(--dim); }
+  .clock .t { font-weight: 300; letter-spacing: -0.02em; text-align: center; }
+  .clock .dots { display: block; height: auto; }
+  .clock .dots circle { fill: var(--faint); }
+  .clock .dots circle.on { fill: var(--dim); }
 
   .clock.small { order: 0; align-self: flex-end; gap: 2.5cqi; }
-  .clock.small svg { width: 9cqi; height: 9cqi; }
+  .clock.small .icon { width: 9cqi; height: 9cqi; }
   .clock.small .t { font-size: 11cqi; color: var(--dim); }
-  .clock.small .s { display: none; }
+  .clock.small .dots { display: none; }
 
   .clock.big { order: 1; flex: 1; flex-direction: column; justify-content: center; gap: 5cqi; }
-  .clock.big svg { width: 20cqi; height: 20cqi; }
-  .clock.big .row { display: flex; align-items: baseline; gap: 1.5cqi; }
+  .clock.big .icon { width: 20cqi; height: 20cqi; }
   .clock.big .t { font-size: 27cqi; }
-  .clock.big .s { font-size: 9cqi; }
+  .clock.big .dots { width: 80cqi; margin-top: -1cqi; }
 
   .clock.equal { flex: 1; flex-direction: column; justify-content: center; align-self: center; gap: 3cqi; }
-  .clock.equal svg { width: 12cqi; height: 12cqi; }
-  .clock.equal .row { display: flex; align-items: baseline; gap: 1cqi; }
+  .clock.equal .icon { width: 12cqi; height: 12cqi; }
   .clock.equal .t { font-size: 18cqi; }
-  .clock.equal .s { font-size: 7cqi; }
-  .clock .row { display: contents; }
-  .clock.big .row, .clock.equal .row { display: flex; }
+  .clock.equal .dots { width: 54cqi; }
 
   /* Readouts */
   .info { width: min(100%, 420px); display: grid; gap: 22px; }
@@ -76,12 +73,14 @@
 <div class="case">
   <div class="face" id="face">
     <div class="clock" id="nt">
-      <svg viewBox="-12 -12 24 24" id="ntIcon" aria-hidden="true"></svg>
-      <div class="row"><span class="t" id="ntT">--:--</span><span class="s" id="ntS">00</span></div>
+      <svg class="icon" viewBox="-12 -12 24 24" id="ntIcon" aria-hidden="true"></svg>
+      <span class="t" id="ntT">--:--</span>
+      <svg class="dots" id="ntD" viewBox="0 0 120 2" aria-hidden="true"></svg>
     </div>
     <div class="clock" id="at">
-      <svg viewBox="-12 -12 24 24" id="atIcon" aria-hidden="true"></svg>
-      <div class="row"><span class="t" id="atT">--:--</span><span class="s" id="atS">00</span></div>
+      <svg class="icon" viewBox="-12 -12 24 24" id="atIcon" aria-hidden="true"></svg>
+      <span class="t" id="atT">--:--</span>
+      <svg class="dots" id="atD" viewBox="0 0 120 2" aria-hidden="true"></svg>
     </div>
   </div>
 </div>
@@ -239,6 +238,15 @@ function globeIcon(theta) {
 
 // ---- Render
 const $ = id => document.getElementById(id);
+// Seconds as a line of 60 dots under the time; dots fill as the minute passes
+for (const id of ['ntD', 'atD'])
+  $(id).innerHTML = Array.from({ length: 60 }, (_, i) => `<circle cx="${1 + i * 2}" cy="1" r=".7"/>`).join('');
+const lastSec = {};
+function setDots(id, sec) {
+  if (lastSec[id] === sec) return;
+  lastSec[id] = sec;
+  $(id).querySelectorAll('circle').forEach((c, i) => c.classList.toggle('on', i <= sec));
+}
 let lastIconKey = '';
 function render() {
   const ms = now(), k = stretch(), s = sun(ms), st = sunTime(ms, s);
@@ -255,8 +263,8 @@ function render() {
   $('at').className = 'clock ' + (swap ? 'equal' : inWork ? 'big' : 'small');
 
   const [nh, nm, ns] = hms(nt);
-  $('ntT').textContent = `${pad(nh)}:${pad(nm)}`; $('ntS').textContent = pad(ns);
-  $('atT').textContent = `${pad(at.getHours())}:${pad(at.getMinutes())}`; $('atS').textContent = pad(at.getSeconds());
+  $('ntT').textContent = `${pad(nh)}:${pad(nm)}`; setDots('ntD', ns);
+  $('atT').textContent = `${pad(at.getHours())}:${pad(at.getMinutes())}`; setDots('atD', at.getSeconds());
 
   // NT icon: sun while there's light (to nautical dusk), hollow while it's below the horizon; moon in the dark
   const iconKey = alt >= -0.833 ? 'sun' : alt >= -12 ? 'hollow' : 'moon' + Math.floor(ms / 3600e3);
@@ -309,7 +317,7 @@ if (!q.has('lat')) {
 }
 
 render();
-setInterval(render, 200);
+setInterval(render, 50);
 </script>
 </body>
 </html>
