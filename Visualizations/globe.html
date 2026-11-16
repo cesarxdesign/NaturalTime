@@ -811,7 +811,8 @@ function showPlanes() {
 toggle('bPlanes', 'planes', showPlanes);
 // The globe's skin covers only the reference bands (E0, N2, N3) while Bands or Population is on; hollow above and below
 const updateSkin = () => { earthCut.visible = state.pop || state.bands; earth.visible = !earthCut.visible; };
-function showBands() { bandGroup.visible = state.bands; $('bandPanel').hidden = !state.bands || atLisbon(); updateSkin();   // Lisbon views: the Lisbon charts take that corner $('bBands').setAttribute('aria-pressed', state.bands); $('bandKey').hidden = !state.bands; }
+// Lisbon views: the Lisbon charts take the band key's corner, so the key hides there
+function showBands() { bandGroup.visible = state.bands; $('bandPanel').hidden = !state.bands || atLisbon(); updateSkin(); $('bBands').setAttribute('aria-pressed', state.bands); $('bandKey').hidden = !state.bands; }
 toggle('bBands', 'bands', showBands); showBands();
 function showPop() { popGroup.visible = state.pop; updateSkin(); $('bPop').setAttribute('aria-pressed', state.pop); $('popKey').hidden = !state.pop; }
 toggle('bPop', 'pop', showPop); showPop();
