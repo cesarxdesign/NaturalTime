@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Natural Time</title>
+<meta name="description" content="A clock locked to the sun at your location: NT outside work hours, AT during them.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Ccircle r='5' fill='%23F2B33D'/%3E%3Cg stroke='%23F2B33D' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M0-8v-2M0 8v2M8 0h2M-8 0h-2M5.7-5.7l1.4-1.4M-5.7 5.7l-1.4 1.4M5.7 5.7l1.4 1.4M-5.7-5.7l-1.4-1.4'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page: #0b0b0c;
+    --case: #1c1c1f;
+    --face: #000;
+    --ink: #f4f4f5;
+    --dim: #8b8b93;
+    --faint: #3a3a40;
+    --sun: #f2b33d;
+    --moon: #d9dee8;
+    --globe: #8fb3d9;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --sans: Inter, -apple-system, system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--page); color: var(--ink); font-family: var(--sans); }
+  body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 16px 56px; gap: 32px; }
+
+  /* Watch */
+  .case { width: min(100%, 340px); padding: 14px; border-radius: 30%/25%; background: var(--case); box-shadow: 0 0 0 1px #2a2a2e inset, 0 30px 60px #0008; }
+  .face { position: relative; aspect-ratio: 396 / 484; border-radius: 26%/21%; background: var(--face); overflow: hidden;
+          display: flex; flex-direction: column; padding: 12% 10% 14%; container-type: inline-size; }
+  .clock { display: flex; align-items: center; font-family: var(--mono); font-variant-numeric: tabular-nums; line-height: 1; }
+  .clock svg { flex: none; overflow: visible; }
+  .clock .t { font-weight: 300; letter-spacing: -0.02em; }
+  .clock .s { color: var(--dim); font-weight: 400; }
+  .clock .tag { font-family: var(--sans); font-size: 7cqi; font-weight: 500; letter-spacing: .08em; color: var(--dim); }
+
+  .clock.small { order: 0; align-self: flex-end; gap: 2.5cqi; }
+  .clock.small svg { width: 9cqi; height: 9cqi; }
+  .clock.small .t { font-size: 11cqi; color: var(--dim); }
+  .clock.small .s { display: none; }
+
+  .clock.big { order: 1; flex: 1; flex-direction: column; justify-content: center; gap: 5cqi; }
+  .clock.big svg { width: 20cqi; height: 20cqi; }
+  .clock.big .row { display: flex; align-items: baseline; gap: 1.5cqi; }
+  .clock.big .t { font-size: 27cqi; }
+  .clock.big .s { font-size: 9cqi; }
+
+  .clock.equal { flex: 1; flex-direction: column; justify-content: center; align-self: center; gap: 3cqi; }
+  .clock.equal svg { width: 12cqi; height: 12cqi; }
+  .clock.equal .row { display: flex; align-items: baseline; gap: 1cqi; }
+  .clock.equal .t { font-size: 18cqi; }
+  .clock.equal .s { font-size: 7cqi; }
+  .clock .row { display: contents; }
+  .clock.big .row, .clock.equal .row { display: flex; }
+
+  /* Readouts */
+  .info { width: min(100%, 420px); display: grid; gap: 22px; }
+  dl { margin: 0; display: grid; grid-template-columns: 1fr auto; row-gap: 10px; column-gap: 16px; font-size: 13px; }
+  dt { color: var(--dim); }
+  dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+  hr { border: 0; border-top: 1px solid var(--faint); margin: 0; }
+  .ctl { display: grid; gap: 8px; font-size: 13px; }
+  .ctl label { display: flex; justify-content: space-between; color: var(--dim); }
+  .ctl label b { font-family: var(--mono); font-weight: 400; color: var(--ink); }
+  input[type=range] { width: 100%; accent-color: var(--sun); }
+  button { font: inherit; font-size: 13px; color: var(--ink); background: transparent; border: 1px solid var(--faint); border-radius: 999px; padding: 6px 14px; cursor: pointer; justify-self: start; }
+  button:hover { border-color: var(--dim); }
+  .note { font-size: 12px; color: var(--dim); line-height: 1.5; margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="case">
+  <div class="face" id="face">
+    <div class="clock" id="nt">
+      <svg viewBox="-12 -12 24 24" id="ntIcon" aria-hidden="true"></svg>
+      <div class="row"><span class="t" id="ntT">--:--</span><span class="s" id="ntS">00</span></div>
+    </div>
+    <div class="clock" id="at">
+      <svg viewBox="-12 -12 24 24" id="atIcon" aria-hidden="true"></svg>
+      <div class="row"><span class="t" id="atT">--:--</span><span class="s" id="atS">00</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="info">
+  <dl>
+    <dt>Place</dt><dd id="place">—</dd>
+    <dt>NT vs AT</dt><dd id="gap">—</dd>
+    <dt>1 NT minute now</dt><dd id="minute">—</dd>
+  </dl>
+  <hr>
+  <dl>
+    <dt>Nautical dawn</dt><dd id="ndawn">—</dd>
+    <dt>Sunrise</dt><dd id="rise">—</dd>
+    <dt>Peak sun</dt><dd id="peak">—</dd>
+    <dt>Sunset</dt><dd id="set">—</dd>
+    <dt>Nautical dusk</dt><dd id="ndusk">—</dd>
+    <dt>Daylight</dt><dd id="daylen">—</dd>
+  </dl>
+  <hr>
+  <dl>
+    <dt>Sleep 22:00–06:00 NT</dt><dd id="sleep">—</dd>
+    <dt>Work 08:00–18:00 AT</dt><dd id="work">—</dd>
+  </dl>
+  <hr>
+  <div class="ctl">
+    <label for="k">Seasonal stretch <b id="kv">30%</b></label>
+    <input type="range" id="k" min="0" max="100" step="5" value="30">
+    <p class="note">0% is pure sun time: peak sun at 12:00, every minute about 60 s. 100% puts sunrise at 06:00 and sunset at 18:00. 30% gives Lisbon about 8h30 of sleep in December and 7h30 in June.</p>
+  </div>
+  <button id="locate">Use my location</button>
+</div>
+
+<script>
+const RAD = Math.PI / 180, DEG = 180 / Math.PI, HOUR = 3600e3;
+const q = new URLSearchParams(location.search);
+
+// ---- Place: GPS if allowed, Lisbon otherwise (or ?lat=&lon= for testing)
+const LISBON = { lat: 38.7223, lon: -9.1393, name: 'Lisbon' };
+let place = { ...LISBON };
+if (q.has('lat') && q.has('lon')) place = { lat: +q.get('lat'), lon: +q.get('lon'), name: '' };
+
+// ---- Time: real now, or ?t=ISO and ?speed=N for testing
+const t0 = q.has('t') ? Date.parse(q.get('t')) : null, real0 = Date.now(), speed = +(q.get('speed') || 1);
+const now = () => t0 === null ? Date.now() : t0 + (Date.now() - real0) * speed;
+
+// ---- Stretch
+const kInput = document.getElementById('k');
+try { const saved = localStorage.getItem('nt-stretch'); if (saved !== null) kInput.value = saved; } catch (e) {}
+const stretch = () => kInput.value / 100;
+
+// ---- Sun (NOAA solar calculator formulas)
+function sun(ms) {
+  const T = (ms / 86400e3 + 2440587.5 - 2451545) / 36525;
+  const L0 = ((280.46646 + T * (36000.76983 + 0.0003032 * T)) % 360 + 360) % 360;
+  const M = (357.52911 + T * (35999.05029 - 0.0001537 * T)) * RAD;
+  const e = 0.016708634 - T * (0.000042037 + 0.0000001267 * T);
+  const C = Math.sin(M) * (1.914602 - T * (0.004817 + 0.000014 * T)) + Math.sin(2 * M) * (0.019993 - 0.000101 * T) + Math.sin(3 * M) * 0.000289;
+  const om = (125.04 - 1934.136 * T) * RAD;
+  const lambda = (L0 + C - 0.00569 - 0.00478 * Math.sin(om)) * RAD;
+  const eps0 = 23 + (26 + (21.448 - T * (46.815 + T * (0.00059 - T * 0.001813))) / 60) / 60;
+  const eps = (eps0 + 0.00256 * Math.cos(om)) * RAD;
+  const decl = Math.asin(Math.sin(eps) * Math.sin(lambda));
+  const y = Math.tan(eps / 2) ** 2, L = L0 * RAD;
+  const eot = 4 * DEG * (y * Math.sin(2 * L) - 2 * e * Math.sin(M) + 4 * e * y * Math.sin(M) * Math.cos(2 * L)
+              - 0.5 * y * y * Math.sin(4 * L) - 1.25 * e * e * Math.sin(2 * M)); // minutes
+  return { decl, eot };
+}
+// Sun time: hours since the sun's lowest point (00:00 = lowest sun, 12:00 = peak sun)
+function sunTime(ms, s) {
+  const utcMin = ((ms / 60e3) % 1440 + 1440) % 1440;
+  return (((utcMin + 4 * place.lon + s.eot) % 1440) + 1440) % 1440 / 60;
+}
+function altitude(st, s) {
+  const H = (st * 15 - 180) * RAD, p = place.lat * RAD;
+  return Math.asin(Math.sin(p) * Math.sin(s.decl) + Math.cos(p) * Math.cos(s.decl) * Math.cos(H)) * DEG;
+}
+// Hours from peak sun until the sun drops to altitude h0 (0 = never up, 12 = never down)
+function halfArc(h0, s) {
+  const p = place.lat * RAD;
+  const c = (Math.sin(h0 * RAD) - Math.sin(p) * Math.sin(s.decl)) / (Math.cos(p) * Math.cos(s.decl));
+  return c >= 1 ? 0 : c <= -1 ? 12 : Math.acos(c) * DEG / 15;
+}
+
+// ---- NT: sun time, stretched by season. Lowest sun = 00:00, peak sun = 12:00 always.
+// Daylight D (hours) is blended toward 12h by the stretch k, and that day is mapped to 06:00–18:00.
+function anchors(D, k) {
+  const De = Math.min(23.5, Math.max(0.5, 12 + k * (D - 12)));
+  return { h: De / 2, am: 12 - De / 2, ae: 12 + De / 2 };
+}
+function toNT(st, D, k) {
+  const { h, am, ae } = anchors(D, k);
+  if (st < am) return st * 6 / am;
+  if (st < 12) return 6 + (st - am) * 6 / h;
+  if (st < ae) return 12 + (st - 12) * 6 / h;
+  return 18 + (st - ae) * 6 / (24 - ae);
+}
+function fromNT(n, D, k) {
+  const { h, am, ae } = anchors(D, k);
+  if (n < 6) return n * am / 6;
+  if (n < 12) return am + (n - 6) * h / 6;
+  if (n < 18) return 12 + (n - 12) * h / 6;
+  return ae + (n - 18) * (24 - ae) / 6;
+}
+function ntMinuteSeconds(st, D, k) { // real seconds in one NT minute right now
+  const { h, am, ae } = anchors(D, k);
+  return 10 * (st < am || st >= ae ? 12 - h : h);
+}
+
+// ---- Formatting
+const pad = n => String(n).padStart(2, '0');
+const hm = ms => new Date(ms).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+function hms(hours) {
+  const tot = Math.floor(((hours % 24) + 24) % 24 * 3600);
+  return [Math.floor(tot / 3600), Math.floor(tot / 60) % 60, tot % 60];
+}
+const dur = h => `${Math.floor(h)}h${pad(Math.round((h % 1) * 60) % 60)}`;
+const ntLabel = h => { const [a, b] = hms(h); return `${pad(a)}:${pad(b)}`; };
+
+// ---- Icons
+const SVGNS = 'http://www.w3.org/2000/svg';
+function sunIcon(filled) {
+  const rays = [0, 45, 90, 135, 180, 225, 270, 315].map(a => {
+    const c = Math.cos(a * RAD), s = Math.sin(a * RAD);
+    return `M${(c * 7.6).toFixed(2)} ${(s * 7.6).toFixed(2)}L${(c * 10).toFixed(2)} ${(s * 10).toFixed(2)}`;
+  }).join('');
+  return `<g fill="none" stroke="var(--sun)" stroke-width="1.6" stroke-linecap="round">
+    <circle r="5" ${filled ? 'fill="var(--sun)"' : ''}/><path d="${rays}"/></g>`;
+}
+function moonIcon(ms) {
+  const syn = 29.530588853, ref = Date.UTC(2000, 0, 6, 18, 14);
+  const age = (((ms - ref) / 86400e3) % syn + syn) % syn, p = age / syn * 2 * Math.PI;
+  const R = 9, rx = Math.abs(Math.cos(p)) * R, gib = Math.cos(p) < 0, waxing = p < Math.PI;
+  const d = waxing
+    ? `M0 ${-R}A${R} ${R} 0 0 1 0 ${R}A${rx.toFixed(2)} ${R} 0 0 ${gib ? 1 : 0} 0 ${-R}Z`
+    : `M0 ${-R}A${R} ${R} 0 0 0 0 ${R}A${rx.toFixed(2)} ${R} 0 0 ${gib ? 0 : 1} 0 ${-R}Z`;
+  const flip = place.lat < 0 ? ' transform="scale(-1 1)"' : '';
+  return `<circle r="${R}" fill="none" stroke="var(--faint)" stroke-width="1"/><path d="${d}" fill="var(--moon)"${flip}/>`;
+}
+function globeIcon(theta) {
+  const R = 10;
+  let d = `M${-R} 0H${R}`;                                   // equator
+  for (const lat of [-45, 45]) {                              // two parallels
+    const y = Math.sin(lat * RAD) * R, x = Math.cos(lat * RAD) * R;
+    d += `M${(-x).toFixed(2)} ${y.toFixed(2)}H${x.toFixed(2)}`;
+  }
+  for (let i = 0; i < 12; i++) {                              // meridians, front half only
+    const a = theta + i * 30 * RAD;
+    if (Math.cos(a) <= 0) continue;
+    const rx = Math.abs(Math.sin(a)) * R;
+    d += `M0 ${-R}A${rx.toFixed(2)} ${R} 0 0 ${Math.sin(a) > 0 ? 1 : 0} 0 ${R}`;
+  }
+  return `<g fill="none" stroke="var(--globe)" stroke-width="1.1"><circle r="${R}" stroke-width="1.4"/><path d="${d}"/></g>`;
+}
+
+// ---- Render
+const $ = id => document.getElementById(id);
+let lastIconKey = '';
+function render() {
+  const ms = now(), k = stretch(), s = sun(ms), st = sunTime(ms, s);
+  const D = 2 * halfArc(-0.833, s), dawnArc = halfArc(-12, s);
+  const nt = toNT(st, D, k), alt = altitude(st, s);
+  const lowest = ms - st * HOUR;                              // this solar day's lowest sun, in real time
+  const at = new Date(ms), atMin = at.getHours() * 60 + at.getMinutes();
+
+  // Which clock is big: AT during the work block (weekdays 08:00–18:00), with a 5-minute handover
+  const weekday = at.getDay() >= 1 && at.getDay() <= 5;
+  const inWork = weekday && atMin >= 480 && atMin < 1080;
+  const swap = weekday && ((atMin >= 475 && atMin < 480) || (atMin >= 1075 && atMin < 1080));
+  $('nt').className = 'clock ' + (swap ? 'equal' : inWork ? 'small' : 'big');
+  $('at').className = 'clock ' + (swap ? 'equal' : inWork ? 'big' : 'small');
+
+  const [nh, nm, ns] = hms(nt);
+  $('ntT').textContent = `${pad(nh)}:${pad(nm)}`; $('ntS').textContent = pad(ns);
+  $('atT').textContent = `${pad(at.getHours())}:${pad(at.getMinutes())}`; $('atS').textContent = pad(at.getSeconds());
+
+  // NT icon: sun while there's light (to nautical dusk), hollow while it's below the horizon; moon in the dark
+  const iconKey = alt >= -0.833 ? 'sun' : alt >= -12 ? 'hollow' : 'moon' + Math.floor(ms / 3600e3);
+  if (iconKey !== lastIconKey) {
+    $('ntIcon').innerHTML = alt >= -0.833 ? sunIcon(true) : alt >= -12 ? sunIcon(false) : moonIcon(ms);
+    lastIconKey = iconKey;
+  }
+
+  // Readouts
+  $('place').textContent = `${place.name ? place.name + ' · ' : ''}${Math.abs(place.lat).toFixed(2)}°${place.lat >= 0 ? 'N' : 'S'} ${Math.abs(place.lon).toFixed(2)}°${place.lon >= 0 ? 'E' : 'W'}`;
+  let gap = atMin + at.getSeconds() / 60 - nt * 60;
+  gap = ((gap + 720) % 1440 + 1440) % 1440 - 720;
+  const g = Math.round(Math.abs(gap));
+  $('gap').textContent = g === 0 ? 'in step' : `NT ${g >= 60 ? dur(g / 60) : g + ' min'} ${gap > 0 ? 'behind' : 'ahead of'} AT`;
+  $('minute').textContent = ntMinuteSeconds(st, D, k).toFixed(1) + ' s';
+
+  const ev = h => hm(lowest + h * HOUR);
+  const none = D === 0 || D === 24 ? '—' : null;
+  $('ndawn').textContent = dawnArc === 0 ? '—' : dawnArc === 12 ? 'light all night' : ev(12 - dawnArc);
+  $('ndusk').textContent = dawnArc === 0 ? '—' : dawnArc === 12 ? 'light all night' : ev(12 + dawnArc);
+  $('rise').textContent = none || ev(12 - D / 2);
+  $('set').textContent = none || ev(12 + D / 2);
+  $('peak').textContent = ev(12);
+  $('daylen').textContent = D === 0 ? 'polar night' : D === 24 ? 'midnight sun' : dur(D);
+  $('sleep').textContent = `${ev(fromNT(22, D, k))}–${ev(fromNT(6, D, k))} AT`;
+  const xNT = toNT(sunTime(new Date(at).setHours(8, 0, 0, 0), s), D, k);
+  const yNT = toNT(sunTime(new Date(at).setHours(18, 0, 0, 0), s), D, k);
+  $('work').textContent = `${ntLabel(xNT)}–${ntLabel(yNT)} NT`;
+  $('kv').textContent = kInput.value + '%';
+}
+
+// Globe spins on its own frame loop (west to east)
+function spin(tms) { $('atIcon').innerHTML = globeIcon(tms / 24000 * 2 * Math.PI); requestAnimationFrame(spin); }
+requestAnimationFrame(spin);
+
+kInput.addEventListener('input', () => { try { localStorage.setItem('nt-stretch', kInput.value); } catch (e) {} render(); });
+
+function locate() {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(p => {
+    place = { lat: p.coords.latitude, lon: p.coords.longitude, name: 'Here' };
+    try { localStorage.setItem('nt-place', JSON.stringify(place)); } catch (e) {}
+    lastIconKey = ''; render();
+  }, () => {}, { maximumAge: 3600e3, timeout: 15e3 });
+}
+$('locate').addEventListener('click', locate);
+if (!q.has('lat')) {
+  try { const p = JSON.parse(localStorage.getItem('nt-place')); if (p && isFinite(p.lat)) place = p; } catch (e) {}
+  locate();
+}
+
+render();
+setInterval(render, 200);
+</script>
+</body>
+</html>
