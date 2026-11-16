@@ -299,17 +299,26 @@ function pose(ms, out = {}) {
   return out;
 }
 const P = {};
-// Light in the "sun up/down" view: sunlight on flat ground grows with sin(sun height), so it peaks at peak sun.
-// Scaled to Lisbon's highest sun of the year (90° − |38.7° − 23.4°| = 74.7°). Below the horizon a dim glow fades out by −12°.
-const GLOW = 0.12, SIN_MAX = Math.sin((90 - Math.abs(LISBON.lat - 23.44)) * RAD);
-function lisbonLight(alt) {
-  if (alt >= 0) return GLOW + (1 - GLOW) * Math.min(1, Math.sin(alt * RAD) / SIN_MAX);
+// Light in the "sun up/down" view: sunlight on flat ground grows with sin(sun height), so it peaks at peak sun,
+// and falls with the square of the Earth–sun distance (about 7% more in early January than early July).
+// Scaled to Lisbon's brightest noon of the year. Below the horizon a dim glow fades out by −12°.
+const GLOW = 0.12;
+const LIGHT_MAX = (() => {
+  let m = 0;
+  for (let d = 0; d < 365; d++) {
+    const s = sunAt(YEAR0 + d * DAY + 12 * 3600e3);
+    m = Math.max(m, Math.sin((90 - Math.abs(LISBON.lat - s.decl * DEG)) * RAD) / (s.dist * s.dist));
+  }
+  return m;
+})();
+function lisbonLight(alt, dist) {
+  if (alt >= 0) return GLOW + (1 - GLOW) * Math.min(1, Math.sin(alt * RAD) / (dist * dist) / LIGHT_MAX);
   return GLOW * Math.max(0, (alt + 12) / 12);
 }
 function orient(ms) {
   pose(ms, P);
   tiltGroup.quaternion.copy(P.tiltQ); spinGroup.rotation.y = P.spinY; sunDir.copy(P.sun);
-  const lit = state.view === 'lisbon' ? lisbonLight(P.altLis) : 1;
+  const lit = state.view === 'lisbon' ? lisbonLight(P.altLis, P.s.dist) : 1;
   light.intensity = 1.25 * lit;
   sun.material.transparent = halo.material.transparent = true;
   sun.material.opacity = 0.12 + 0.88 * lit; halo.material.opacity = lit;

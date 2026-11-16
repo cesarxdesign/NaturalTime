@@ -17,7 +17,7 @@ Live: https://cesarxdesign.github.io/NaturalTime/Visualizations/globe.html
 | **Spin · axis still** | turns once a day, axis upright on screen | moves up and down with the season | always on: half the globe is lit |
 | **Spin · axis moves** | turns once a day under a still sun | fixed on the right; the axis leans toward it in June, away in December, sideways at the equinoxes | always on |
 | **Lisbon · sun around** | held still, Lisbon's meridian (blue line) facing you | goes round Earth once a day, at that day's height | real: Lisbon goes dark when the sun goes behind |
-| **Lisbon · sun up/down** | held still, Lisbon's meridian facing you | sits on Lisbon's meridian at that day's point of the figure-8: high in June, low in December, nudged sideways by the equation of time | follows Lisbon's sun height: brightness grows with sin(sun height), as sunlight on flat ground does, so it peaks at peak sun and is weaker on winter noons. Scaled to Lisbon's highest sun of the year (74.7°). Below the horizon a dim glow (12%, a display choice) fades out by −12° |
+| **Lisbon · sun up/down** | held still, Lisbon's meridian facing you | sits on Lisbon's meridian at that day's point of the figure-8: high in June, low in December, nudged sideways by the equation of time | follows Lisbon's sun height: brightness grows with sin(sun height), as sunlight on flat ground does, so it peaks at peak sun and is weaker on winter noons. It also falls with the square of the Earth–sun distance: about 7% more light at the closest point (3 Jan) than at the farthest (6 Jul). Scaled to Lisbon's brightest noon of the year (21 June). Below the horizon a dim glow (12%, a display choice) fades out by −12° |
 
 The 2 Lisbon views also show 2 panels (bottom left):
 
