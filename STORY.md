@@ -32,6 +32,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 22. **The light ramp.** Waking at sunrise is fine where the light comes on fast. Where it creeps in (winter, the north), sleeping a little past sunrise beats sitting in dim light, and it lets winter's extra sleep come partly from the morning, not all from the evening.
 
+**The stretch, in his words:** "anyone else would have put 30% and shipped it." The placeholder was 30%. Instead: equal halves, a wrong turn to 100%, 4 cities on their longest and shortest days, equal-light bands, the figure-8, light strength, the morning ramp, the heat lag, and a search of the published models. Still open, on purpose.
+
 23. **Testing the stretch on real places.** Longest and shortest day, sun time and clock, in Singapore, Nairobi, Lisbon and Oslo:
    - Singapore and Nairobi: 12h03–12h12 of day all year, so 06:00–18:00 is almost true. Put Singapore's clock on its natural zone and sunrise is 06:01, peak 12:03–12:07, sunset 18:04–18:12.
    - Lisbon: 14h53 in June (sun time 04:34 → 19:26), 9h27 in December (07:16 → 16:44).
