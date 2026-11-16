@@ -28,15 +28,18 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 20. **Wake when the light comes.** Centring sleep on the night, as the Hadza do, had Lisbon up 1h12 before a November sunrise. Rule set instead: wake at sunrise, and longer nights only move bedtime earlier.
 
+21. **Two equal halves.** The Earth turns at a steady rate, so the morning is exactly as long as the afternoon. Keep both halves equal and pin the ends, and there's only one answer: sunrise 06:00, peak 12:00, sunset 18:00, every day, everywhere. Wake at sunrise becomes wake at 06:00 NT. Minutes stretch with the season instead (Lisbon: 47–74 s by day).
+
 ## Rejected or replaced
 
 - Sunrise as the anchor: doesn't exist every day far north.
 - Day and night as two fixed halves: ignores the season.
 - Split (two-phase) sleep: left out.
 - Deepest sleep as the anchor: follows bedtime, not the clock.
-- 30% stretch, 22:00–06:00 sleep arc: picked without evidence; placeholders until agreed.
+- 30% stretch, 22:00–06:00 sleep arc: picked without evidence. Stretch now settled at 100%; the arc is still a placeholder.
 - An 8 h sleep ceiling (Huberman's winter top): not natural; deep-winter sleep under natural light runs longer. The one place the user overruled Huberman.
 - Sleep centred on the night (1.1 h after lowest sun): woke people in the dark in winter. Replaced by wake at sunrise.
+- Stretch 30%: a placeholder with no reason. Stretch 0% (pure sun time): honest minutes, but sunrise wanders 04:34–07:16 NT in Lisbon.
 - On/off light on the globe: replaced by measured lux on an eye scale.
 - Reference planes Equator, Austin, Lisbon, Stockholm, Tromsø: bunched in pairs, a 30° hole where most people live; Tromsø too small.
 - Planes Quito, Manila, Austin, Milan, St Petersburg: exact 15° spacing, but cities he doesn't know.

@@ -61,7 +61,7 @@ Peak sun and lowest sun are the only markers that exist every day everywhere. Su
 Inside the day, NT stretches or shrinks its minutes with the season, while keeping 00:00 at lowest sun and 12:00 at peak sun.
 
 1. Work out today's daylight `D` in hours: sunrise to sunset, with the sun's centre 0.833° below the horizon (standard refraction).
-2. Blend it toward 12 hours by the stretch `k` (live code: 30%, a placeholder not yet agreed, see Under discussion): `D' = 12 + k × (D − 12)`, kept between 0.5 h and 23.5 h.
+2. Blend it toward 12 hours by the stretch `k`: `D' = 12 + k × (D − 12)`, kept between 0.5 h and 23.5 h. **Agreed (2026-11-16): k = 100%**, so `D' = D`: sunrise is always 06:00 NT, peak sun 12:00, sunset 18:00. Reason: nature gives 2 equal halves either side of peak sun (the Earth turns at a steady rate, so the morning is exactly as long as the afternoon); the only way to keep both halves equal and pin sunrise and sunset is 06:00–12:00–18:00. It also puts the agreed wake (usually at sunrise) at 06:00 NT every day. The 0.5–23.5 h clamp is the existing fallback where the sun doesn't set or rise; the far-north rule is still open.
 3. Map the blended day onto NT 06:00–18:00 and the rest onto the night, in 4 straight pieces:
 
 | Sun time | NT |
@@ -72,19 +72,19 @@ Inside the day, NT stretches or shrinks its minutes with the season, while keepi
 | peak sun + D'/2 | 18:00 |
 
 - At `k = 0%`, NT is pure sun time: every minute is about 60 s and sunrise moves around the dial.
-- At `k = 100%`, sunrise is always 06:00 and sunset always 18:00 (the old "temporal hours"). In Lisbon that gives about 9h20 of real sleep in winter and 6h10 in summer, which is more than people living by the sun actually do.
-- At `k = 30%`, a day minute in Lisbon runs from about 56 s in December to about 64 s in June, and night minutes the other way.
+- At `k = 100%` (agreed), sunrise is always 06:00 and sunset always 18:00, the old "temporal hours" (Japan's traditional clocks worked this way). In Lisbon a day minute runs from about 47 s in December to about 74 s in June, and a night minute from about 73 s to about 46 s.
+- At `k = 30%` (the old placeholder, dropped), a day minute in Lisbon ran from about 56 s in December to about 64 s in June.
 
 Length of 1 NT minute = `5 × D'` seconds by day and `5 × (24 − D')` seconds by night.
 
-NT seconds stretch with the minutes. In Lisbon right now an NT second is 0.95 real seconds by day and 1.05 at night.
+NT seconds stretch with the minutes. In Lisbon on 16 November an NT second is 0.84 real seconds by day and 1.16 at night.
 
 ### 3. Sleep: 22:00–06:00 NT (placeholder, not agreed)
 
 Live code draws sleep as a fixed arc on the NT dial, 22:00 to 06:00, centred on 02:00 NT. It's a placeholder chosen without agreement; the sleep rule is being worked out under **Under discussion**. The reasoning behind the placeholder:
 
 - Centred about 2 hours after the sun's lowest point because that's where people living without electricity centre their sleep: they fall asleep about 3 hours after sunset and wake near the coldest point of the night, just before dawn. Air temperature trails the sun by about 2 hours.
-- With the 30% stretch, the arc gives Lisbon about **8h30 of real sleep in December and 7h30 in June**. That's close to the roughly 1 extra hour in winter seen in those groups.
+- With the 100% stretch, the arc ends at sunrise every day and gives Lisbon about 9h40 in bed in December and 6h05 in June. The Z rule under discussion replaces it.
 - Waking exactly at sunrise and sleeping at sunset is not the goal: dawn is a gentle wake-up and dusk still has activity.
 
 ### 4. Never the same time twice
@@ -102,7 +102,7 @@ Two people with NT in the same town read the same minute: across Caparica (about
 - **Handover:** the 5 minutes before 08:00 and before 18:00 show both clocks at the same size.
 - **Tap the big clock** to swap them by hand. The swap lasts until the next scheduled change.
 
-In Lisbon in 2026, at the 30% stretch, the work block starts between 06:22 and 07:31 NT and ends between 16:01 and 17:56 NT, depending on the season. While daylight saving is on (late March to late October), 08:00 AT arrives only 23–45 minutes after a 06:00 NT wake-up. NT doesn't hide that: it shows the cost so the choice is yours.
+In Lisbon in 2026, at the 100% stretch, the work block starts between 06:06 and 07:28 NT and ends between 15:30 and 18:38 NT, depending on the season. At its earliest, 08:00 AT comes only 6 minutes after sunrise (06:00 NT). NT doesn't hide that: it shows the cost so the choice is yours.
 
 ### Time, seconds and labels
 
@@ -268,12 +268,12 @@ Lisbon in NT: Portugal's 00:41 → 08:22 is 23:03 → 06:44 NT on 22 June and 00
 
 ### The seasonal stretch
 
-How far NT pulls sunrise and sunset toward 06:00 and 18:00. Live code runs 30%, a placeholder chosen without agreement. Options on the table: 0% (pure sun time), 100% (sunrise always 06:00, sunset always 18:00, with a fallback where the sun doesn't set or rise), or a value with a reason behind it.
+Settled 2026-11-16: 100% (see How NT is worked out). Options weighed: 0% (pure sun time: honest 60-second minutes, but sunrise wanders from 04:34 to 07:16 NT in Lisbon), 30% (placeholder with no reason, dropped), 100% (chosen). Still open: the rule where the sun doesn't set or rise.
 
 ## Open items
 
 - **Temperature offset:** agreed that the 2-hour gap between the sun and the body should follow the place's measured temperature cycle (from forecasts, averaged over 1–2 weeks so weather doesn't jerk it). Not built: sleep is fixed at 22:00–06:00 NT.
-- **Stretch 30%:** a placeholder chosen without agreement (see Under discussion). Far north it's extreme: Kiruna at midsummer gets about 5h36.
+- **Stretch far north:** at 100%, minutes get very uneven near the Arctic Circle (Oslo in June: 94 s by day, 26 s by night) and fail where the sun doesn't set or rise; the 0.5–23.5 h clamp is a stopgap, the rule is open.
 - **Sleep arc 22:00–06:00 NT:** a placeholder, to be replaced by the Z rule.
 - **Work block weekdays only:** an assumption. Weekends are NT all day. The block itself (08:00–18:00) will be set per user.
 - **Handover and hollow-sun craft:** to be designed.

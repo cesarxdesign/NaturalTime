@@ -133,8 +133,8 @@
   </dl>
   <hr>
   <div class="ctl">
-    <label for="k">Seasonal stretch <b id="kv">30%</b></label>
-    <input type="range" id="k" min="0" max="100" step="5" value="30">
+    <label for="k">Seasonal stretch <b id="kv">100%</b></label>
+    <input type="range" id="k" min="0" max="100" step="5" value="100">
     <p class="note">0% is pure sun time: peak sun at 12:00, every minute about 60 s. 100% puts sunrise at 06:00 and sunset at 18:00. 30% gives Lisbon about 8h30 of sleep in December and 7h30 in June.</p>
   </div>
   <button id="locate">Use my location</button>
@@ -155,7 +155,7 @@ const now = () => t0 === null ? Date.now() : t0 + (Date.now() - real0) * speed;
 
 // ---- Stretch
 const kInput = document.getElementById('k');
-try { const saved = localStorage.getItem('nt-stretch'); if (saved !== null) kInput.value = saved; } catch (e) {}
+try { const saved = localStorage.getItem('nt-stretch-v2'); if (saved !== null) kInput.value = saved; } catch (e) {}
 if (q.has('k')) kInput.value = Math.max(0, Math.min(100, +q.get('k')));   // ?k=0..100 for testing, not saved
 const stretch = () => kInput.value / 100;
 
@@ -358,7 +358,7 @@ function render() {
 function spin(tms) { $('atIcon').innerHTML = globeIcon(tms / 24000 * 2 * Math.PI); requestAnimationFrame(spin); }
 requestAnimationFrame(spin);
 
-kInput.addEventListener('input', () => { try { localStorage.setItem('nt-stretch', kInput.value); } catch (e) {} render(); });
+kInput.addEventListener('input', () => { try { localStorage.setItem('nt-stretch-v2', kInput.value); } catch (e) {} render(); });
 
 // AT label: the city the device's time zone is named after (Europe/Lisbon → Lisbon)
 const zoneName = (TZ || '').split('/').pop().replace(/_/g, ' ');
