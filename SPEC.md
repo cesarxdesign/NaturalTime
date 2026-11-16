@@ -191,20 +191,21 @@ Z has to be a calculation based on something real. Plan: find the planet's basel
 
 **Agreed (2026-11-16): one rule for both hemispheres.** Whatever is set north of the equator holds south of it too, mirrored: same latitude, same rule, seasons flipped. So southern data (Hadza, Tsimané, San) counts for the matching northern latitude.
 
-**Agreed (2026-11-16): 5 reference planes**, equator to the far north: Equator 0°, Austin 30.3°, Lisbon 38.7°, Stockholm 59.3°, Tromsø 69.7°. Shown on the globe ("Sleep planes", [Visualizations](Visualizations/README.md)).
+**5 reference planes, proposed (not agreed):** about 15° apart, from the equator to St Petersburg (59.9° N, the northernmost city of over a million). Shown on the globe ("Sleep planes", [Visualizations](Visualizations/README.md)).
 
-Population check: city population by latitude, north and south folded together (Natural Earth populated places, 7,342 places, 2.37 billion people). Each plane takes the people up to the midpoint with its neighbours (15.1°, 34.5°, 49.0°, 64.5°; the midpoints are a drawing choice, not agreed):
+| Plane | Latitude | Gap to the next | Natural-light sleep data near it |
+|---|---|---|---|
+| Quito | 0.2° S | 14.4° | Hadza 3.7° S |
+| Manila | 14.6° N | 15.7° | Tsimané 14.9° S |
+| Austin (Huberman) | 30.3° N | 15.2° | none yet; San 19.8° S between Manila and Austin |
+| Milan | 45.5° N | 14.5° | Colorado 40° N, between Austin and Milan |
+| St Petersburg | 59.9° N | | none yet |
 
-| Plane | Slice | Share of people |
-|---|---|---|
-| Equator | 0–15.1° | 18% |
-| Austin | 15.1–34.5° | 43% |
-| Lisbon | 34.5–49.0° | 30% |
-| Stockholm | 49.0–64.5° | 8% |
-| Tromsø | 64.5° and up | 0.1% |
+Lisbon (38.7° N) is the first user and a test point between Austin and Milan, worked out by the rule rather than a plane.
 
-- The widest gap, 0–30°, holds the most people (Mumbai 19°, Mexico City 19.4°, Dhaka 23.8°, Karachi 24.9°). Natural-light sleep data exists inside it: Tsimané 14.9° and San 19.8°.
-- Cities only: rural people aren't counted, which under-weights the tropics.
+Rejected the same day: Equator, Austin, Lisbon, Stockholm, Tromsø. Austin and Lisbon are only 8.4° apart, Stockholm and Tromsø 10.3°, while 0–30° had no plane. Tromsø also dropped as too small: the top plane is the northernmost city of over a million.
+
+Population check: city population by latitude, north and south folded together (Natural Earth populated places, 7,342 places, 2.37 billion people). Each plane takes the people up to the midpoint with its neighbours (the midpoints are a drawing choice, not agreed): Quito 9%, Manila 21%, Austin 43%, Milan 23%, St Petersburg 4.5%. Cities only: rural people aren't counted, which under-weights the tropics.
 
 Natural-light sleep by latitude (Yetish et al. 2015, Table S2; Wright et al. 2013; Stothard et al. 2017). "Night" is sunset to sunrise. "Sleep" is time actually asleep (actigraphy), not time in bed: the 3 traditional groups were asleep about 83% of the time between falling asleep and waking.
 

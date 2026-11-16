@@ -53,7 +53,7 @@ Year, Year in 2 s and Imprint step a day at a time at the same clock time as the
 - **Equator** (dashed) and **tropics** at 23.4° N and S: the band never leaves the tropics.
 - **Year path (thin amber, toggle "Year path"):** where the sun is overhead at the same clock time every day of the year. It's a figure-8 (the analemma): up and down from the tilt, sideways from the equation of time. Drawn at 12:00 UTC in the spin views and at Lisbon mean noon in the Lisbon views, so there it sits on Lisbon's meridian.
 - **Lisbon** (blue dot).
-- **Sleep planes (green-grey, toggle "Sleep planes", or `?planes=1`):** the 5 agreed reference latitudes for the sleep rule (Equator, Austin, Lisbon, Stockholm, Tromsø), labelled in the north and mirrored dimmer in the south (one rule for both hemispheres). A panel, **People by latitude**, shows city population per degree from the equator (north and south folded; Natural Earth populated places, 2.37 billion people) with each plane's share of the people nearest it. Hidden in the Lisbon views, where the Lisbon panels take that space.
+- **Sleep planes (green-grey, toggle "Sleep planes", or `?planes=1`):** the 5 proposed reference latitudes for the sleep rule, about 15° apart (Quito, Manila, Austin, Milan, St Petersburg), labelled in the north and mirrored dimmer in the south (one rule for both hemispheres). A panel, **People by latitude**, shows city population per degree from the equator (north and south folded; Natural Earth populated places, 2.37 billion people) with each plane's share of the people nearest it. Hidden in the Lisbon views, where the Lisbon panels take that space.
 
 ### Controls
 
