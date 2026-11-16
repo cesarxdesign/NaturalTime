@@ -261,6 +261,17 @@ With wake at sunrise (AT): 16 Nov bed 21:59, wake 07:20; 22 Jun bed 22:44, wake 
 
 Conflict: Colorado measured 9.9 h asleep in winter at 40° N; this rule gives about 8 h there. Huberman favored; Colorado's week-long campers may have been catching up on sleep.
 
+### Hypothesis: anchor the day on the body, not the light (2026-11-16, not agreed)
+
+The user's intuition, not a decision: Earth takes time to warm up after peak sun, and people and animals take time to get going after sunrise and linger after sunset. So the lived day runs later than the light (light 06:00–18:00, day closer to 08:00–20:00), a bias seen worldwide. The aim is to nudge wake closer to sunrise and bed a little earlier, not all the way to sunset (we sleep about 8 h, night can be 12 h).
+
+- The day's anchor ("peak") could be peak heat, some time after peak sun, rather than peak sun itself.
+- The halves would then not be equal: the evening half (lingering) longer than the morning half.
+- Lingering flexes with the season, but less than the light does: long summer days can't stretch it fully (or there'd be no rest), short winter days still keep some (or we'd oversleep).
+- Goal: one reference all year, so the same NT numbers mean the same thing (e.g. eat at 12, bed at 21, up at 6–7; examples only, not values).
+
+Evidence so far: the Hadza (natural light, equator) wake 1 h before sunrise and fall asleep 3.4 h after sunset, so their waking day runs 05:03 → 21:21 sun time, centred at 13:12, about 1h12 after peak sun; morning half 6h57, evening half 9h21. Peak air heat trails peak sun by about 2–3 h; body temperature peaks in the late afternoon. Conflicts with the agreed "peak sun at 12:00, equal halves"; would replace it if adopted.
+
 ### Observed sleep today, with electric light (for comparison, not a target)
 
 Sleep Cycle app, 941,329 users aged 18–55, June 2014 to March 2015, time in bed, national averages (Daily Mail 2015, read from a reprint): Portugal 00:41 → 08:22, UK 00:28 → 07:33, Italy 00:35 → 07:52, USA 23:54 → 07:20, Denmark 23:47 → 07:19, Sweden 23:50 → 07:21, Norway 00:16 → 07:43, Singapore 23:52 → 07:38, Indonesia 00:10 → 06:55, Thailand 00:22 → 07:24, Hong Kong 00:55 → 07:57, Brazil 00:32 → 07:31. Kenya: not found. No city-level or seasonal figures for these places. Huberman: no fixed clock times; wake at the same time daily, sunlight within 30–60 min of waking, sleep when first sleepy, his own bedtime about 22:00–23:00 ([Toolkit for Sleep](https://www.hubermanlab.com/newsletter/toolkit-for-sleep)).

@@ -46,6 +46,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 27. **Ease in, ease out.** No animal runs at full speed at sunrise; the productive day trails the light (7–19 or 8–20 instead of 6–18). Nature has the same shift: peak heat trails peak sun by about 2–3 h, and the body's temperature peaks in the late afternoon. Not a fixed 2 h: it moves with season, latitude and coast.
 28. **Looking for the heat formula.** The best published rule found: Cesaraccio et al. 2001 (yes, nearly his name), peak heat 4 h before sunset, coldest at sunrise, built on 5 Californian weather stations. It moves with day length (equator 2h03 after peak sun; Lisbon 3h26 in June, 0h44 in December) but breaks on short days (Oslo in December would peak before noon). Other models (Parton & Logan) use a fixed lag tuned site by site. Nobody found adjusts the timing for latitude: a gap the project may have to fill with its own fit to measured data.
 
+29. **The body's day, not the light's (hypothesis).** Earth warms up late, and so do we: light runs 6–18, the lived day closer to 8–20, everywhere. Maybe NT's anchor is peak heat, not peak sun; maybe the halves aren't equal, because we linger in the evening; and the lingering flexes with the season, but less than the light. The aim: the same numbers mean the same thing all year (eat at 12, bed at 21, up at 6–7, as shapes, not values). First evidence: the Hadza's waking day is centred 1h12 after peak sun, with a 6h57 morning and a 9h21 evening.
+
 ## Rejected or replaced
 
 - Sunrise as the anchor: doesn't exist every day far north.
