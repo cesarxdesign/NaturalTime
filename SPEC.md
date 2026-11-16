@@ -287,3 +287,4 @@ Add to the URL:
 - `lat=53.48&lon=-2.24` for any place
 - `tz=Europe/London` for that place's AT (without it, AT is the device's time zone)
 - `speed=60` to run time 60× faster
+- `k=100` to set the seasonal stretch (0–100%) for that visit only
