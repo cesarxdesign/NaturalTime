@@ -33,6 +33,7 @@ Raw material for a future folio page: turning points, decisions, what was reject
 - Split (two-phase) sleep: left out.
 - Deepest sleep as the anchor: follows bedtime, not the clock.
 - 30% stretch, 22:00–06:00 sleep arc: picked without evidence; placeholders until agreed.
+- An 8 h sleep ceiling (Huberman's winter top): not natural; deep-winter sleep under natural light runs longer. The one place the user overruled Huberman.
 - On/off light on the globe: replaced by measured lux on an eye scale.
 - Reference planes Equator, Austin, Lisbon, Stockholm, Tromsø: bunched in pairs, a 30° hole where most people live; Tromsø too small.
 - Planes Quito, Manila, Austin, Milan, St Petersburg: exact 15° spacing, but cities he doesn't know.

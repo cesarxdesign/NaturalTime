@@ -125,10 +125,10 @@ function halfArc(lat, decl, h0) {
 }
 
 // ---- Proposed Z rule (SPEC.md, Under discussion; NOT agreed)
-// asleep S = 6.4 h + 0.56 × (night − 11.9 h), floor 6 h, ceiling 8 h (Huberman) or 9.9 h (Colorado);
+// asleep S = 6.4 h + 0.56 × (night − 11.9 h), floor 6 h, ceiling 9.9 h (the longest sleep measured under natural light, Colorado winter);
 // Z (time in bed) = 15 min + S ÷ 0.83; centred 1.1 h after lowest sun (Hadza).
 const RULE = { base: 6.4, slope: 0.56, nightA: 11.9, floor: 6, latency: 0.25, eff: 0.83, centre: 1.1 };
-const state = { city: 'lis', day: Math.floor((Date.UTC(2026, 10, 16) - YEAR0) / DAY), ceil: 8 };
+const state = { city: 'lis', day: Math.floor((Date.UTC(2026, 10, 16) - YEAR0) / DAY), ceil: 9.9 };   // 8 h ceiling rejected: deep-winter sleep runs longer than 8 h under natural light
 function rule(night) {
   const S = Math.max(RULE.floor, Math.min(state.ceil, RULE.base + RULE.slope * (night - RULE.nightA)));
   const Z = RULE.latency + S / RULE.eff;
@@ -177,11 +177,6 @@ const city = () => CITIES.find(c => c.id === state.city);
     const b = document.createElement('button'); b.textContent = c.name; b.dataset.id = c.id;
     b.onclick = () => { state.city = c.id; draw(); }; bar.append(b);
   }
-  const s = document.createElement('span'); s.className = 'grp'; s.textContent = 'CEILING'; bar.append(s);
-  for (const v of [8, 9.9]) {
-    const b = document.createElement('button'); b.textContent = `${v} h asleep`; b.dataset.ceil = v;
-    b.onclick = () => { state.ceil = v; draw(); }; bar.append(b);
-  }
 }
 
 // ---- Year chart: days across, sun time down from 12:00 through midnight to 12:00
@@ -189,7 +184,6 @@ const cv = $('year'), X = cv.getContext('2d');
 const G = { L: 64, R: 16, T: 40, B: 34 };
 function draw() {
   document.querySelectorAll('[data-id]').forEach(b => b.setAttribute('aria-pressed', b.dataset.id === state.city));
-  document.querySelectorAll('[data-ceil]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.ceil === state.ceil));
   const c = city(), W = cv.width, H = cv.height, pw = W - G.L - G.R, ph = H - G.T - G.B;
   const tx = d => G.L + d / 365 * pw;
   const ty = h => G.T + wrap(h - 12) / 24 * ph;            // 12:00 at top, 00:00 in the middle
@@ -272,7 +266,7 @@ function table() {
 function notes() {
   const src = CITIES.filter(c => OBSERVED[c.id]).map(c => `<p><b>${c.name}:</b> ${OBSERVED[c.id].what}. ${OBSERVED[c.id].src}</p>`).join('');
   $('notes').innerHTML = `
-    <p><b>Should (proposed rule, not agreed):</b> asleep = 6.4 h + 0.56 × (night − 11.9 h), never under 6 h, capped at the chosen ceiling; in bed = 15 min to fall asleep + asleep ÷ 0.83; the window is centred 1.1 h after lowest sun (NT 01:06), as the Hadza sleep.</p>
+    <p><b>Should (proposed rule, not agreed):</b> asleep = 6.4 h + 0.56 × (night − 11.9 h), never under 6 h, never over 9.9 h (the longest sleep measured under natural light: Colorado camping in winter); in bed = 15 min to fall asleep + asleep ÷ 0.83; the window is centred 1.1 h after lowest sun (NT 01:06), as the Hadza sleep.</p>
     <p><b>NT</b> here is sun time: 00:00 at lowest sun, 12:00 at peak sun, minutes 60 s long. With the seasonal stretch, NT readings between those anchors would shift; the stretch isn't agreed yet.</p>
     <p><b>Clock</b> times use each city's own time zone, daylight saving included (the browser's time-zone database). Night is sunset to sunrise (sun's centre 0.833° below the horizon); twilight runs to −12°.</p>
     ${src ? '<p><b>Observed data</b> (one figure for the whole year unless stated):</p>' + src : '<p><b>Observed data:</b> being sourced.</p>'}`;

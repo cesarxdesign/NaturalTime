@@ -239,7 +239,7 @@ Z (bed) = 15 min + S ÷ 0.83
 - **Baseline (A):** the 3 traditional groups average 6.4 h asleep at nights of about 11.9 h (Hadza 6.3 at 12.1; Tsimané and San, averaged over their seasons, 6.2 and 6.7). Z at the equator: 7.9 h in bed, every day.
 - **Swing:** 0.56 h of sleep per hour of night. Tsimané 0.7, San 0.45, Colorado 0.56: all natural-light, within the same people. Huberman's example at his latitude (Austin, nights 9.9–13.8 h): 6 h → 8 h is 0.51. The natural data and Huberman roughly agree on the slope.
 - **Floor: 6 h asleep (7.5 h in bed).** Huberman's summer figure. Shortest-night measurements: Tsimané 5.7, San 6.2, Colorado 6.8. Reached at nights under 11.2 h.
-- **Ceiling:** not decided. 8 h asleep (Huberman's winter top; 9.9 h in bed) or 9.9 h asleep (Colorado winter, the most measured under natural light; 12.2 h in bed).
+- **Ceiling:** 8 h asleep **rejected** (2026-11-16): not natural; in deep winter, people living by the sun sleep longer than 8 h, not just lie in bed. Huberman's 7–8 h winter figure overruled here (flagged). Proposed instead: 9.9 h asleep (12.2 h in bed), the longest sleep measured under natural light (Colorado camping, winter). Not agreed.
 - **Temperature:** no separate length term, to avoid double-counting the season. Heat only as a later adjustment: nights above 30 °C cut sleep by just over 14 min (Minor et al. 2022, 47,000 people, 68 countries).
 - **Where Z sits:** centred about 1.1 h after lowest sun (NT about 01:05). Hadza: in bed 21:06 solar, awake 05:03, centre 01:05; melatonin midpoint at lowest sun, sleep centre about 1 h after it. Wake comes before sunrise when nights are long, which covers the far north.
 
