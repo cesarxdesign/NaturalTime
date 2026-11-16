@@ -52,6 +52,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 31. **Geometry is the only clean signal.** Temperature and rain follow the sun only roughly, and people have bent them too: fewer trees mean less rain and longer dry seasons, cities hold heat, and electric light and clocks shift sleep. The sun's position is the one input nobody has moved, which is why NT anchors on it and treats climate as a correction.
 
+32. **Who lives where the light swings.** Rough count by light band (country populations spread by where their cities are): 87% of people live north of the equator; bands 1–2 (0–40°, weak seasons) hold 84%: East and South Asia, the Middle East, Africa, Latin America. Only Europe and Russia live mostly in bands 3–4, with real seasons. Yet the working day and the clock (9-to-5, time zones, Greenwich) were shaped in band 3–4 Britain, Europe and the US, and exported to the majority, who live by heat more than by day length.
+
 ## Rejected or replaced
 
 - Sunrise as the anchor: doesn't exist every day far north.
@@ -72,6 +74,7 @@ Raw material for a future folio page: turning points, decisions, what was reject
 - Lisbon peak sun: about 12:20–13:43 AT over a year; 37 min from its place in the time zone, −16 to +14 min from the equation of time, +60 min daylight saving.
 - Lisbon day length: 9h27 (December) to 14h53 (June). Equator: 12h07 every day.
 - Lisbon's year: sun 51%, twilight 9%, dark 40%.
+- People by light band, N and S folded: band 1 44%, band 2 40%, band 3 11%, band 4 4%, band 5 0.5%, beyond 0.1%. North of the equator: 87%.
 - Earth–sun distance: 147.1 million km (3 Jan) to 152.1 million km (6 Jul); about 7% more light in January.
 - Sleep without electric light: Hadza, San, Tsimané 5.7–7.1 h (average 6.4 h), start about 3.3 h after sunset, wake before sunrise. Colorado: 6.8 h summer, 9.9 h winter.
 - People by latitude (cities, N and S folded), nearest each plane: Singapore group 13%, Bangkok group 23%, Austin 36%, Milan 22%, Copenhagen group 6%.
