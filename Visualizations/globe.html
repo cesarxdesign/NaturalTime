@@ -86,7 +86,7 @@
     <div><i class="key dot"></i>Lisbon, London</div>
     <div id="planeKey" hidden><i class="key plane"></i>Cities (sleep planes), northern half only: a line for one city, a band for a group; dots are the cities, southern ones mirrored north and named in brackets</div>
     <div id="bandKey" hidden><i class="key" style="border-top-color:#e8ecf1;opacity:.7"></i>Light bands, northern half: each adds the same to the longest day as the tropics band (about 1h28); 7 and 8 are thin slivers under the Arctic Circle; above 65.7° the longest day is 24 h</div>
-    <div id="popKey" hidden><i class="key" style="border-top-color:#cfd6e0"></i>Population by light band, north and south: share of the world's people (rough: each country's total spread by where its cities are; Natural Earth, about 2019)</div>
+    <div id="popKey" hidden><i class="key" style="border-top-color:#cfd6e0"></i>Population by light band, north and south: share of the world's people and density (× world average, also the shade) (rough: each country's total spread by where its cities are; Natural Earth, about 2019)</div>
     <div id="refKey" hidden><i class="key eq" style="border-top-color:var(--blue)"></i>Reference: Lisbon, London</div>
     <div id="trailKey" hidden><i class="key fig"></i><span id="trailLabel"></span></div>
   </div>
@@ -384,21 +384,27 @@ const popGroup = new THREE.Group(); tiltGroup.add(popGroup);
   const edges = [...BAND_EDGES, 90];   // 8 bands + the 24 h cap
   // Bands of 10% or more stand alone; runs of neighbouring bands under 10% are merged into one group
   const skinTo = { N: 90, S: 90 };   // where the globe's skin stops: no skin over the merged (hollow) groups
+  // Shade = density: share of people ÷ share of Earth's surface (1 = world average)
+  const dens = g => (g.v / total) / ((Math.sin(g.hi * RAD) - Math.sin(g.lo * RAD)) / 2);
+  const allGroups = {};
   for (const [h, sgn] of [['N', 1], ['S', -1]]) {
-    const groups = [];
+    const groups = []; allGroups[h] = groups;
     for (let i = 0; i < edges.length - 1; i++) {
       const v = BAND_POP[h][i], big = 100 * v / total >= 10, last = groups[groups.length - 1];
       if (!big && last && !last.big) { last.hi = edges[i + 1]; last.v += v; last.to = i; }
       else groups.push({ lo: edges[i], hi: edges[i + 1], v, from: i, to: i, big });
     }
-    for (const g of groups) {
+  }
+  const maxDens = Math.max(...[...allGroups.N, ...allGroups.S].filter(g => g.big).map(dens));
+  for (const [h, sgn] of [['N', 1], ['S', -1]]) {
+    for (const g of allGroups[h]) {
       const a = sgn > 0 ? 90 - g.hi : 90 + g.lo;   // polar angle from the north pole
       if (!g.big) skinTo[h] = Math.min(skinTo[h], g.lo);
       if (g.big) popGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0115, 160, 16, 0, 2 * Math.PI, a * RAD, (g.hi - g.lo) * RAD),   // merged small groups stay hollow
-        new THREE.MeshBasicMaterial({ color: 0xcfd6e0, transparent: true, opacity: 0.03 + 0.45 * Math.sqrt(g.v / max), depthWrite: false })));
+        new THREE.MeshBasicMaterial({ color: 0xcfd6e0, transparent: true, opacity: 0.06 + 0.5 * dens(g) / maxDens, depthWrite: false })));
       if (g.hi < 90) popGroup.add(line(parallel(sgn * g.hi, 1.012), edgeMat));
       const name = g.from === g.to ? `${h}${g.from + 1}` : `${h}${g.from + 1}+`;
-      const mid = g.hi === 90 ? g.lo + 8 : (g.lo + g.hi) / 2, lb = label(`${name} ${pct(g.v)}`, '#e8ecf1', 0.08);
+      const mid = g.hi === 90 ? g.lo + 8 : (g.lo + g.hi) / 2, lb = label(`${name} ${pct(g.v)} · ${dens(g).toFixed(1)}×`, '#e8ecf1', 0.08);
       lb.position.set(-Math.cos(mid * RAD) - 0.08 - lb.scale.x / 2, sgn * Math.sin(mid * RAD), 0); popGroup.add(lb);   // outside the left edge
     }
   }
