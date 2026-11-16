@@ -12,3 +12,5 @@ Sun maths: NOAA solar calculator formulas, worked out on the device. Only the pl
 Testing: `?t=2026-07-25T15:20:00Z&lat=53.48&lon=-2.24&tz=Europe/London&speed=60` (tz sets AT; without it AT is the device time zone)
 
 Live: https://cesarxdesign.github.io/NaturalTime/
+
+Full spec (what it takes into account, how and why): [SPEC.md](SPEC.md)
