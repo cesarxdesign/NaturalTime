@@ -60,6 +60,7 @@
   .bars .work { stroke: var(--globe); stroke-width: 3; stroke-linecap: round; opacity: .55; }
   .bars .noon { stroke: var(--globe); stroke-width: 1.4; stroke-linecap: round; }
   .bars .now { stroke: var(--ink); stroke-width: .8; }
+  .bars .twi { fill: var(--sun); }
 
   /* Readouts */
   .info { width: min(100%, 420px); display: grid; gap: 22px; }
@@ -93,6 +94,8 @@
     <svg class="bars" viewBox="0 0 200 26" aria-hidden="true">
       <line class="track" x1="1" y1="7" x2="199" y2="7"/>
       <line class="peak" x1="100" y1="2" x2="100" y2="12"/>
+      <circle class="twi" id="barDawn" cy="7" r="1.8"/>
+      <circle class="twi" id="barDusk" cy="7" r="1.8"/>
       <line class="track" x1="1" y1="19" x2="199" y2="19"/>
       <line class="work" id="barWork" y1="19" y2="19"/>
       <line class="noon" id="barNoon" y1="14" y2="24"/>
@@ -314,6 +317,12 @@ function render() {
   const bx = h => (1 + h / 24 * 198).toFixed(2);
   const setX = (id, a, b = a) => { const l = $(id); l.setAttribute('x1', bx(a)); l.setAttribute('x2', bx(b)); };
   setX('barWork', xNT, yNT); setX('barNoon', noonNT); setX('barNow', nt);
+  // Nautical dawn and dusk on the NT line (hidden when it never gets dark, or never gets light)
+  const twi = dawnArc > 0 && dawnArc < 12;
+  for (const [id, st2] of [['barDawn', 12 - dawnArc], ['barDusk', 12 + dawnArc]]) {
+    $(id).setAttribute('cx', bx(toNT(st2, D, k)));
+    $(id).style.display = twi ? '' : 'none';
+  }
   $('kv').textContent = kInput.value + '%';
 }
 
