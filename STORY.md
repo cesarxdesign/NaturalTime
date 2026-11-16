@@ -54,6 +54,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 32. **Who lives where the light swings.** Rough count by light band (country populations spread by where their cities are): 87% of people live north of the equator; bands 1–2 (0–40°, weak seasons) hold 84%: East and South Asia, the Middle East, Africa, Latin America. Only Europe and Russia live mostly in bands 3–4, with real seasons. Yet the working day and the clock (9-to-5, time zones, Greenwich) were shaped in band 3–4 Britain, Europe and the US, and exported to the majority, who live by heat more than by day length. The bands and head-counts are guidance on ways of living, not a definition of who the user is: NT works for anyone, anywhere.
 
+33. **Three bands to build on.** N1 and S1 get the same light, mirrored, so they merge into E0, the equatorial band. With N2 and N3, that's 3 reference bands holding about 95% of people and all the natural-light sleep data; everything further out is derived. The 5 city planes fold into them: plane 1 and 2 cities in E0, Austin and Lisbon in N2, Milan in N3.
+
 ## Rejected or replaced
 
 - Sunrise as the anchor: doesn't exist every day far north.

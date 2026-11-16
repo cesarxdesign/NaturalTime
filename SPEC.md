@@ -261,6 +261,18 @@ With wake at sunrise (AT): 16 Nov bed 21:59, wake 07:20; 22 Jun bed 22:44, wake 
 
 Conflict: Colorado measured 9.9 h asleep in winter at 40° N; this rule gives about 8 h there. Huberman favored; Colorado's week-long campers may have been catching up on sleep.
 
+### Reference bands (agreed 2026-11-16)
+
+The model is built on 3 light bands and derives everything else:
+
+| Band | Latitude | Reference cities | Natural-light sleep data |
+|---|---|---|---|
+| E0 (N1 + S1 merged: same light, mirrored) | 23.4° S – 23.4° N | Singapore, Nairobi, Jakarta, Bangkok, Hong Kong, Rio | Hadza 3.7° S, Tsimané 14.9° S, San 19.8° S |
+| N2 | 23.4–40.2° | Austin, Lisbon | Colorado 40.0° N (top edge) |
+| N3 | 40.2–50.7° | Milan | none yet |
+
+S2 mirrors N2. N4 and beyond (London, Copenhagen, Stockholm, Oslo) are derived from the curve fitted on these 3, flattening toward the pole. Every place still gets its own exact day from the sun at its GPS position; the bands only organise the evidence and the fitting.
+
 ### Hypothesis: anchor the day on the body, not the light (2026-11-16, not agreed)
 
 The user's intuition, not a decision: Earth takes time to warm up after peak sun, and people and animals take time to get going after sunrise and linger after sunset. So the lived day runs later than the light (light 06:00–18:00, day closer to 08:00–20:00), a bias seen worldwide. The aim is to nudge wake closer to sunrise and bed a little earlier, not all the way to sunset (we sleep about 8 h, night can be 12 h).
