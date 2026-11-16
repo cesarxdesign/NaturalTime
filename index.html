@@ -53,6 +53,14 @@
   .clock.equal .t { font-size: 18cqi; }
   .clock.equal .dots { width: 54cqi; }
 
+  /* Day bars: NT on top (peak sun fixed in the middle), AT below (work block and AT noon drift) */
+  .bars { order: 2; display: block; width: 100%; height: auto; flex: none; margin-top: 2cqi; overflow: visible; }
+  .bars .track { stroke: var(--faint); stroke-width: 1.2; stroke-linecap: round; }
+  .bars .peak { stroke: var(--sun); stroke-width: 1.4; stroke-linecap: round; }
+  .bars .work { stroke: var(--globe); stroke-width: 3; stroke-linecap: round; opacity: .55; }
+  .bars .noon { stroke: var(--globe); stroke-width: 1.4; stroke-linecap: round; }
+  .bars .now { stroke: var(--ink); stroke-width: .8; }
+
   /* Readouts */
   .info { width: min(100%, 420px); display: grid; gap: 22px; }
   dl { margin: 0; display: grid; grid-template-columns: 1fr auto; row-gap: 10px; column-gap: 16px; font-size: 13px; }
@@ -82,6 +90,14 @@
       <span class="t" id="atT">--:--</span>
       <svg class="dots" id="atD" viewBox="0 0 120 2" aria-hidden="true"></svg>
     </div>
+    <svg class="bars" viewBox="0 0 200 26" aria-hidden="true">
+      <line class="track" x1="1" y1="7" x2="199" y2="7"/>
+      <line class="peak" x1="100" y1="2" x2="100" y2="12"/>
+      <line class="track" x1="1" y1="19" x2="199" y2="19"/>
+      <line class="work" id="barWork" y1="19" y2="19"/>
+      <line class="noon" id="barNoon" y1="14" y2="24"/>
+      <line class="now" id="barNow" y1="0" y2="26"/>
+    </svg>
   </div>
 </div>
 
@@ -290,9 +306,14 @@ function render() {
   $('peak').textContent = ev(12);
   $('daylen').textContent = D === 0 ? 'polar night' : D === 24 ? 'midnight sun' : dur(D);
   $('sleep').textContent = `${ev(fromNT(22, D, k))}–${ev(fromNT(6, D, k))} AT`;
-  const xNT = toNT(sunTime(new Date(at).setHours(8, 0, 0, 0), s), D, k);
-  const yNT = toNT(sunTime(new Date(at).setHours(18, 0, 0, 0), s), D, k);
+  const atToNT = h => toNT(sunTime(new Date(at).setHours(h, 0, 0, 0), s), D, k);
+  const xNT = atToNT(8), yNT = atToNT(18), noonNT = atToNT(12);
   $('work').textContent = `${ntLabel(xNT)}–${ntLabel(yNT)} NT`;
+
+  // Day bars: x is NT across 24h, so peak sun sits mid-bar and AT's marks drift through the year
+  const bx = h => (1 + h / 24 * 198).toFixed(2);
+  const setX = (id, a, b = a) => { const l = $(id); l.setAttribute('x1', bx(a)); l.setAttribute('x2', bx(b)); };
+  setX('barWork', xNT, yNT); setX('barNoon', noonNT); setX('barNow', nt);
   $('kv').textContent = kInput.value + '%';
 }
 
