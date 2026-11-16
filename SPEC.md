@@ -261,6 +261,10 @@ With wake at sunrise (AT): 16 Nov bed 21:59, wake 07:20; 22 Jun bed 22:44, wake 
 
 Conflict: Colorado measured 9.9 h asleep in winter at 40° N; this rule gives about 8 h there. Huberman favored; Colorado's week-long campers may have been catching up on sleep.
 
+### Working bands: 1 h swing steps (agreed 2026-11-16, for now)
+
+Work continues on bands where each step adds 1 h to the gap between the longest and shortest day, N1, N2… and S1, S2… outward from the equator, up to the 24 h cap at 65.7°. Edges (north, mirrored south): 8.6°, 16.8°, 24.2°, 30.8°, 36.5°, 41.4°, 45.6°, 49.1°, 52.0°, 54.5°, 56.7°, 58.5°, 60.0°… Reason: the first step (equator to 8.6°) lands close to where the figure-8 crosses itself (8.9° N). The two come from different causes (day-length swing vs the oval orbit), so the match is close, not exact. These replace the earlier reference bands below while this work runs; on the globe: "1 h bands".
+
 ### Reference bands (agreed 2026-11-16)
 
 The model is built on these bands and derives everything else. The tropics are split in 3, each covering the same change in day length (about 58 min on the June solstice), so the middle comes out slightly wider:
