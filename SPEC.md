@@ -152,18 +152,24 @@ Evidence gathered so far:
 | Conditions | Winter vs summer sleep |
 |---|---|
 | Without electric light (Tsimané, Bolivia; San, Namibia) | about 1 hour more in winter |
-| Camping without electric light, Colorado | winter 9.9 h vs 7.6 h at home; summer camping no different from home |
+| Camping without electric light, Colorado (40° N, close to Lisbon's 38.7°) | winter, around the solstice (5 people): 9.9 h vs 7.6 h at home. Summer, 14h40 of daylight (8 people): 6.8 h vs 6.7 h at home |
 | With electric light (Germany; 73 million nights of wearable data; Tromsø) | 0–25 minutes more in winter |
 
 - Read as a ratio: under natural light, sleep changes by about 40–60% of the change in night length.
 - People living by the sun wake near the coldest point of the night, about 1 hour before sunrise.
+- Under natural light only (Colorado, summer), melatonin rises near sunset, peaks in **the middle of the solar night**, and falls just after sunrise, before waking. The body's night lines up with the sun's.
+- Deepest sleep (slow-wave) comes early, in the first sleep cycles, and follows bedtime rather than the clock. Mid-sleep tracks melatonin timing closely. Core body temperature bottoms out about 2 hours before habitual waking.
+- **Huberman** (Huberman Lab sleep toolkit): needs change, for example "6 hours a night in summer and 7-8 in winter"; wake at the same time every day, go to bed when first sleepy; sunlight within 30–60 minutes of waking; avoid bright overhead light 10 pm–4 am.
+- **Conflict:** Huberman's example swing (6 h → 7–8 h) is smaller than Colorado's measured one (6.8 h → 9.9 h). His is an example of changing needs, Colorado's a small measured study. Standing rule: favor Huberman where they disagree.
+
+Lisbon's nights match Colorado's closely: 9h07 at the June solstice (Colorado summer camping had 9h20 of dark) and 14h32 at the December solstice.
 
 Open questions:
 
-1. **Z's swing:** which ratio to the night length (40–60% from the evidence), and whether a floor (about 6 h) and a ceiling (about 10 h) apply.
+1. **Z's swing:** Huberman's example (summer 6 h, winter 7–8 h) or Colorado's measurement (summer 6.8 h, winter 9.9 h, about 56% of the night-length change); and whether a floor and a ceiling apply.
 2. **Z's baseline:** the length at the equinox, set per user (8 h for the first user).
 3. **Temperature:** heat shortens sleep and cold lengthens it; the size of the effect needs data.
-4. **Where Z sits:** around a "peak sleep" point, stretched both ways like NT stretches from peak sun, or ending at the coldest point of the night with Z counted backwards. This also settles the 2-hour offset between lowest sun and the middle of sleep that the placeholder uses.
+4. **Where Z sits:** the evidence puts the body's night (melatonin midpoint) at the middle of the solar night, i.e. lowest sun, NT 00:00. Options: around a "peak sleep" point, stretched both ways like NT stretches from peak sun, or ending at the coldest point of the night with Z counted backwards. This also settles the 2-hour offset between lowest sun and the middle of sleep that the placeholder uses.
 
 ### The seasonal stretch
 
