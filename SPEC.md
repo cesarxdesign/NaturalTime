@@ -272,7 +272,7 @@ The model is built on these bands and derives everything else. The tropics are s
 | N2 | 23.4–40.2° | 37.1% | Tokyo, Delhi, Shanghai, Dhaka (and Austin, Lisbon) | Colorado 40.0° N (top edge) |
 | N3 | 40.2–50.7° | 11.3% | New York, Istanbul, Paris (and Milan) | none yet |
 
-S2 mirrors N2. N4 and beyond (London, Copenhagen, Stockholm, Oslo; 4.5%) are derived from the curve fitted on these, flattening toward the pole. Shares are rough (Natural Earth country populations spread by where each country's cities are). Every place still gets its own exact day from the sun at its GPS position; the bands only organise the evidence and the fitting.
+The south mirrors the north: S1 (8.3–23.4° S, 4.0%) and beyond (S1+, 7.2% in all) are derived from N1 and N2, not modelled separately. N4 and beyond (London, Copenhagen, Stockholm, Oslo; 4.5%) are derived from the curve fitted on these, flattening toward the pole. Shares are rough (Natural Earth country populations spread by where each country's cities are). Every place still gets its own exact day from the sun at its GPS position; the bands only organise the evidence and the fitting.
 
 ### Hypothesis: anchor the day on the body, not the light (2026-11-16, not agreed)
 
