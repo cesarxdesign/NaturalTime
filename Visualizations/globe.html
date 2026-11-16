@@ -380,18 +380,22 @@ const popGroup = new THREE.Group(); tiltGroup.add(popGroup);
   const pct = v => { const p = 100 * v / total; return p >= 1 ? p.toFixed(1) + '%' : p >= 0.01 ? p.toPrecision(1) + '%' : v > 0 ? '<0.01%' : '0%'; };
   const edgeMat = new THREE.LineBasicMaterial({ color: 0xcfd6e0, transparent: true, opacity: 0.5 });
   const edges = [...BAND_EDGES, 90];   // 8 bands + the 24 h cap
+  // Bands of 10% or more stand alone; runs of neighbouring bands under 10% are merged into one group
   for (const [h, sgn] of [['N', 1], ['S', -1]]) {
+    const groups = [];
     for (let i = 0; i < edges.length - 1; i++) {
-      const lo = edges[i], hi = edges[i + 1], v = BAND_POP[h][i];
-      const a = sgn > 0 ? 90 - hi : 90 + lo;   // polar angle from the north pole
-      popGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0115, 160, 16, 0, 2 * Math.PI, a * RAD, (hi - lo) * RAD),
-        new THREE.MeshBasicMaterial({ color: 0xcfd6e0, transparent: true, opacity: 0.03 + 0.45 * Math.sqrt(v / max), depthWrite: false })));
-      if (hi < 90) popGroup.add(line(parallel(sgn * hi, 1.012), edgeMat));
-      if (hi - lo >= 2) {   // bands 7 and 8 are too thin to label
-        const mid = (lo + hi) / 2, lb = label(`${h}${i + 1 === edges.length - 1 ? ' cap' : i + 1} ${pct(v)}`, '#e8ecf1', 0.08);
-        const stagger = mid > 50 && i % 2 ? 0.4 : 0;   // crowded near the poles: push every other label out
-        lb.position.set(-Math.cos(mid * RAD) - 0.08 - stagger - lb.scale.x / 2, sgn * Math.sin(mid * RAD), 0); popGroup.add(lb);   // outside the left edge
-      }
+      const v = BAND_POP[h][i], big = 100 * v / total >= 10, last = groups[groups.length - 1];
+      if (!big && last && !last.big) { last.hi = edges[i + 1]; last.v += v; last.to = i; }
+      else groups.push({ lo: edges[i], hi: edges[i + 1], v, from: i, to: i, big });
+    }
+    for (const g of groups) {
+      const a = sgn > 0 ? 90 - g.hi : 90 + g.lo;   // polar angle from the north pole
+      popGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0115, 160, 16, 0, 2 * Math.PI, a * RAD, (g.hi - g.lo) * RAD),
+        new THREE.MeshBasicMaterial({ color: 0xcfd6e0, transparent: true, opacity: 0.03 + 0.45 * Math.sqrt(g.v / max), depthWrite: false })));
+      if (g.hi < 90) popGroup.add(line(parallel(sgn * g.hi, 1.012), edgeMat));
+      const name = g.from === g.to ? `${h}${g.from + 1}` : `${h}${g.from + 1}+`;
+      const mid = g.hi === 90 ? g.lo + 8 : (g.lo + g.hi) / 2, lb = label(`${name} ${pct(g.v)}`, '#e8ecf1', 0.08);
+      lb.position.set(-Math.cos(mid * RAD) - 0.08 - lb.scale.x / 2, sgn * Math.sin(mid * RAD), 0); popGroup.add(lb);   // outside the left edge
     }
   }
 }
