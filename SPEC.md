@@ -268,6 +268,7 @@ Conflict: Colorado measured 9.9 h asleep in winter at 40° N; this rule gives ab
 - **R, rest:** recreation, relaxing, recovering, eating, training, people: whatever is left, R = 24 − W − S.
 
 So R absorbs the season: long summer days give more R, long winter nights give more S and less R. S has no agreed numbers yet.
+- **W is set by society, on AT** (e.g. 9-to-5), so daylight saving shifts it by an hour twice a year. Wake follows the sun and moves a little every day, never in jumps. So when daylight saving changes, wake doesn't jump: what changes is the free time between waking and the start of W.
 
 ### Working bands: 1 h swing steps (agreed 2026-11-16, for now)
 
