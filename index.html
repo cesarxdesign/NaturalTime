@@ -35,6 +35,11 @@
   .clock svg { flex: none; overflow: visible; }
   .clock .t { font-weight: 300; letter-spacing: -0.02em; text-align: center; }
   .clock .dots { display: block; height: auto; }
+  .clock .lbl { font-family: var(--sans); color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
+  .clock .lbl:empty { display: none; }
+  .clock.small .lbl { order: -1; font-size: 6cqi; max-width: 34cqi; }
+  .clock.big .lbl { font-size: 6.5cqi; max-width: 80cqi; margin-bottom: -2cqi; }
+  .clock.equal .lbl { font-size: 5.5cqi; max-width: 70cqi; margin-bottom: -1cqi; }
   .clock .dots circle { fill: var(--faint); }
   .clock .dots circle.on { fill: var(--dim); }
 
@@ -83,11 +88,13 @@
   <div class="face" id="face">
     <div class="clock" id="nt">
       <svg class="icon" viewBox="-12 -12 24 24" id="ntIcon" aria-hidden="true"></svg>
+      <span class="lbl" id="ntL"></span>
       <span class="t" id="ntT">--:--</span>
       <svg class="dots" id="ntD" viewBox="0 0 120 2" aria-hidden="true"></svg>
     </div>
     <div class="clock" id="at">
       <svg class="icon" viewBox="-12 -12 24 24" id="atIcon" aria-hidden="true"></svg>
+      <span class="lbl" id="atL"></span>
       <span class="t" id="atT">--:--</span>
       <svg class="dots" id="atD" viewBox="0 0 120 2" aria-hidden="true"></svg>
     </div>
@@ -302,6 +309,8 @@ function render() {
   }
 
   // Readouts
+  $('ntL').textContent = place.name || '';
+  $('atL').textContent = zoneName;
   $('place').textContent = `${place.name ? place.name + ' · ' : ''}${Math.abs(place.lat).toFixed(2)}°${place.lat >= 0 ? 'N' : 'S'} ${Math.abs(place.lon).toFixed(2)}°${place.lon >= 0 ? 'E' : 'W'}`;
   let gap = atMin + at.getSeconds() / 60 - nt * 60;
   gap = ((gap + 720) % 1440 + 1440) % 1440 - 720;
@@ -341,16 +350,43 @@ requestAnimationFrame(spin);
 
 kInput.addEventListener('input', () => { try { localStorage.setItem('nt-stretch', kInput.value); } catch (e) {} render(); });
 
+// AT label: the city the device's time zone is named after (Europe/Lisbon → Lisbon)
+const zoneName = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').split('/').pop().replace(/_/g, ' ');
+
+// NT label: the place you're in. Coordinates go to the geocoder rounded to ~1 km.
+// Town or municipality level: Almada, Manchester, Dover (not the parish, not the district)
+function tidyName(d) {
+  if (d.city) return d.city;
+  return (d.locality || '').replace(/^Uni[aã]o das [Ff]reguesias de /, '').replace(/^Freguesia de /, '').split(/ e /)[0];
+}
+async function nameFor(p) {
+  const lat = p.lat.toFixed(2), lon = p.lon.toFixed(2);
+  try {
+    const cached = JSON.parse(localStorage.getItem('nt-name') || 'null');
+    if (cached && cached.lat === lat && cached.lon === lon) return cached.name;
+  } catch (e) {}
+  try {
+    const r = await fetch(`https://api-bdc.io/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+    const name = tidyName(await r.json());
+    try { localStorage.setItem('nt-name', JSON.stringify({ lat, lon, name })); } catch (e) {}
+    return name;
+  } catch (e) { return ''; }
+}
+async function setPlace(p) {
+  place = p; lastIconKey = ''; render();
+  const name = await nameFor(p);
+  if (place === p && name) { place.name = name; render(); }
+  try { localStorage.setItem('nt-place', JSON.stringify(place)); } catch (e) {}
+}
 function locate() {
   if (!navigator.geolocation) return;
-  navigator.geolocation.getCurrentPosition(p => {
-    place = { lat: p.coords.latitude, lon: p.coords.longitude, name: 'Here' };
-    try { localStorage.setItem('nt-place', JSON.stringify(place)); } catch (e) {}
-    lastIconKey = ''; render();
-  }, () => {}, { maximumAge: 3600e3, timeout: 15e3 });
+  navigator.geolocation.getCurrentPosition(
+    p => setPlace({ lat: p.coords.latitude, lon: p.coords.longitude, name: '' }),
+    () => {}, { maximumAge: 3600e3, timeout: 15e3 });
 }
 $('locate').addEventListener('click', locate);
-if (!q.has('lat')) {
+if (q.has('lat')) setPlace(place);
+else {
   try { const p = JSON.parse(localStorage.getItem('nt-place')); if (p && isFinite(p.lat)) place = p; } catch (e) {}
   locate();
 }
