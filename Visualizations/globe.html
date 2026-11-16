@@ -44,8 +44,16 @@
   .lisPanels { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); bottom: 12px; width: min(300px, calc(100% - 32px)); display: grid; gap: 8px; }
   .lisPanels[hidden] { display: none; }
   .sky { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; }
-  .popPanel { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); bottom: 30px; width: min(300px, calc(100% - 32px)); }
-  .popPanel[hidden] { display: none; }
+  .rightPanels { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); bottom: 30px; width: min(300px, calc(100% - 32px)); display: grid; gap: 8px; }
+  .popPanel[hidden], .bandPanel[hidden] { display: none; }
+  .bandPanel { background: rgba(11,15,21,.88); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 12px; display: grid; gap: 6px; }
+  .bandPanel h3 { margin: 0; font-size: 13px; font-weight: 600; }
+  .bandPanel .b { display: grid; grid-template-columns: 3.4em 1fr; gap: 1px 8px; }
+  .bandPanel .b b { font-family: var(--mono); font-weight: 500; }
+  .bandPanel .b span { color: var(--ink); }
+  .bandPanel .b small { grid-column: 2; color: var(--dim); font-family: var(--mono); font-size: 11px; }
+  .bandPanel .b.derived b, .bandPanel .b.derived span { color: var(--dim); }
+  .bandPanel .src { color: var(--dim); font-size: 11px; }
   .key.plane { border-top: 2px solid #9fd0c4; }
   .speed { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dim); }
   .speed[hidden] { display: none; }
@@ -98,7 +106,18 @@
     <button data-view="lisbon" aria-pressed="false">Lisbon · sun up/down</button>
     <button data-view="orbit" aria-pressed="false">Orbit · sun in middle</button>
   </div>
+  <div class="rightPanels">
+  <div class="bandPanel" id="bandPanel" hidden>
+    <h3>Bands · biggest cities</h3>
+    <div class="b derived"><b>N4+</b><span>Moscow, London</span><small>50.7° N and up · derived</small></div>
+    <div class="b"><b>N3</b><span>New York, Istanbul, Paris</span><small>40.2–50.7° N</small></div>
+    <div class="b"><b>N2</b><span>Tokyo, Delhi, Shanghai, Dhaka</span><small>23.4–40.2° N</small></div>
+    <div class="b"><b>E0</b><span>Mexico City, Mumbai, Kolkata, Rio de Janeiro, Manila, Lagos</span><small>23.4° S – 23.4° N</small></div>
+    <div class="b derived"><b>S2+</b><span>São Paulo, Buenos Aires, Santiago</span><small>23.4° S and down · derived</small></div>
+    <div class="src">Ranked by metro population (Natural Earth populated places)</div>
+  </div>
   <div class="popPanel" id="popPanel" hidden><canvas class="sky" id="popChart" width="600" height="560" aria-label="City population by latitude, north and south folded, with the 5 sleep planes"></canvas></div>
+  </div>
   <div class="lisPanels" id="lisPanels" hidden>
     <canvas class="sky" id="yearChart" width="600" height="330" aria-label="Lisbon's day, twilight and night across the year"></canvas>
     <canvas class="sky" id="sky" width="600" height="300"></canvas>
@@ -784,7 +803,7 @@ function showPlanes() {
   if (state.planes) drawPop();
 }
 toggle('bPlanes', 'planes', showPlanes);
-function showBands() { bandGroup.visible = state.bands; $('bBands').setAttribute('aria-pressed', state.bands); $('bandKey').hidden = !state.bands; }
+function showBands() { bandGroup.visible = state.bands; $('bandPanel').hidden = !state.bands; $('bBands').setAttribute('aria-pressed', state.bands); $('bandKey').hidden = !state.bands; }
 toggle('bBands', 'bands', showBands); showBands();
 function showPop() { popGroup.visible = earthCut.visible = state.pop; earth.visible = !state.pop; $('bPop').setAttribute('aria-pressed', state.pop); $('popKey').hidden = !state.pop; }
 toggle('bPop', 'pop', showPop); showPop();
