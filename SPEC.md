@@ -189,6 +189,23 @@ Z has to be a calculation based on something real. Plan: find the planet's basel
 | Stockholm (C) | 59.3° N | 6h05 | 18h37 | 12h32 | none |
 | Tromsø (D) | 69.7° N | none (polar night) | 24 h (midnight sun) | 24 h | none |
 
+**Agreed (2026-11-16): one rule for both hemispheres.** Whatever is set north of the equator holds south of it too, mirrored: same latitude, same rule, seasons flipped. So southern data (Hadza, Tsimané, San) counts for the matching northern latitude.
+
+**Agreed (2026-11-16): 5 reference planes**, equator to the far north: Equator 0°, Austin 30.3°, Lisbon 38.7°, Stockholm 59.3°, Tromsø 69.7°. Shown on the globe ("Sleep planes", [Visualizations](Visualizations/README.md)).
+
+Population check: city population by latitude, north and south folded together (Natural Earth populated places, 7,342 places, 2.37 billion people). Each plane takes the people up to the midpoint with its neighbours (15.1°, 34.5°, 49.0°, 64.5°; the midpoints are a drawing choice, not agreed):
+
+| Plane | Slice | Share of people |
+|---|---|---|
+| Equator | 0–15.1° | 18% |
+| Austin | 15.1–34.5° | 43% |
+| Lisbon | 34.5–49.0° | 30% |
+| Stockholm | 49.0–64.5° | 8% |
+| Tromsø | 64.5° and up | 0.1% |
+
+- The widest gap, 0–30°, holds the most people (Mumbai 19°, Mexico City 19.4°, Dhaka 23.8°, Karachi 24.9°). Natural-light sleep data exists inside it: Tsimané 14.9° and San 19.8°.
+- Cities only: rural people aren't counted, which under-weights the tropics.
+
 Natural-light sleep by latitude (Yetish et al. 2015, Table S2; Wright et al. 2013; Stothard et al. 2017). "Night" is sunset to sunrise. "Sleep" is time actually asleep (actigraphy), not time in bed: the 3 traditional groups were asleep about 83% of the time between falling asleep and waking.
 
 | Group | Latitude | Season | Night | Sleep |

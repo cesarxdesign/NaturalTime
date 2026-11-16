@@ -43,6 +43,9 @@
   .lisPanels { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); bottom: 12px; width: min(300px, calc(100% - 32px)); display: grid; gap: 8px; }
   .lisPanels[hidden] { display: none; }
   .sky { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; }
+  .popPanel { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); bottom: 30px; width: min(300px, calc(100% - 32px)); }
+  .popPanel[hidden] { display: none; }
+  .key.plane { border-top: 2px solid #9fd0c4; }
   .speed { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dim); }
   .speed[hidden] { display: none; }
   .speed input[type=range] { width: 120px; }
@@ -80,6 +83,7 @@
     <div><i class="key trop"></i>Tropics, 23.4° N and S</div>
     <div><i class="key fig"></i><span id="figLabel">Overhead sun at 12:00 UTC, every day of the year</span></div>
     <div><i class="key dot"></i>Lisbon</div>
+    <div id="planeKey" hidden><i class="key plane"></i>Sleep planes: Equator, Austin, Lisbon, Stockholm, Tromsø (dimmer: same rule in the south)</div>
     <div id="trailKey" hidden><i class="key fig"></i><span id="trailLabel"></span></div>
   </div>
   <div class="hint">Drag to turn · double-click to reset</div>
@@ -89,6 +93,7 @@
     <button data-view="around" aria-pressed="false">Lisbon · sun around</button>
     <button data-view="lisbon" aria-pressed="false">Lisbon · sun up/down</button>
   </div>
+  <div class="popPanel" id="popPanel" hidden><canvas class="sky" id="popChart" width="600" height="560" aria-label="City population by latitude, north and south folded, with the 5 sleep planes"></canvas></div>
   <div class="lisPanels" id="lisPanels" hidden>
     <canvas class="sky" id="yearChart" width="600" height="330" aria-label="Lisbon's day, twilight and night across the year"></canvas>
     <canvas class="sky" id="sky" width="600" height="300"></canvas>
@@ -104,6 +109,7 @@
     <div class="btns">
       <button id="bTilt" aria-pressed="true">Tilt 23.4°</button>
       <button id="bPath" aria-pressed="true">Year path</button>
+      <button id="bPlanes" aria-pressed="false">Sleep planes</button>
       <span class="sep"></span>
       <button data-time="pause" aria-pressed="false">Pause</button>
       <button data-time="day" aria-pressed="true">Day</button>
@@ -150,7 +156,7 @@ function sunAt(ms) {
 
 // ---- State
 const VIEWS = ['axis', 'spin', 'around', 'lisbon'];
-const state = { ms: Math.min(Math.max(Date.now(), YEAR0), YEAR1 - 1), tilt: true, path: true, time: 'day', yearPos: 0,
+const state = { planes: new URLSearchParams(location.search).get('planes') === '1', ms: Math.min(Math.max(Date.now(), YEAR0), YEAR1 - 1), tilt: true, path: true, time: 'day', yearPos: 0,
   view: VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'spin' };
 { const t = Date.parse(new URLSearchParams(location.search).get('t') || ''); if (t >= YEAR0 && t < YEAR1) state.ms = t; }   // ?t=2026-06-21T12:36Z
 const atLisbon = () => state.view === 'around' || state.view === 'lisbon';   // Earth held still, Lisbon facing you
@@ -258,6 +264,54 @@ function buildPath() {
 }
 const lisMeridian = line(meridian(LISBON.lon, 1.003), new THREE.LineBasicMaterial({ color: 0x8fb3d9 }));
 spinGroup.add(lisMeridian);
+
+// ---- Sleep planes: the reference latitudes for the sleep rule (Under discussion in SPEC.md).
+// One rule for both hemispheres, so each plane is drawn north (labelled) and mirrored south (dimmer).
+const PLANES = [['Equator', 0], ['Austin', 30.27], ['Lisbon', 38.72], ['Stockholm', 59.33], ['Tromsø', 69.65]];
+// City population (Natural Earth populated places, pop_max, 7,342 places, 2.37 billion people),
+// in millions per 1° of latitude from the equator, north and south folded together (index = whole degrees).
+const POP = [16.4,19.3,15.0,25.5,31.8,28.6,54.5,28.7,28.7,23.0,40.2,18.0,40.1,31.9,30.3,26.4,28.4,24.2,27.2,66.7,29.7,36.2,86.8,82.4,49.1,64.6,50.1,32.0,47.0,45.6,68.2,67.7,58.2,85.6,87.3,100.4,68.4,64.4,44.4,58.6,70.7,72.7,33.5,43.9,19.6,30.0,15.8,25.4,29.8,16.9,28.3,32.1,22.0,25.3,12.7,23.7,10.7,4.5,3.8,9.7,2.6,2.0,0.9,0.8,1.3,0.2,0.3,0.6,0.4,0.4,0.1];
+const planeGroup = new THREE.Group(); tiltGroup.add(planeGroup);
+{
+  const strong = new THREE.MeshBasicMaterial({ color: 0x9fd0c4 }), faint = new THREE.MeshBasicMaterial({ color: 0x9fd0c4, transparent: true, opacity: 0.35 });
+  for (const [name, lat] of PLANES) {
+    for (const sgn of lat ? [1, -1] : [1]) {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(Math.cos(lat * RAD) * 1.009, 0.006, 8, 200), sgn > 0 ? strong : faint);
+      ring.rotation.x = Math.PI / 2; ring.position.y = sgn * Math.sin(lat * RAD) * 1.009; planeGroup.add(ring);
+    }
+    const lb = label(`${name} ${lat ? lat.toFixed(1) + '°' : '0°'}`, '#9fd0c4', 0.075);
+    const w = lb.scale.x;
+    lb.position.set(-Math.cos(lat * RAD) - 0.06 - w / 2, Math.sin(lat * RAD), 0);   // just outside the globe's left edge
+    planeGroup.add(lb);
+  }
+}
+// Each plane stands for the people between it and the midpoints to its neighbours
+const PLANE_EDGES = [0, ...PLANES.slice(1).map(([, b], i) => (PLANES[i][1] + b) / 2), 90];
+const POP_TOTAL = POP.reduce((a, b) => a + b, 0);
+const popBetween = (lo, hi) => POP.reduce((sum, v, d) => sum + v * Math.max(0, Math.min(hi, d + 1) - Math.max(lo, d)), 0);
+const PLANE_SHARE = PLANES.map((_, i) => popBetween(PLANE_EDGES[i], PLANE_EDGES[i + 1]) / POP_TOTAL);
+function drawPop() {
+  const c = $('popChart'), x = c.getContext('2d'), W = c.width, H = c.height, L = 20, T = 96, B = 52, R = 20, ph = H - T - B, pw = W - L - R;
+  const TOP = 75, ty = lat => T + (1 - lat / TOP) * ph, max = Math.max(...POP);
+  x.fillStyle = '#0b0f15'; x.fillRect(0, 0, W, H);
+  x.font = '500 28px Inter, system-ui, sans-serif'; x.fillStyle = '#e8ecf1'; x.textBaseline = 'top'; x.textAlign = 'left';
+  x.fillText('People by latitude', L, 14);
+  x.font = '400 20px Inter, system-ui, sans-serif'; x.fillStyle = '#8b95a4';
+  x.fillText('cities, north and south together', L, 46);
+  // alternate band shading: the slice each plane stands for
+  PLANES.forEach((_, i) => { if (i % 2) { x.fillStyle = 'rgba(159,208,196,.06)'; x.fillRect(L, ty(Math.min(TOP, PLANE_EDGES[i + 1])), pw, ty(PLANE_EDGES[i]) - ty(Math.min(TOP, PLANE_EDGES[i + 1]))); } });
+  x.fillStyle = 'rgba(143,179,217,.75)';
+  POP.forEach((v, d) => { const y0 = ty(d + 1), y1 = ty(d); x.fillRect(L, y0, v / max * pw * 0.62, y1 - y0 - 0.5); });
+  x.font = '400 22px "IBM Plex Mono", ui-monospace, monospace'; x.textBaseline = 'middle';
+  PLANES.forEach(([name, lat], i) => {
+    const y = ty(lat);
+    x.strokeStyle = '#9fd0c4'; x.lineWidth = 2; x.beginPath(); x.moveTo(L, y); x.lineTo(W - R, y); x.stroke();
+    x.fillStyle = '#9fd0c4'; x.textAlign = 'right';
+    x.fillText(`${name} ${(PLANE_SHARE[i] * 100).toFixed(PLANE_SHARE[i] < 0.01 ? 1 : 0)}%`, W - R, y - (lat ? 15 : -16) * (i === 2 ? -1 : 1));
+  });
+  x.font = '400 20px Inter, system-ui, sans-serif'; x.fillStyle = 'rgba(232,236,241,.6)'; x.textAlign = 'left'; x.textBaseline = 'top';
+  x.fillText('% = share of people nearest each plane', L, H - B + 18);
+}
 
 // ---- Orientation, 4 views
 // axis:   Earth turns once a day, axis upright on screen; the sun moves up and down with the season.
@@ -533,6 +587,12 @@ function refresh() {   // anything that changes the geometry of the year
 }
 toggle('bTilt', 'tilt', () => { bandDecl = null; yearImg = null; refresh(); });
 toggle('bPath', 'path');
+function showPlanes() {
+  planeGroup.visible = state.planes; $('bPlanes').setAttribute('aria-pressed', state.planes);
+  $('popPanel').hidden = !state.planes || atLisbon(); $('planeKey').hidden = !state.planes;
+  if (state.planes) drawPop();
+}
+toggle('bPlanes', 'planes', showPlanes);
 function setTime(m) {
   state.time = m;
   document.querySelectorAll('[data-time]').forEach(b => b.setAttribute('aria-pressed', b.dataset.time === m));
@@ -555,6 +615,7 @@ function setView(v) {
   state.view = v;
   document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === v));
   $('lisPanels').hidden = !atLisbon();
+  showPlanes();
   resetCamera(); resize();
   $('figLabel').textContent = atLisbon() ? 'Overhead sun at Lisbon mean noon, every day of the year' : 'Overhead sun at 12:00 UTC, every day of the year';
   refresh();
