@@ -33,6 +33,7 @@
   .legend div[hidden] { display: none; }
   .key { width: 18px; height: 0; border-top: 2px solid var(--sun); flex: none; }
   .key.eq { border-top: 2px dashed var(--ink); opacity: .8; }
+  .key.equator { border-top: 3px solid #2ee6d6; }
   .key.trop { border-top: 1px dashed var(--sun); opacity: .5; }
   .key.dot { width: 8px; height: 8px; border: 0; border-radius: 50%; background: var(--blue); margin-inline: 5px; }
   .key.fig { border-top: 1px solid var(--sun); opacity: .6; }
@@ -79,7 +80,7 @@
 <div id="stage">
   <div class="legend">
     <div><i class="key"></i>Sun straight overhead, today</div>
-    <div><i class="key eq"></i>Equator</div>
+    <div><i class="key equator"></i>Equator</div>
     <div><i class="key trop"></i>Tropics, 23.4° N and S; the ribbon between them is where the sun can be overhead</div>
     <div><i class="key fig"></i><span id="figLabel">Overhead sun at 12:00 UTC, every day of the year</span></div>
     <div><i class="key dot"></i>Lisbon, London</div>
@@ -204,7 +205,8 @@ function label(text, color, h = 0.11) {
 const tiltGroup = new THREE.Group(), spinGroup = new THREE.Group();
 scene.add(tiltGroup); tiltGroup.add(spinGroup);
 
-spinGroup.add(new THREE.Mesh(new THREE.SphereGeometry(R, 96, 64), new THREE.MeshPhongMaterial({ color: 0x2b3b55, emissive: 0x04060a, shininess: 6 })));
+const earthMat = new THREE.MeshPhongMaterial({ color: 0x2b3b55, emissive: 0x04060a, shininess: 6, side: THREE.DoubleSide });
+const earth = new THREE.Mesh(new THREE.SphereGeometry(R, 96, 64), earthMat); spinGroup.add(earth);
 const gridMat = new THREE.LineBasicMaterial({ color: 0x4a5d79, transparent: true, opacity: 0.55 });
 for (let lon = -180; lon < 180; lon += 30) spinGroup.add(line(meridian(lon, 1.002), lon === 0 ? new THREE.LineBasicMaterial({ color: 0x8aa2c4 }) : gridMat));
 const lis = new THREE.Mesh(new THREE.SphereGeometry(0.024, 16, 12), new THREE.MeshBasicMaterial({ color: 0x8fb3d9 }));
@@ -216,7 +218,7 @@ lon.position.copy(ll(LONDON.lat, LONDON.lon, 1.008)); spinGroup.add(lon);
 const lonLabel = label('London', '#8fb3d9', 0.085); lonLabel.position.copy(ll(LONDON.lat + 5, LONDON.lon + 10, 1.04)); spinGroup.add(lonLabel);
 
 // Parallels are the same all day, so they hang on the tilt group
-tiltGroup.add(line(parallel(0, 1.003), new THREE.LineDashedMaterial({ color: 0xe8ecf1, dashSize: 0.045, gapSize: 0.03 }), true));
+{ const eq = new THREE.Mesh(new THREE.TorusGeometry(1.007, 0.006, 8, 240), new THREE.MeshBasicMaterial({ color: 0x2ee6d6 })); eq.rotation.x = Math.PI / 2; tiltGroup.add(eq); }   // the equator, turquoise
 const tropMat = new THREE.LineDashedMaterial({ color: 0xf2b33d, dashSize: 0.02, gapSize: 0.025, transparent: true, opacity: 0.55 });
 tiltGroup.add(line(parallel(23.44, 1.003), tropMat, true), line(parallel(-23.44, 1.003), tropMat, true));
 // A thin amber ribbon between the tropics: the only strip of Earth where the sun is ever straight overhead
@@ -381,6 +383,7 @@ const popGroup = new THREE.Group(); tiltGroup.add(popGroup);
   const edgeMat = new THREE.LineBasicMaterial({ color: 0xcfd6e0, transparent: true, opacity: 0.5 });
   const edges = [...BAND_EDGES, 90];   // 8 bands + the 24 h cap
   // Bands of 10% or more stand alone; runs of neighbouring bands under 10% are merged into one group
+  const skinTo = { N: 90, S: 90 };   // where the globe's skin stops: no skin over the merged (hollow) groups
   for (const [h, sgn] of [['N', 1], ['S', -1]]) {
     const groups = [];
     for (let i = 0; i < edges.length - 1; i++) {
@@ -390,7 +393,8 @@ const popGroup = new THREE.Group(); tiltGroup.add(popGroup);
     }
     for (const g of groups) {
       const a = sgn > 0 ? 90 - g.hi : 90 + g.lo;   // polar angle from the north pole
-      popGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0115, 160, 16, 0, 2 * Math.PI, a * RAD, (g.hi - g.lo) * RAD),
+      if (!g.big) skinTo[h] = Math.min(skinTo[h], g.lo);
+      if (g.big) popGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0115, 160, 16, 0, 2 * Math.PI, a * RAD, (g.hi - g.lo) * RAD),   // merged small groups stay hollow
         new THREE.MeshBasicMaterial({ color: 0xcfd6e0, transparent: true, opacity: 0.03 + 0.45 * Math.sqrt(g.v / max), depthWrite: false })));
       if (g.hi < 90) popGroup.add(line(parallel(sgn * g.hi, 1.012), edgeMat));
       const name = g.from === g.to ? `${h}${g.from + 1}` : `${h}${g.from + 1}+`;
@@ -398,6 +402,9 @@ const popGroup = new THREE.Group(); tiltGroup.add(popGroup);
       lb.position.set(-Math.cos(mid * RAD) - 0.08 - lb.scale.x / 2, sgn * Math.sin(mid * RAD), 0); popGroup.add(lb);   // outside the left edge
     }
   }
+  // The globe with its skin cut away over the hollow groups (shown instead of the full globe while Population is on)
+  var earthCut = new THREE.Mesh(new THREE.SphereGeometry(R, 96, 64, 0, 2 * Math.PI, (90 - skinTo.N) * RAD, (skinTo.N + skinTo.S) * RAD), earthMat);
+  earthCut.visible = false; spinGroup.add(earthCut);
 }
 // Reference lines (not planes): places the user knows, so the planes can be read against them
 const REFS = [['Lisbon', 38.72], ['London', 51.51]];
@@ -765,7 +772,7 @@ function showPlanes() {
 toggle('bPlanes', 'planes', showPlanes);
 function showBands() { bandGroup.visible = state.bands; $('bBands').setAttribute('aria-pressed', state.bands); $('bandKey').hidden = !state.bands; }
 toggle('bBands', 'bands', showBands); showBands();
-function showPop() { popGroup.visible = state.pop; $('bPop').setAttribute('aria-pressed', state.pop); $('popKey').hidden = !state.pop; }
+function showPop() { popGroup.visible = earthCut.visible = state.pop; earth.visible = !state.pop; $('bPop').setAttribute('aria-pressed', state.pop); $('popKey').hidden = !state.pop; }
 toggle('bPop', 'pop', showPop); showPop();
 function setTime(m) {
   state.time = m;
