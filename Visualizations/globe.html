@@ -83,7 +83,8 @@
     <div><i class="key trop"></i>Tropics, 23.4° N and S; the ribbon between them is where the sun can be overhead</div>
     <div><i class="key fig"></i><span id="figLabel">Overhead sun at 12:00 UTC, every day of the year</span></div>
     <div><i class="key dot"></i>Lisbon</div>
-    <div id="planeKey" hidden><i class="key plane"></i>Sleep planes, northern half only: a line for one city, a band for a group; dots are the cities, southern ones mirrored north and named in brackets</div>
+    <div id="planeKey" hidden><i class="key plane"></i>Cities (sleep planes), northern half only: a line for one city, a band for a group; dots are the cities, southern ones mirrored north and named in brackets</div>
+    <div id="bandKey" hidden><i class="key" style="border-top-color:#e8ecf1;opacity:.7"></i>Light bands, northern half: each adds the same to the longest day as the tropics band (about 1h28); 7 and 8 are thin slivers under the Arctic Circle; above 65.7° the longest day is 24 h</div>
     <div id="refKey" hidden><i class="key eq" style="border-top-color:var(--blue)"></i>Reference: Lisbon, London</div>
     <div id="trailKey" hidden><i class="key fig"></i><span id="trailLabel"></span></div>
   </div>
@@ -110,7 +111,8 @@
     <div class="btns">
       <button id="bTilt" aria-pressed="true">Tilt 23.4°</button>
       <button id="bPath" aria-pressed="true">Year path</button>
-      <button id="bPlanes" aria-pressed="false">Sleep planes</button>
+      <button id="bPlanes" aria-pressed="false">Cities</button>
+      <button id="bBands" aria-pressed="false">Bands</button>
       <span class="sep"></span>
       <button data-time="pause" aria-pressed="false">Pause</button>
       <button data-time="day" aria-pressed="true">Day</button>
@@ -157,7 +159,7 @@ function sunAt(ms) {
 
 // ---- State
 const VIEWS = ['axis', 'spin', 'around', 'lisbon'];
-const state = { planes: new URLSearchParams(location.search).get('planes') === '1', ms: Math.min(Math.max(Date.now(), YEAR0), YEAR1 - 1), tilt: true, path: true, time: 'day', yearPos: 0,
+const state = { planes: new URLSearchParams(location.search).get('planes') === '1', bands: new URLSearchParams(location.search).get('bands') === '1', ms: Math.min(Math.max(Date.now(), YEAR0), YEAR1 - 1), tilt: true, path: true, time: 'day', yearPos: 0,
   view: VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'spin' };
 { const t = Date.parse(new URLSearchParams(location.search).get('t') || ''); if (t >= YEAR0 && t < YEAR1) state.ms = t; }   // ?t=2026-06-21T12:36Z
 const atLisbon = () => state.view === 'around' || state.view === 'lisbon';   // Earth held still, Lisbon facing you
@@ -307,6 +309,38 @@ const cityGroup = new THREE.Group(); spinGroup.add(cityGroup);   // the cities t
     lb.position.set(-Math.cos(P.mid * RAD) - 0.06 - lb.scale.x / 2, Math.sin(P.mid * RAD), 0);   // just outside the globe's left edge
     planeGroup.add(lb);
   }
+}
+// ---- Light bands: each band adds the same to the longest day as the tropics band (0–23.44°, about 1h28),
+// so they narrow toward the pole. Worked out here from the sun, not typed in. Northern half only.
+const longestDay = lat => {
+  const c = (Math.sin(-0.833 * RAD) - Math.sin(lat * RAD) * Math.sin(23.44 * RAD)) / (Math.cos(lat * RAD) * Math.cos(23.44 * RAD));
+  return c <= -1 ? 24 : 2 * Math.acos(c) * DEG / 15;
+};
+const latForLongest = t => { let lo = 0, hi = 70; for (let i = 0; i < 50; i++) { const m = (lo + hi) / 2; if (longestDay(m) < t) lo = m; else hi = m; } return hi; };
+const BAND_EDGES = (() => {
+  const step = longestDay(23.44) - longestDay(0), e = [0];
+  for (let t = longestDay(0) + step; t < 24; t += step) e.push(latForLongest(t));
+  const cap = latForLongest(24);
+  if (cap - e[e.length - 1] > 0.05) e.push(cap); else e[e.length - 1] = cap;
+  return e;
+})();
+const bandGroup = new THREE.Group(); tiltGroup.add(bandGroup);
+{
+  const fills = [new THREE.MeshBasicMaterial({ color: 0xe8ecf1, transparent: true, opacity: 0.16, depthWrite: false }),
+                 new THREE.MeshBasicMaterial({ color: 0xe8ecf1, transparent: true, opacity: 0.05, depthWrite: false })];
+  const edgeMat = new THREE.LineBasicMaterial({ color: 0xe8ecf1, transparent: true, opacity: 0.6 });
+  const seg = (lo, hi, mat) => bandGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0105, 160, 16, 0, 2 * Math.PI, (90 - hi) * RAD, (hi - lo) * RAD), mat));
+  for (let i = 0; i < BAND_EDGES.length - 1; i++) {
+    const lo = BAND_EDGES[i], hi = BAND_EDGES[i + 1];
+    seg(lo, hi, fills[i % 2]);
+    bandGroup.add(line(parallel(hi, 1.011), edgeMat));
+    if (hi - lo >= 2) {   // too thin to label: bands 7 and 8
+      const lb = label(String(i + 1), '#e8ecf1', 0.08); lb.position.copy(ll((lo + hi) / 2, -112, 1.05)); bandGroup.add(lb);
+    }
+  }
+  const cap = BAND_EDGES[BAND_EDGES.length - 1];
+  seg(cap, 90, new THREE.MeshBasicMaterial({ color: 0x8fb3d9, transparent: true, opacity: 0.18, depthWrite: false }));
+  const lb = label("24 h", "#8fb3d9", 0.07); lb.position.copy(ll(78, -112, 1.05)); bandGroup.add(lb);
 }
 // Reference lines (not planes): places the user knows, so the planes can be read against them
 const REFS = [['Lisbon', 38.72], ['London', 51.51]];
@@ -639,6 +673,8 @@ function showPlanes() {
   if (state.planes) drawPop();
 }
 toggle('bPlanes', 'planes', showPlanes);
+function showBands() { bandGroup.visible = state.bands; $('bBands').setAttribute('aria-pressed', state.bands); $('bandKey').hidden = !state.bands; }
+toggle('bBands', 'bands', showBands); showBands();
 function setTime(m) {
   state.time = m;
   document.querySelectorAll('[data-time]').forEach(b => b.setAttribute('aria-pressed', b.dataset.time === m));
