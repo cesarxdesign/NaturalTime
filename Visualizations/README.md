@@ -54,6 +54,7 @@ Year, Year in 2 s and Imprint step a day at a time at the same clock time as the
 - **Overhead band (amber):** where the sun is straight overhead today. On any one day it's a straight parallel at the sun's declination.
 - **Equator** (dashed) and **tropics** at 23.4° N and S: the band never leaves the tropics.
 - **Year path (thin amber, toggle "Year path"):** where the sun is overhead at the same clock time every day of the year. It's a figure-8 (the analemma): up and down from the tilt, sideways from the equation of time. Drawn at 12:00 UTC in the spin views and at Lisbon mean noon in the Lisbon views, so there it sits on Lisbon's meridian.
+- **Where the 8 crosses (thin amber line, with Year path):** the parallel through the figure-8's crossing point, 8.9° N: on 12 April and 29 August the sun is overhead at the same spot at the same clock time. Found from the sun in the page, not typed in.
 - **Lisbon** (blue dot).
 - **Light bands (toggle "Bands", or `?bands=1`):** northern half, alternating light and dark strips. Each band adds the same to the longest day as the tropics band does (0–23.4°, about 1h28), so they narrow toward the pole: 0–23.4°, 23.4–40.2°, 40.2–50.7°, 50.7–57.2°, 57.2–61.3°, 61.3–63.8°, 63.8–65.2°, 65.2–65.7° (7 and 8 unlabelled slivers). Above 65.7° the longest day is 24 h (blue cap). Worked out in the page from the sun, not typed in.
 - **Tropics ribbon (faint amber):** the strip between the tropics, the only part of Earth where the sun is ever straight overhead.

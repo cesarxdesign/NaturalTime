@@ -269,6 +269,27 @@ function buildPath() {
   if (path) { spinGroup.remove(path); path.geometry.dispose(); }
   const pts = []; for (let d = 0; d <= 365; d++) pts.push(noonPoint(YEAR0 + d * DAY));
   path = line(pts, pathMat); spinGroup.add(path);
+  buildCrossing();
+}
+// Where the 8 crosses itself: 2 dates a year when the overhead sun at the same clock time lands on the same spot.
+// Found from the sun (declination and equation of time), then drawn as a parallel all round the globe.
+const crossing = new THREE.Group(); tiltGroup.add(crossing);
+function buildCrossing() {
+  crossing.children.slice().forEach(c => { crossing.remove(c); if (c.geometry) c.geometry.dispose(); });
+  if (!state.tilt) return;                                     // no tilt: the 8 collapses to a line, nothing crosses
+  const p = []; for (let d = 0; d <= 365; d++) { const s = sunAt(YEAR0 + d * DAY + 12 * 3600e3); p.push([-(s.eotTilt + s.eotOrbit) / 4, s.decl * DEG]); }
+  for (let i = 0; i < 365; i++) for (let j = i + 2; j < 365; j++) {
+    const [x1, y1] = p[i], [x2, y2] = p[i + 1], [x3, y3] = p[j], [x4, y4] = p[j + 1];
+    const den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4); if (Math.abs(den) < 1e-12) continue;
+    const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / den, u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / den;
+    if (t < 0 || t > 1 || u < 0 || u > 1) continue;
+    const lat = y1 + t * (y2 - y1), fmt = d => new Date(YEAR0 + d * DAY).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+    crossing.add(line(parallel(lat, 1.012), new THREE.LineBasicMaterial({ color: 0xf2b33d })));
+    const lb = label(`8 crosses · ${lat.toFixed(1)}° N · ${fmt(i + t)} & ${fmt(j + u)}`, '#f2b33d', 0.065);
+    lb.position.set(Math.cos(lat * RAD) + 0.06 + lb.scale.x / 2, Math.sin(lat * RAD) + 0.05, 0);   // just outside the right edge
+    crossing.add(lb);
+    return;
+  }
 }
 const lisMeridian = line(meridian(LISBON.lon, 1.003), new THREE.LineBasicMaterial({ color: 0x8fb3d9 }));
 spinGroup.add(lisMeridian);
@@ -761,7 +782,7 @@ function frame(t) {
     }
   }
   const { s, decl, eot } = orient(state.ms);
-  path.visible = pathDot.visible = state.path;
+  path.visible = pathDot.visible = crossing.visible = state.path;
   if (atLisbon()) { drawSky(state.ms, decl, eot); drawYear(state.ms, eot); }
   place();
   renderer.render(scene, camera);
