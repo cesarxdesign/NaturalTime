@@ -267,7 +267,7 @@ Conflict: Colorado measured 9.9 h asleep in winter at 40° N; this rule gives ab
 - **S, sleep:** about 8 h on average across the year and the globe, a bit more in winter and less in summer (the Z rule: time in bed).
 - **R, rest:** recreation, relaxing, recovering, eating, training, people: whatever is left, R = 24 − W − S.
 
-So R absorbs the season: long summer days give more R, long winter nights give more S and less R. With the proposed Z figures (equator-group baseline): equator S 7.9 h, R 8.1 h all year; Lisbon S 7.5 h / R 8.5 h in June, S 9.75 h / R 6.25 h in December.
+So R absorbs the season: long summer days give more R, long winter nights give more S and less R. S has no agreed numbers yet.
 
 ### Working bands: 1 h swing steps (agreed 2026-11-16, for now)
 
