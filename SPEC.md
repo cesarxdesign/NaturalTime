@@ -4,6 +4,8 @@ What the watch takes into account, how it works it out, and why. Started 2026-11
 
 Models used to work the ideas out: [Visualizations](Visualizations/README.md).
 
+**Approach.** Engine first, then UX, then UI. The face in `index.html` is a working view of the engine, not the design. The obvious product stops at NT, AT, the day bars and the work-block swap. This project goes further: an evidence-based sleep layer that places sleep on the sun's clock for any latitude, even if few people will live by it. Every value is based on something real and agreed before it ships; the reasoning, evidence and rejected options are recorded here as they happen.
+
 ---
 
 ## The problem: the clock's noon is not the sun's noon
