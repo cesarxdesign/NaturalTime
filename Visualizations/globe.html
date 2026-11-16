@@ -489,7 +489,9 @@ function buildSwing(step) {
     for (let i = 0; i < e.length - 1; i++) {
       const lo = e[i], hi = e[i + 1], cap = hi === 90, name = h + (cap ? ' cap' : i + 1), pc = swingPct(SWING_POP[step][h][i] || 0);
       const a = sgn > 0 ? 90 - hi : 90 + lo;
-      g.add(new THREE.Mesh(new THREE.SphereGeometry(1.0105, 160, 8, 0, 2 * Math.PI, a * RAD, (hi - lo) * RAD),
+      // 1 h bands: S2 and down, N10 and up are hollow (no fill, no skin)
+      const hollow = step === 1 && ((h === 'S' && i >= 1) || (h === 'N' && i >= 9));
+      if (!hollow) g.add(new THREE.Mesh(new THREE.SphereGeometry(1.0105, 160, 8, 0, 2 * Math.PI, a * RAD, (hi - lo) * RAD),
         new THREE.MeshBasicMaterial({ color: cap ? 0x8fb3d9 : 0xe8ecf1, transparent: true, opacity: cap ? 0.18 : i % 2 ? 0.05 : 0.16, depthWrite: false })));
       if (!cap) g.add(line(parallel(sgn * hi, 1.011), edgeMat));
       if (hi - lo >= 2.5) {
@@ -501,13 +503,15 @@ function buildSwing(step) {
     }
   }
   g.visible = false; tiltGroup.add(g);
+  let skin = null;
+  if (step === 1) { skin = new THREE.Mesh(new THREE.SphereGeometry(R, 96, 64, 0, 2 * Math.PI, (90 - e[9]) * RAD, (e[9] + e[1]) * RAD), earthMat); skin.visible = false; spinGroup.add(skin); }
   // Key, from the north cap down to the south cap
   const north = rows.filter(r => r.h === 'N').reverse(), south = rows.filter(r => r.h === 'S');
   const fmt = r => `${r.lo.toFixed(1)}–${r.hi === 90 ? '90' : r.hi.toFixed(1)}° ${r.h}`;
   const html = `<h3>${step} h bands · biggest cities</h3>` + [...north, ...south].map(r =>
     `<div class="b${r.hi === 90 ? ' derived' : ''}"><b>${r.name} · ${r.pc}</b><small>${fmt(r)}</small><span>${r.top.length ? r.top.join(', ') : '—'}</span></div>`).join('') +
     `<div class="src">Each band adds ${step} h to the gap between the longest and shortest day; cap = 24 h longest day. % = share of the world's people (rough). Cities of 100,000+ by metro population (Natural Earth)</div>`;
-  return swingGroups[step] = { g, html };
+  return swingGroups[step] = { g, html, skin };
 }
 // Reference lines (not planes): places the user knows, so the planes can be read against them
 const REFS = [['Lisbon', 38.72], ['London', 51.51]];
@@ -875,7 +879,11 @@ function showPlanes() {
 }
 toggle('bPlanes', 'planes', showPlanes);
 // The globe's skin covers only the reference bands (E0, N2, N3) while Bands or Population is on; hollow above and below
-const updateSkin = () => { earthCutBands.visible = state.bands; earthCut.visible = state.pop && !state.bands; earth.visible = !state.bands && !state.pop; };
+const updateSkin = () => {
+  const swSkin = !state.bands && state.swing && swingGroups[state.swing] && swingGroups[state.swing].skin;
+  for (const k of [1, 2]) if (swingGroups[k] && swingGroups[k].skin) swingGroups[k].skin.visible = swSkin === swingGroups[k].skin;
+  earthCutBands.visible = state.bands; earthCut.visible = state.pop && !state.bands && !swSkin; earth.visible = !state.bands && !state.pop && !swSkin;
+};
 function showBands() { bandGroup.visible = state.bands; $('bandPanel').hidden = !state.bands; updateSkin(); $('bBands').setAttribute('aria-pressed', state.bands); $('bandKey').hidden = !state.bands; }
 toggle('bBands', 'bands', showBands); showBands();
 function showPop() { popGroup.visible = state.pop; updateSkin(); $('bPop').setAttribute('aria-pressed', state.pop); $('popKey').hidden = !state.pop; }
@@ -884,6 +892,7 @@ function showSwing() {
   for (const k of [1, 2]) { const sg = state.swing === k ? (swingGroups[k] || buildSwing(k)) : swingGroups[k]; if (sg) sg.g.visible = state.swing === k; $('bSw' + k).setAttribute('aria-pressed', state.swing === k); }
   $('swingPanel').hidden = !state.swing;
   if (state.swing) $('swingPanel').innerHTML = swingGroups[state.swing].html;
+  updateSkin();
 }
 for (const k of [1, 2]) $('bSw' + k).addEventListener('click', () => {
   state.swing = state.swing === k ? 0 : k;
