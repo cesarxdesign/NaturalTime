@@ -270,6 +270,8 @@ The user's intuition, not a decision: Earth takes time to warm up after peak sun
 - Lingering flexes with the season, but less than the light does: long summer days can't stretch it fully (or there'd be no rest), short winter days still keep some (or we'd oversleep).
 - Goal: one reference all year, so the same NT numbers mean the same thing (e.g. eat at 12, bed at 21, up at 6–7; examples only, not values).
 
+- **Design range (agreed in principle, 2026-11-16):** the model is built for where life is livable by the sun, up to about London (51.5° N), maybe Copenhagen (55.7° N). Beyond that, NT doesn't try to fix the far north: people there still sleep about 8 h and live with the extremes, so the flex is capped at the edge of the range and adjusted, not stretched to follow 20-hour days. The exact edge latitude is open.
+
 Evidence so far: the Hadza (natural light, equator) wake 1 h before sunrise and fall asleep 3.4 h after sunset, so their waking day runs 05:03 → 21:21 sun time, centred at 13:12, about 1h12 after peak sun; morning half 6h57, evening half 9h21. Peak air heat trails peak sun by about 2–3 h; body temperature peaks in the late afternoon. Conflicts with the agreed "peak sun at 12:00, equal halves"; would replace it if adopted.
 
 ### Observed sleep today, with electric light (for comparison, not a target)

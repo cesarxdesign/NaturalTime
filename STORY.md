@@ -48,6 +48,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 29. **The body's day, not the light's (hypothesis).** Earth warms up late, and so do we: light runs 6–18, the lived day closer to 8–20, everywhere. Maybe NT's anchor is peak heat, not peak sun; maybe the halves aren't equal, because we linger in the evening; and the lingering flexes with the season, but less than the light. The aim: the same numbers mean the same thing all year (eat at 12, bed at 21, up at 6–7, as shapes, not values). First evidence: the Hadza's waking day is centred 1h12 after peak sun, with a 6h57 morning and a 9h21 evening.
 
+30. **Not fixing Oslo.** "We're NOT going to fix Oslo, ever." People there still sleep about 8 h; they live with the extremes (sunlit 3 am summers, 6-hour winter days). So the model is designed for livable latitudes, up to about London, maybe Copenhagen, and beyond that the flex is capped, not stretched.
+
 ## Rejected or replaced
 
 - Sunrise as the anchor: doesn't exist every day far north.
