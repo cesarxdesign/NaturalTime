@@ -10,7 +10,7 @@ A 3D Earth (three.js r128) lit by a sun on the right. Sun maths: the same NOAA f
 
 Live: https://cesarxdesign.github.io/NaturalTime/Visualizations/globe.html
 
-### 4 views (top right, or `#axis` / `#spin` / `#around` / `#lisbon` in the URL)
+### 5 views (top right, or `#axis` / `#spin` / `#around` / `#lisbon` / `#orbit` in the URL)
 
 | View | Earth | Sun | Light |
 |---|---|---|---|
@@ -32,6 +32,8 @@ The 2 Lisbon views also show 2 panels (bottom left):
 - **Lisbon sky:** the sun's height over Lisbon from 00:00 to 24:00 sun time, the horizon, the −12° line, and where the sun is now (filled by day, hollow otherwise). The sky colour follows the sun's height.
 
 To watch Lisbon's sun and dark over the year with the globe still: **Lisbon · sun up/down**, **Day**, and push **Speed** up. The sun climbs and drops along the 8 with the season while the light goes on and off each day.
+
+- **Orbit · sun in middle:** the sun at the centre and Earth going round it on its true orbit: its true distance each day (147.1 million km on 3 Jan to 152.1 million km on 6 Jul) and its true shape, which is almost a circle. Earth's axis stays fixed in space, leaning 23.44°, so the north leans toward the sun at the June solstice and away at December's. Marks for the equinoxes, solstices, closest and farthest points. Earth and sun are drawn far bigger than real. In the trail modes, the amber trail is Earth's path.
 
 ### 5 time modes (panel, or `?time=` in the URL)
 
