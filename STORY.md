@@ -30,6 +30,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 
 21. **Two equal halves.** The Earth turns at a steady rate, so the morning is exactly as long as the afternoon. Keep both halves equal and pin the ends, and there's only one answer: sunrise 06:00, peak 12:00, sunset 18:00, every day, everywhere. Wake at sunrise becomes wake at 06:00 NT. Minutes stretch with the season instead (Lisbon: 47–74 s by day).
 
+22. **The light ramp.** Waking at sunrise is fine where the light comes on fast. Where it creeps in (winter, the north), sleeping a little past sunrise beats sitting in dim light, and it lets winter's extra sleep come partly from the morning, not all from the evening.
+
 ## Rejected or replaced
 
 - Sunrise as the anchor: doesn't exist every day far north.
