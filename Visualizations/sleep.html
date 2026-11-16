@@ -203,6 +203,7 @@ const city = () => CITIES.find(c => c.id === state.city);
 const cv = $('year'), X = cv.getContext('2d');
 const G = { L: 64, R: 16, T: 40, B: 34 };
 function draw() {
+  try { localStorage.setItem('sleep-city', state.city); } catch (e) {}
   document.querySelectorAll('[data-id]').forEach(b => b.setAttribute('aria-pressed', b.dataset.id === state.city));
   const c = city(), W = cv.width, H = cv.height, pw = W - G.L - G.R, ph = H - G.T - G.B;
   const tx = d => G.L + d / 365 * pw;
@@ -302,6 +303,8 @@ let down = false;
 cv.addEventListener('pointerdown', e => { down = true; cv.setPointerCapture(e.pointerId); pick(e); });
 cv.addEventListener('pointermove', e => down && pick(e));
 cv.addEventListener('pointerup', () => down = false);
+// Remember the chosen city across visits and updates (URL parameters still win; browser storage only)
+try { const c = localStorage.getItem('sleep-city'); if (CITIES.some(x => x.id === c)) state.city = c; } catch (e) {}
 { const q = new URLSearchParams(location.search); if (CITIES.some(c => c.id === q.get('city'))) state.city = q.get('city'); if (q.get('day')) state.day = Math.max(0, Math.min(364, +q.get('day'))); }
 draw(); notes();
 </script>

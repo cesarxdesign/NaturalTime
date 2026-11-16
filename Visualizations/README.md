@@ -67,6 +67,10 @@ Year, Year in 2 s and Imprint step a day at a time at the same clock time as the
 - **Timeline:** drag to any day of 2026. Marks show the equinoxes and solstices, the months, and Earth's closest (3 Jan) and farthest (6 Jul) points from the sun. Click a mark to jump to it.
 - **Drag** the globe to turn the camera. **Reset view** (or double-click) puts the camera back.
 
+### Your setup is remembered
+
+The globe keeps your view, toggles, time mode, speed and camera angle in the browser, so reloading or opening an updated version comes back as you left it; URL parameters still override. The sleep page remembers the chosen city.
+
 ### Readouts
 
 The date, the latitude where the sun is overhead (declination), Earth–sun distance, and Lisbon's daylight for that day (sunrise to sunset, refraction included): 9h28 in December to 14h50 in June.
