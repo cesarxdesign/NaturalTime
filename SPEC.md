@@ -201,6 +201,8 @@ Z has to be a calculation based on something real. Plan: find the planet's basel
 | Milan | 45.5° N | 14.5° | Colorado 40° N, between Austin and Milan |
 | St Petersburg | 59.9° N | | none yet |
 
+**Agreed (2026-11-16): a plane's city can come from either hemisphere.** With the rule mirrored, the globe is 2 halves laid over each other, so a southern city can stand for its latitude in the north. Checked every slot for million-plus cities within 2.5° (Natural Earth): no southern city beats the picks. At 15° the south has Brasília 15.8° S (3.7 M) against Manila 14.6° N (11.1 M); at 30° Porto Alegre 30.0° S (3.9 M); at 45° and 60° the south has none (Natural Earth lists no southern city of a million or more beyond about 35° S).
+
 Lisbon (38.7° N) is the first user and a test point between Austin and Milan, worked out by the rule rather than a plane.
 
 Rejected the same day: Equator, Austin, Lisbon, Stockholm, Tromsø. Austin and Lisbon are only 8.4° apart, Stockholm and Tromsø 10.3°, while 0–30° had no plane. Tromsø also dropped as too small: the top plane is the northernmost city of over a million.
