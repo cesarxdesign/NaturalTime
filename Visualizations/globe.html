@@ -82,7 +82,7 @@
     <div><i class="key eq"></i>Equator</div>
     <div><i class="key trop"></i>Tropics, 23.4° N and S; the ribbon between them is where the sun can be overhead</div>
     <div><i class="key fig"></i><span id="figLabel">Overhead sun at 12:00 UTC, every day of the year</span></div>
-    <div><i class="key dot"></i>Lisbon</div>
+    <div><i class="key dot"></i>Lisbon, London</div>
     <div id="planeKey" hidden><i class="key plane"></i>Cities (sleep planes), northern half only: a line for one city, a band for a group; dots are the cities, southern ones mirrored north and named in brackets</div>
     <div id="bandKey" hidden><i class="key" style="border-top-color:#e8ecf1;opacity:.7"></i>Light bands, northern half: each adds the same to the longest day as the tropics band (about 1h28); 7 and 8 are thin slivers under the Arctic Circle; above 65.7° the longest day is 24 h</div>
     <div id="refKey" hidden><i class="key eq" style="border-top-color:var(--blue)"></i>Reference: Lisbon, London</div>
@@ -208,6 +208,10 @@ for (let lon = -180; lon < 180; lon += 30) spinGroup.add(line(meridian(lon, 1.00
 const lis = new THREE.Mesh(new THREE.SphereGeometry(0.024, 16, 12), new THREE.MeshBasicMaterial({ color: 0x8fb3d9 }));
 lis.position.copy(ll(LISBON.lat, LISBON.lon, 1.008)); spinGroup.add(lis);
 const lisLabel = label('Lisbon', '#8fb3d9', 0.085); lisLabel.position.copy(ll(LISBON.lat + 5, LISBON.lon - 12, 1.04)); spinGroup.add(lisLabel);
+const LONDON = { lat: 51.51, lon: -0.13 };
+const lon = new THREE.Mesh(new THREE.SphereGeometry(0.024, 16, 12), new THREE.MeshBasicMaterial({ color: 0x8fb3d9 }));
+lon.position.copy(ll(LONDON.lat, LONDON.lon, 1.008)); spinGroup.add(lon);
+const lonLabel = label('London', '#8fb3d9', 0.085); lonLabel.position.copy(ll(LONDON.lat + 5, LONDON.lon + 10, 1.04)); spinGroup.add(lonLabel);
 
 // Parallels are the same all day, so they hang on the tilt group
 tiltGroup.add(line(parallel(0, 1.003), new THREE.LineDashedMaterial({ color: 0xe8ecf1, dashSize: 0.045, gapSize: 0.03 }), true));
@@ -724,7 +728,7 @@ function refresh() {   // anything that changes the geometry of the year
 toggle('bTilt', 'tilt', () => { bandDecl = null; yearImg = null; refresh(); });
 toggle('bPath', 'path');
 function showPlanes() {
-  planeGroup.visible = cityGroup.visible = state.planes; lisLabel.visible = !state.planes; $('bPlanes').setAttribute('aria-pressed', state.planes);
+  planeGroup.visible = cityGroup.visible = state.planes; $('bPlanes').setAttribute('aria-pressed', state.planes);
   $('popPanel').hidden = !state.planes || atLisbon(); $('planeKey').hidden = $('refKey').hidden = !state.planes;
   if (state.planes) drawPop();
 }
