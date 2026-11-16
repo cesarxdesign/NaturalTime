@@ -19,8 +19,8 @@ Raw material for a future folio page: turning points, decisions, what was reject
 13. **Light as the eye sees it.** The globe's light was first an on/off guess, then sin(sun height), then the Earth–sun distance was added, then measured clear-sky lux (sunrise about 400 lux, end of civil twilight about 3, nautical about 0.03) on a log scale, because eyes respond to light that way.
 14. **Evidence over intuition.** Colorado camping (40° N, close to Lisbon): 6.8 h of sleep in summer, 9.9 h in winter under natural light only. Huberman's example: 6 h summer, 7–8 h winter. Conflict recorded; Huberman favored.
 15. **One model for the whole planet.** Baseline at the equator (12h07 of day all year, nothing to flex), then a relation fitted through real places: Lisbon (first user), Austin (Huberman), Stockholm, Tromsø.
-
 16. **The baseline has data.** The Hadza, 3.7° S, under natural light: 12.1 h nights, 6.3 h of sleep, asleep 3.4 h after sunset, awake 1 h before sunrise, no seasons. Further from the equator sleep grows in winter (Tsimané +56 min, San +53 min), always ending near the day's coldest point.
+17. **Sleep counted as time in bed.** Studies report time asleep; the watch needs time in bed. Z = time to fall asleep (about 15 min, 169 lab studies) + sleep period (time asleep ÷ about 85% efficiency). Huberman sets no target, only a limit: up after 20–25 min awake.
 
 ## Rejected or replaced
 
@@ -38,6 +38,7 @@ Raw material for a future folio page: turning points, decisions, what was reject
 - Lisbon's year: sun 51%, twilight 9%, dark 40%.
 - Earth–sun distance: 147.1 million km (3 Jan) to 152.1 million km (6 Jul); about 7% more light in January.
 - Sleep without electric light: Hadza, San, Tsimané 5.7–7.1 h (average 6.4 h), start about 3.3 h after sunset, wake before sunrise. Colorado: 6.8 h summer, 9.9 h winter.
+- Time to fall asleep: 15.4 min (adults, 169 lab studies, Boulos 2019); 14.3 min at 18–34, 19.5 min at 65–79. Sleep efficiency 85.7%. Huberman: get up after 20–25 min awake.
 
 ## Visuals available
 
