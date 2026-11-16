@@ -251,6 +251,10 @@ Z (bed) = 15 min + S ÷ 0.83
 | Stockholm | 6.0 / 7.5 | 8.0 / 9.9 · 9.8 / 12.0 |
 | Tromsø | 6.0 / 7.5 | 8.0 / 9.9 · 9.9 / 12.2 |
 
+Lisbon check with the first user (2026-11-16), equator baseline, AT:
+- 16 Nov: sunrise 07:20, peak sun 12:21, sunset 17:23; bed 20:47 ("almost 21 seems ok as guidance"), wake 06:08, 1h12 before sunrise.
+- 22 Jun: sunrise 06:12, peak sun 13:38, sunset 21:05; bed 23:00 ("a wee bit late", but 21:22 NT reads right), wake 06:29 ("in line with regular standards"), 17 min after sunrise.
+
 Conflict: Colorado measured 9.9 h asleep in winter at 40° N; this rule gives about 8 h there. Huberman favored; Colorado's week-long campers may have been catching up on sleep.
 
 ### Observed sleep today, with electric light (for comparison, not a target)
