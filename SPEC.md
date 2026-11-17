@@ -272,6 +272,13 @@ So R absorbs the season: long summer days give more R, long winter nights give m
 - **Split on the table (2026-11-17):** S 30% / W 40% / R 30% of 24 h = 7h12 / 9h36 / 7h12. Background: natural-light studies average 6h51 asleep (Hadza 6h18, Tsimané 6h13, San 6h32, Colorado 8h21 as the midpoint of summer 6h48 and winter 9h54). 7 h = 29.2%, 8 h = 33.3% of the day. Not yet squared with W = 8 h above.
 - **Wake on the two clocks (maybe, not agreed):** on AT the wake drifts by whatever the sun needs each day (e.g. 07:01, 07:02, 07:04…); on NT it could always read the same, e.g. 06:00. The user wakes at the same sun-based time every day, adjusted for heat or whatever the model ends up using; only its AT reading moves.
 
+- **Ideas on the table (2026-11-17, not agreed):**
+  - NT's longer and shorter minutes give exact sun-based times for each part of the day.
+  - The user enters work start and end; W shifts to fit those hours, and S and R are adjusted around it.
+  - With a split such as S/W/R 30/40/30, the result is an alarm on AT (06:43 or whatever it comes to). The AT number doesn't matter: waking feels the same every day, in step with sunrise.
+  - Work stays put on AT, so the gap between waking and work grows in summer and shrinks in winter.
+  - **The floor:** that gap can't drop below the time needed to get ready and get there. Lisbon sunrise on AT runs from 06:11 (13 Jun) to 07:55 (24 Oct and early Jan). Sunrise comes later than 06:30 on 289 days, later than 07:00 on 207, and later than 07:30 on 105. With the 08:00 start, 1 h commute and 30 min to get ready (wake by 06:30), a sunrise wake fits on 76 days a year.
+
 ### Working bands: 1 h swing steps (agreed 2026-11-16, for now)
 
 Work continues on bands where each step adds 1 h to the gap between the longest and shortest day, N1, N2… and S1, S2… outward from the equator, up to the 24 h cap at 65.7°. Edges (north, mirrored south): 8.6°, 16.8°, 24.2°, 30.8°, 36.5°, 41.4°, 45.6°, 49.1°, 52.0°, 54.5°, 56.7°, 58.5°, 60.0°… Reason: the first step (equator to 8.6°) lands close to where the figure-8 crosses itself (8.9° N). The two come from different causes (day-length swing vs the oval orbit), so the match is close, not exact. These replace the earlier reference bands below while this work runs; on the globe: "1 h bands".
