@@ -278,6 +278,15 @@ So R absorbs the season: long summer days give more R, long winter nights give m
   - With a split such as S/W/R 30/40/30, the result is an alarm on AT (06:43 or whatever it comes to). The AT number doesn't matter: waking feels the same every day, in step with sunrise.
   - Work stays put on AT, so the gap between waking and work grows in summer and shrinks in winter.
   - **The floor:** that gap can't drop below the time needed to get ready and get there. Lisbon sunrise on AT runs from 06:11 (13 Jun) to 07:55 (24 Oct and early Jan). Sunrise comes later than 06:30 on 289 days, later than 07:00 on 207, and later than 07:30 on 105. With the 08:00 start, 1 h commute and 30 min to get ready (wake by 06:30), a sunrise wake fits on 76 days a year.
+  - **Further north it breaks (2026-11-17):** at some point in winter, sunrise itself comes too late for AT work hours. Latest sunrise on AT: Lisbon 07:55, London 08:06 (30 Dec), Oslo 09:20 (27 Dec). Days a year when sunrise is later than the wake-by time:
+
+    | Wake by (AT) | Lisbon | London | Oslo |
+    |---|---|---|---|
+    | 06:30 | 289 | 183 | 196 |
+    | 07:00 | 207 | 134 | 166 |
+    | 07:30 | 105 | 83 | 138 |
+    | 08:00 | 0 | 30 | 103 |
+    | 09:00 | 0 | 0 | 43 |
 
 ### Working bands: 1 h swing steps (agreed 2026-11-16, for now)
 
