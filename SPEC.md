@@ -269,6 +269,7 @@ Conflict: Colorado measured 9.9 h asleep in winter at 40° N; this rule gives ab
 
 So R absorbs the season: long summer days give more R, long winter nights give more S and less R. S has no agreed numbers yet.
 - **W is set by society, on AT** (e.g. 9-to-5), so daylight saving shifts it by an hour twice a year. Wake follows the sun and moves a little every day, never in jumps. So when daylight saving changes, wake doesn't jump: what changes is the free time between waking and the start of W. Without daylight saving, there's no jump at all: the gap only drifts slowly with the sun.
+- **Split on the table (2026-11-17):** S 30% / W 40% / R 30% of 24 h = 7h12 / 9h36 / 7h12. Background: natural-light studies average 6h51 asleep (Hadza 6h18, Tsimané 6h13, San 6h32, Colorado 8h21 as the midpoint of summer 6h48 and winter 9h54). 7 h = 29.2%, 8 h = 33.3% of the day. Not yet squared with W = 8 h above.
 - **Wake on the two clocks (maybe, not agreed):** on AT the wake drifts by whatever the sun needs each day (e.g. 07:01, 07:02, 07:04…); on NT it could always read the same, e.g. 06:00. The user wakes at the same sun-based time every day, adjusted for heat or whatever the model ends up using; only its AT reading moves.
 
 ### Working bands: 1 h swing steps (agreed 2026-11-16, for now)
