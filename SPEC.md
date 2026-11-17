@@ -288,6 +288,10 @@ So R absorbs the season: long summer days give more R, long winter nights give m
     | 08:00 | 0 | 30 | 103 |
     | 09:00 | 0 | 0 | 43 |
 
+- **Wake follows sunrise, with a small flex (direction agreed 2026-11-17, size open):** the wake time keeps the same relation to sunrise all year, with a small flex: closer to actual sunrise when work hours allow, further from it when they don't. Its shape can come from the seasonal curve already in hand, but much gentler. Every value has to come from evidence, not be picked.
+  - **Evidence for the size:** how much of the change in night length shows up as extra sleep. Tsimané 0.9 h of 1.3 h (0.69), San 0.9 h of 1.9 h (0.47), Colorado 3.1 h of 5.3 h (0.58). For comparison, 22:00–06:00 NT at 100% stretch passes on 2/3 (0.67).
+  - **Evidence on wake against sunrise (Yetish Table S2, local clock):** Hadza 57 min before (May). Tsimané 68 min before (Aug), 83 min before (Nov). San 25 min before (May), 7 min before (Aug), 54 min after (Jan). Colorado summer: just after sunrise. The paper ties waking to the daily temperature low more than to light.
+
 ### Working bands: 1 h swing steps (agreed 2026-11-16, for now)
 
 Work continues on bands where each step adds 1 h to the gap between the longest and shortest day, N1, N2… and S1, S2… outward from the equator, up to the 24 h cap at 65.7°. Edges (north, mirrored south): 8.6°, 16.8°, 24.2°, 30.8°, 36.5°, 41.4°, 45.6°, 49.1°, 52.0°, 54.5°, 56.7°, 58.5°, 60.0°… Reason: the first step (equator to 8.6°) lands close to where the figure-8 crosses itself (8.9° N). The two come from different causes (day-length swing vs the oval orbit), so the match is close, not exact. These replace the earlier reference bands below while this work runs; on the globe: "1 h bands".
